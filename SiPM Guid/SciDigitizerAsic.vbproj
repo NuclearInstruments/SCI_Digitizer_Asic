@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D8533211-324F-4050-8AF7-B099843EE2C6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>SiPM_Guid.My.MyApplication</StartupObject>
+    <RootNamespace>SiPM_Guid</RootNamespace>
+    <AssemblyName>SiPM Guid</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\BIN\</OutputPath>
+    <DocumentationFile>SiPM Guid.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>SiPM Guid.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>fava_grossa.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DT5550W-P-lib, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BIN\DT5550W-P-lib.dll</HintPath>
+    </Reference>
+    <Reference Include="Gigasoft.ProEssentials">
+      <HintPath>C:\ProEssentials8\DotNetAnyCpu\Gigasoft.ProEssentials.Dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.4.0\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.WindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.2.10.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Gigasoft.ProEssentials" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChooseCh.Designer.vb">
+      <DependentUpon>ChooseCh.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ChooseCh.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="connection.Designer.vb">
+      <DependentUpon>connection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="connection.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataStructures.vb" />
+    <Compile Include="fit_win.Designer.vb">
+      <DependentUpon>fit_win.vb</DependentUpon>
+    </Compile>
+    <Compile Include="fit_win.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ImportDLL_niusb3.vb" />
+    <Compile Include="AcquisitionClass.vb" />
+    <Compile Include="logwin.Designer.vb">
+      <DependentUpon>logwin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="logwin.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mapping.Designer.vb">
+      <DependentUpon>Mapping.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="pImmediate.Designer.vb">
+      <DependentUpon>pImmediate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pImmediate.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="pMonitor.Designer.vb">
+      <DependentUpon>pMonitor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pMonitor.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="pProperties.Designer.vb">
+      <DependentUpon>pProperties.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pProperties.vb" />
+    <Compile Include="pSpectra.Designer.vb">
+      <DependentUpon>pSpectra.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pSpectra.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RunStart.Designer.vb">
+      <DependentUpon>RunStart.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RunStart.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SciCompilerExportClass.vb" />
+    <Compile Include="Settings.Designer.vb">
+      <DependentUpon>Settings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Translation.vb" />
+    <Compile Include="Statistics.Designer.vb">
+      <DependentUpon>Statistics.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Statistics.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WaveformCaptureSelect.Designer.vb">
+      <DependentUpon>WaveformCaptureSelect.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WaveformCaptureSelect.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ChooseCh.resx">
+      <DependentUpon>ChooseCh.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="connection.resx">
+      <DependentUpon>connection.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fit_win.resx">
+      <DependentUpon>fit_win.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="logwin.resx">
+      <DependentUpon>logwin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mapping.resx">
+      <DependentUpon>Mapping.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="pImmediate.resx">
+      <DependentUpon>pImmediate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="pMonitor.resx">
+      <DependentUpon>pMonitor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="pProperties.resx">
+      <DependentUpon>pProperties.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="pSpectra.resx">
+      <DependentUpon>pSpectra.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RunStart.resx">
+      <DependentUpon>RunStart.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Statistics.resx">
+      <DependentUpon>Statistics.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaveformCaptureSelect.resx">
+      <DependentUpon>WaveformCaptureSelect.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fava_grossa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fava_grossa.ico" />
+    <None Include="Resources\sciwall.png" />
+    <None Include="Resources\295sp3p.png" />
+    <None Include="Resources\logo mada.PNG" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
