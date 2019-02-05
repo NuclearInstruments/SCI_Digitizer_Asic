@@ -984,8 +984,60 @@ Public Class MainForm
         End If
 
 
+        If CurrentProcessMode = ProcessMode.EVENT_DECODE Then
+            If SaveFileType = FileType.CSV And EnableSaveFile = True Then
+                Dim strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;"
+                For i = 0 To BI.channelsPerAsic - 1
+                    strline &= $"HIT_{i};"
+                Next
+                For i = 0 To BI.channelsPerAsic - 1
+                    strline &= $"CHARGE_{i};"
+                Next
+                For i = 0 To BI.channelsPerAsic - 1
+                    strline &= $"COARSE_{i};"
+                Next
+                For i = 0 To BI.channelsPerAsic - 1
+                    strline &= $"FINE_{i};"
+                Next
+                For i = 0 To BI.channelsPerAsic - 1
+                    strline &= $"RELATIVETIME_{i};"
+                Next
+                strline = strline.Remove(strline.Length - 1)
 
-        Dim TempTime = Now
+                tx.WriteLine(strline)
+
+            End If
+        End If
+
+        If CurrentProcessMode > ProcessMode.EVENT_DECODE Then
+            If SaveFileType = FileType.CSV And EnableSaveFile = True Then
+                Dim strline = "ID_CLUSTER;CLUSTER_RUN_Timecode_ns;CLUSTER_Timecode_ns;NEventsInCluster;"
+                For asi = 0 To BI.totalAsics - 1
+                    strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};"
+                    For i = 0 To BI.channelsPerAsic - 1
+                        strline &= $"HIT_{asi}_{i};"
+                    Next
+                    For i = 0 To BI.channelsPerAsic - 1
+                        strline &= $"CHARGE_{asi}_{i};"
+                    Next
+                    For i = 0 To BI.channelsPerAsic - 1
+                        strline &= $"COARSE_{asi}_{i};"
+                    Next
+                    For i = 0 To BI.channelsPerAsic - 1
+                        strline &= $"FINE_{asi}_{i};"
+                    Next
+                    For i = 0 To BI.channelsPerAsic - 1
+                        strline &= $"RELATIVETIME_{asi}_{i};"
+                    Next
+                Next
+
+                strline = strline.Remove(strline.Length - 1)
+                tx.WriteLine(strline)
+
+            End If
+        End If
+
+            Dim TempTime = Now
         sByteCounter = 0
         StartTime = Now
         While running
@@ -1070,7 +1122,11 @@ Public Class MainForm
                         Next
 
                         If SaveFileType = FileType.CSV And EnableSaveFile = True Then
-                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode_ns & ";" & e.EventTimecode & ";" & String.Join(";", e.hit) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                            Dim hitNumber(e.hit.Count - 1) As UInt16
+                            For i = 0 To e.hit.Count - 1
+                                hitNumber(i) = IIf(e.hit(i), 1, 0)
+                            Next
+                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
                             tx.WriteLine(strline)
                             sByteCounter += strline.Length
                         End If
@@ -1188,13 +1244,17 @@ Public Class MainForm
                                 Next
 
 
-                                e.EventTimecode -= timecode_min
+                                e.EventTimecode = timecode_min
                                 e.EventTimecode_ns = e.EventTimecode * BI.FPGATimecode_ns
-                                e.RunEventTimecode -= Runtimecode_min
+                                e.RunEventTimecode = Runtimecode_min
                                 e.RunEventTimecode_ns = e.RunEventTimecode * BI.FPGATimecode_ns
                                 If EnableSaveFile = True Then   'FILE SAVE
                                     If SaveFileType = FileType.CSV Then
-                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode_ns & ";" & String.Join(";", e.hit) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                                        Dim hitNumber(e.hit.Count - 1) As UInt16
+                                        For i = 0 To e.hit.Count - 1
+                                            hitNumber(i) = IIf(e.hit(i), 1, 0)
+                                        Next
+                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
                                     End If
                                 End If
                             Next
