@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Rivedere i valori degli attributi degli assembly
 
-<Assembly: AssemblyTitle("MADA readout system for SiPM")>
+<Assembly: AssemblyTitle("DT5550W Readout Software")>
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("Nuclear Instruments")>
-<Assembly: AssemblyProduct("SiPM Guid")>
-<Assembly: AssemblyCopyright("Copyright ©  2016")>
+<Assembly: AssemblyProduct("DT5550W")>
+<Assembly: AssemblyCopyright("Copyright ©  2018")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' usando l'asterisco '*' come illustrato di seguito:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.2.0.0")>
-<Assembly: AssemblyFileVersion("1.2.0.0")>
+<Assembly: AssemblyVersion("2018.10.0.2")>
+<Assembly: AssemblyFileVersion("2018.10.0.2")>

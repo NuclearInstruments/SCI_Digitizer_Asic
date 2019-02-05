@@ -5,7 +5,7 @@ Public Class pMonitor
 
     Public Sub CreatePlotTopPetiroc()
 
-        Pesgo1.PeData.Subsets = 9
+        Pesgo1.PeData.Subsets = 8
         Pesgo1.PeData.Points = 2048
         Pesgo1.PeSpecial.AutoImageReset = False
 
@@ -17,17 +17,7 @@ Public Class pMonitor
         Pesgo1.PeGrid.MultiAxesSubsets(5) = 1
         Pesgo1.PeGrid.MultiAxesSubsets(6) = 1
         Pesgo1.PeGrid.MultiAxesSubsets(7) = 1
-        Pesgo1.PeGrid.MultiAxesSubsets(8) = 1
-        Pesgo1.PeUserInterface.Allow.MultiAxesSizing = True
-        'Pesgo1.PeGrid.MultiAxesProportions(0) = 0.4
-        'Pesgo1.PeGrid.MultiAxesProportions(1) = 0.4
-        'Pesgo1.PeGrid.MultiAxesProportions(2) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(3) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(4) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(5) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(6) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(7) = 0.02
-        'Pesgo1.PeGrid.MultiAxesProportions(8) = 0.02
+
 
         'Pesgo1.PeGrid.OverlapMultiAxes(0) = 2
         'Pesgo1.PeGrid.OverlapMultiAxes(1) = 1
@@ -85,38 +75,36 @@ Public Class pMonitor
         Pesgo1.PeGrid.WorkingAxis = 0
         Pesgo1.PeString.YAxisLabel = "AN"
         Pesgo1.PeGrid.WorkingAxis = 1
-        Pesgo1.PeString.YAxisLabel = "A PROBE"
-        Pesgo1.PeGrid.WorkingAxis = 2
         Pesgo1.PeString.YAxisLabel = "D PROBE"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 3
+        Pesgo1.PeGrid.WorkingAxis = 2
         Pesgo1.PeString.YAxisLabel = "TRIGGER"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 4
+        Pesgo1.PeGrid.WorkingAxis = 3
         Pesgo1.PeString.YAxisLabel = "A CLK"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 5
+        Pesgo1.PeGrid.WorkingAxis = 4
         Pesgo1.PeString.YAxisLabel = "A DIN"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 6
+        Pesgo1.PeGrid.WorkingAxis = 5
         Pesgo1.PeString.YAxisLabel = "LEMO"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 7
+        Pesgo1.PeGrid.WorkingAxis = 6
         Pesgo1.PeString.YAxisLabel = "GLOBAL"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
         Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
-        Pesgo1.PeGrid.WorkingAxis = 8
+        Pesgo1.PeGrid.WorkingAxis = 7
         Pesgo1.PeString.YAxisLabel = "TRIG MUX"
         Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
         Pesgo1.PeGrid.Configure.ManualMinY = 0
@@ -126,7 +114,7 @@ Public Class pMonitor
         Pesgo1.PeGrid.WorkingAxis = 0
 
 
-        Dim tmpXData(2048 * 9) As Single
+        Dim tmpXData(2048 * 8) As Single
         For i = 0 To 2047
             tmpXData(i) = i * 1 / 80000000
             tmpXData(i + (2048 * 1)) = i * 1 / 80000000
@@ -136,9 +124,8 @@ Public Class pMonitor
             tmpXData(i + (2048 * 5)) = i * 1 / 80000000
             tmpXData(i + (2048 * 6)) = i * 1 / 80000000
             tmpXData(i + (2048 * 7)) = i * 1 / 80000000
-            tmpXData(i + (2048 * 8)) = i * 1 / 80000000
         Next
-        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.XData, tmpXData, 18252)
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.XData, tmpXData, 2048 * 8) '18252)
         Pesgo1.PeData.Y(0, 0) = 0
         Pesgo1.PeData.Y(0, 1) = 0
         Pesgo1.PeData.Y(0, 2) = 0
@@ -147,18 +134,27 @@ Public Class pMonitor
         Dim y1(2048), y2(2048), y3(2048), y4(2048) As Single
         Dim tmpYData2(2048 * 9) As Single
         For i = 0 To 2047
-            y1(i) = Math.Sin(i / 10) * 34
-            y2(i) = IIf(y1(i) > 0, 1, 0)
-            y3(i) = IIf(y1(i) > 10, 1, 0)
-            y4(i) = IIf(y1(i) < 10, 1, 0)
+            y1(i) = 0 'Math.Sin(i / 10) * 34
+            y2(i) = 0 'IIf(y1(i) > 0, 1, 0)
+            y3(i) = 0 'IIf(y1(i) > 10, 1, 0)
+            y4(i) = 0 'IIf(y1(i) < 10, 1, 0)
         Next
         Array.Copy(y1, 0, tmpYData2, 0, 2048)
         Array.Copy(y2, 0, tmpYData2, 2048, 2048)
         Array.Copy(y3, 0, tmpYData2, 4096, 2048)
         Array.Copy(y4, 0, tmpYData2, 6144, 2048)
 
-        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 18252)
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 2048 * 8) '18252)
 
+        'Pesgo1.PeUserInterface.Allow.MultiAxesSizing = True
+        Pesgo1.PeGrid.MultiAxesProportions(0) = 0.3
+        Pesgo1.PeGrid.MultiAxesProportions(1) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(2) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(3) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(4) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(5) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(6) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(7) = 0.1
 
         '// Reset image //
         Pesgo1.PeFunction.Force3dxVerticeRebuild = True
@@ -173,56 +169,71 @@ Public Class pMonitor
 
     Public Sub Plot(PMD As DT5550W_P_lib.DT5550W.PetirocMonitorData)
         Dim tmpYData2(2048 * 9) As Single
+        Dim v1 = 0
+        Dim v2 = 0
+        Dim v3 = 0
+        Dim v4 = 0
+        For i = 0 To PMD.charge_mux_a.Length - 1
+            v1 = v1 * 0.6 + PMD.charge_mux_a(i) * 0.4
+            PMD.charge_mux_a(i) = v1
+            v2 = v2 * 0.6 + PMD.charge_mux_b(i) * 0.4
+            PMD.charge_mux_b(i) = v2
+            v3 = v3 * 0.6 + PMD.charge_mux_c(i) * 0.4
+            PMD.charge_mux_c(i) = v3
+            v3 = v3 * 0.6 + PMD.charge_mux_d(i) * 0.4
+            PMD.charge_mux_d(i) = v4
+
+        Next
         If ComboBox2.SelectedIndex = 0 Then
             Array.Copy(PMD.charge_mux_a, 0, tmpYData2, 2048 * 0, 2048)
-            Array.Copy(PMD.an_probe_a, 0, tmpYData2, 2048 * 1, 2048)
-            Array.Copy(PMD.dig_probe_a, 0, tmpYData2, 2048 * 2, 2048)
-            Array.Copy(PMD.trigger_a, 0, tmpYData2, 2048 * 3, 2048)
-            Array.Copy(PMD.sr_clk_a, 0, tmpYData2, 2048 * 4, 2048)
-            Array.Copy(PMD.sr_din_a, 0, tmpYData2, 2048 * 5, 2048)
-            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 6, 2048)
-            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 7, 2048)
-            Array.Copy(PMD.trig_b_mux_a, 0, tmpYData2, 2048 * 8, 2048)
+            'Array.Copy(PMD.an_probe_a, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.dig_probe_a, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.trigger_a, 0, tmpYData2, 2048 * 2, 2048)
+            Array.Copy(PMD.sr_clk_a, 0, tmpYData2, 2048 * 3, 2048)
+            Array.Copy(PMD.sr_din_a, 0, tmpYData2, 2048 * 4, 2048)
+            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 5, 2048)
+            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 6, 2048)
+            Array.Copy(PMD.trig_b_mux_a, 0, tmpYData2, 2048 * 7, 2048)
         End If
 
         If ComboBox2.SelectedIndex = 1 Then
             Array.Copy(PMD.charge_mux_b, 0, tmpYData2, 2048 * 0, 2048)
-            Array.Copy(PMD.an_probe_b, 0, tmpYData2, 2048 * 1, 2048)
-            Array.Copy(PMD.dig_probe_b, 0, tmpYData2, 2048 * 2, 2048)
-            Array.Copy(PMD.trigger_b, 0, tmpYData2, 2048 * 3, 2048)
-            Array.Copy(PMD.sr_clk_b, 0, tmpYData2, 2048 * 4, 2048)
-            Array.Copy(PMD.sr_din_b, 0, tmpYData2, 2048 * 5, 2048)
-            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 6, 2048)
-            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 7, 2048)
-            Array.Copy(PMD.trig_b_mux_b, 0, tmpYData2, 2048 * 8, 2048)
+            '    Array.Copy(PMD.an_probe_b, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.dig_probe_b, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.trigger_b, 0, tmpYData2, 2048 * 2, 2048)
+            Array.Copy(PMD.sr_clk_b, 0, tmpYData2, 2048 * 3, 2048)
+            Array.Copy(PMD.sr_din_b, 0, tmpYData2, 2048 * 4, 2048)
+            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 5, 2048)
+            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 6, 2048)
+            Array.Copy(PMD.trig_b_mux_b, 0, tmpYData2, 2048 * 7, 2048)
         End If
 
         If ComboBox2.SelectedIndex = 2 Then
             Array.Copy(PMD.charge_mux_c, 0, tmpYData2, 2048 * 0, 2048)
-            Array.Copy(PMD.an_probe_c, 0, tmpYData2, 2048 * 1, 2048)
-            Array.Copy(PMD.dig_probe_c, 0, tmpYData2, 2048 * 2, 2048)
-            Array.Copy(PMD.trigger_c, 0, tmpYData2, 2048 * 3, 2048)
-            Array.Copy(PMD.sr_clk_c, 0, tmpYData2, 2048 * 4, 2048)
-            Array.Copy(PMD.sr_din_c, 0, tmpYData2, 2048 * 5, 2048)
-            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 6, 2048)
-            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 7, 2048)
-            Array.Copy(PMD.trig_b_mux_c, 0, tmpYData2, 2048 * 8, 2048)
+            '  Array.Copy(PMD.an_probe_c, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.dig_probe_c, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.trigger_c, 0, tmpYData2, 2048 * 2, 2048)
+            Array.Copy(PMD.sr_clk_c, 0, tmpYData2, 2048 * 3, 2048)
+            Array.Copy(PMD.sr_din_c, 0, tmpYData2, 2048 * 4, 2048)
+            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 5, 2048)
+            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 6, 2048)
+            Array.Copy(PMD.trig_b_mux_c, 0, tmpYData2, 2048 * 7, 2048)
         End If
 
         If ComboBox2.SelectedIndex = 3 Then
             Array.Copy(PMD.charge_mux_d, 0, tmpYData2, 2048 * 0, 2048)
-            Array.Copy(PMD.an_probe_d, 0, tmpYData2, 2048 * 1, 2048)
-            Array.Copy(PMD.dig_probe_d, 0, tmpYData2, 2048 * 2, 2048)
-            Array.Copy(PMD.trigger_d, 0, tmpYData2, 2048 * 3, 2048)
-            Array.Copy(PMD.sr_clk_d, 0, tmpYData2, 2048 * 4, 2048)
-            Array.Copy(PMD.sr_din_d, 0, tmpYData2, 2048 * 5, 2048)
-            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 6, 2048)
-            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 7, 2048)
-            Array.Copy(PMD.trig_b_mux_d, 0, tmpYData2, 2048 * 8, 2048)
+            '  Array.Copy(PMD.an_probe_d, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.dig_probe_d, 0, tmpYData2, 2048 * 1, 2048)
+            Array.Copy(PMD.trigger_d, 0, tmpYData2, 2048 * 2, 2048)
+            Array.Copy(PMD.sr_clk_d, 0, tmpYData2, 2048 * 3, 2048)
+            Array.Copy(PMD.sr_din_d, 0, tmpYData2, 2048 * 4, 2048)
+            Array.Copy(PMD.lemo1, 0, tmpYData2, 2048 * 5, 2048)
+            Array.Copy(PMD.global_trigger, 0, tmpYData2, 2048 * 6, 2048)
+            Array.Copy(PMD.trig_b_mux_d, 0, tmpYData2, 2048 * 7, 2048)
         End If
 
 
-        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 18252)
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 2048 * 8)
 
 
 

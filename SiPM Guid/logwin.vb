@@ -9,6 +9,11 @@
     Dim AvailableSize As New Label
     Dim DwnProcess As New Label
 
+
+    Dim SiPMT As New Label
+    Dim HVVolt As New Label
+    Dim HVCurrent As New Label
+
     Private Declare Function GetDiskFreeSpaceEx _
     Lib "kernel32" _
     Alias "GetDiskFreeSpaceExA" _
@@ -57,11 +62,14 @@
         tb2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 15))
         tb2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33))
 
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 33))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
         tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 33))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
         tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 33))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+
         Dim l0 As New Label
         Dim l1 As New Label
         Dim l2 As New Label
@@ -71,6 +79,9 @@
         Dim l6 As New Label
         Dim l7 As New Label
         Dim l8 As New Label
+        Dim l9 As New Label
+        Dim l10 As New Label
+        Dim l11 As New Label
 
         l0.Text = "Run ID"
         l0.TextAlign = ContentAlignment.MiddleCenter
@@ -185,6 +196,45 @@
         DwnProcess.Dock = DockStyle.Fill
         tb2.Controls.Add(DwnProcess, 5, 4)
 
+        l9.Text = "SiPM T"
+        l9.TextAlign = ContentAlignment.MiddleCenter
+        l9.Dock = DockStyle.Fill
+        tb2.Controls.Add(l9, 0, 6)
+        tb2.Dock = DockStyle.Fill
+        SiPMT.Text = ""
+        SiPMT.BackColor = Color.LightGreen
+        SiPMT.ForeColor = Color.Black
+        SiPMT.TextAlign = ContentAlignment.MiddleCenter
+        SiPMT.Dock = DockStyle.Fill
+        tb2.Controls.Add(SiPMT, 1, 6)
+
+        l10.Text = "V"
+        l10.TextAlign = ContentAlignment.MiddleCenter
+        l10.Dock = DockStyle.Fill
+        tb2.Controls.Add(l10, 2, 6)
+        tb2.Dock = DockStyle.Fill
+        HVVolt.Text = "0 V"
+        HVVolt.BackColor = Color.LightGreen
+        HVVolt.ForeColor = Color.Black
+        HVVolt.TextAlign = ContentAlignment.MiddleCenter
+        HVVolt.Dock = DockStyle.Fill
+        tb2.Controls.Add(HVVolt, 3, 6)
+
+        l11.Text = "I"
+        l11.TextAlign = ContentAlignment.MiddleCenter
+        l11.Dock = DockStyle.Fill
+        tb2.Controls.Add(l11, 4, 6)
+        tb2.Dock = DockStyle.Fill
+        HVCurrent.Text = "0 uA"
+        HVCurrent.BackColor = Color.LightGreen
+        HVCurrent.ForeColor = Color.Black
+        HVCurrent.TextAlign = ContentAlignment.MiddleCenter
+        HVCurrent.Dock = DockStyle.Fill
+        tb2.Controls.Add(HVCurrent, 5, 6)
+
+
+
+
         tb2.Dock = DockStyle.Fill
         TableLayoutPanel1.Controls.Add(tb2, 1, 0)
         Timer1.Enabled = True
@@ -206,6 +256,51 @@
         FileSize.Text = BytesToMegabytes(MainForm.sByteCounter) & " MB"
         DwnProcess.Text = MainForm.sAcqTime & "/" & MainForm.sProcTime
 
+        If RunStatus.Text.Contains("RUNNING") Then
+
+            If MainForm.DisableTempReadingAcq Then
+                HVVolt.Visible = False
+                HVCurrent.Visible = False
+                SiPMT.Visible = False
+            End If
+        Else
+                HVVolt.Visible = True
+            HVCurrent.Visible = True
+            SiPMT.Visible = True
+
+        End If
+
+    End Sub
+
+    Public Sub UpdateHvStatus(enable As Boolean, voltage As Double, current As Double)
+
+        If enable = False Then
+
+            HVVolt.BackColor = Color.LightGreen
+            HVCurrent.BackColor = Color.LightGreen
+        Else
+
+            HVVolt.BackColor = Color.Red
+            HVCurrent.BackColor = Color.Red
+
+        End If
+
+        HVVolt.Text = Math.Round(voltage, 3) & " V"
+        HVCurrent.Text = Math.Round(current, 3) & " uA"
+    End Sub
+
+    Public Sub UpdateSiPMTemp(sensorA As Double, sensorB As Double)
+        If sensorB > -128 Then
+            SiPMT.Text = "R: " & Math.Round(sensorA, 1) & "°C  L:" & Math.Round(sensorB, 1) & "°C"
+        Else
+            SiPMT.Text = Math.Round(sensorA, 1) & "°C"
+        End If
+
+
+
+    End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
     End Sub
 End Class

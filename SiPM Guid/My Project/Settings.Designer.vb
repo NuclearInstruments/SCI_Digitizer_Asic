@@ -411,9 +411,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.SiPM_Guid.My.MySettings
+        Friend ReadOnly Property Settings() As Global.SciDigitizerAsic.My.MySettings
             Get
-                Return Global.SiPM_Guid.My.MySettings.Default
+                Return Global.SciDigitizerAsic.My.MySettings.Default
             End Get
         End Property
     End Module

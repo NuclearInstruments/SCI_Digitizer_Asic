@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.SiPM_Guid.MainForm
+            Me.MainForm = Global.SciDigitizerAsic.MainForm
         End Sub
     End Class
 End Namespace

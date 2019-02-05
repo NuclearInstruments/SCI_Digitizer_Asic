@@ -31,6 +31,7 @@ Public Class Connection
 
     Private Sub Connection_Load(sender As Object, e As EventArgs) Handles Me.Load
         RefreshDevices()
+        Version.Text = "Version: " & Application.ProductVersion.ToString
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs)
@@ -47,5 +48,13 @@ Public Class Connection
 
         'End If
         Me.DialogResult = DialogResult.OK
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        RefreshDevices()
+    End Sub
+
+    Private Sub Label4_Click(sender As Object, e As EventArgs) Handles Label4.Click
+
     End Sub
 End Class

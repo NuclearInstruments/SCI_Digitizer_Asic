@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D8533211-324F-4050-8AF7-B099843EE2C6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>SiPM_Guid.My.MyApplication</StartupObject>
-    <RootNamespace>SiPM_Guid</RootNamespace>
-    <AssemblyName>SiPM Guid</AssemblyName>
+    <StartupObject>SciDigitizerAsic.My.MyApplication</StartupObject>
+    <RootNamespace>SciDigitizerAsic</RootNamespace>
+    <AssemblyName>SciDigitizerAsic</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -22,7 +22,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>..\BIN\</OutputPath>
-    <DocumentationFile>SiPM Guid.xml</DocumentationFile>
+    <DocumentationFile>SciDigitizerAsic.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>SiPM Guid.xml</DocumentationFile>
+    <DocumentationFile>SciDigitizerAsic.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -48,7 +48,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>fava_grossa.ico</ApplicationIcon>
+    <ApplicationIcon>%2815%29.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DT5550W-P-lib, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -116,6 +116,12 @@
       <DependentUpon>connection.vb</DependentUpon>
     </Compile>
     <Compile Include="connection.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CPSMonitor.Designer.vb">
+      <DependentUpon>CPSMonitor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CPSMonitor.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DataStructures.vb" />
@@ -216,6 +222,9 @@
     <EmbeddedResource Include="connection.resx">
       <DependentUpon>connection.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CPSMonitor.resx">
+      <DependentUpon>CPSMonitor.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="fit_win.resx">
       <DependentUpon>fit_win.vb</DependentUpon>
     </EmbeddedResource>
@@ -224,6 +233,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Mapping.resx">
       <DependentUpon>Mapping.vb</DependentUpon>
@@ -278,7 +288,10 @@
     <None Include="Resources\fava_grossa.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="%2815%29.ico" />
     <Content Include="fava_grossa.ico" />
+    <None Include="Resources\TriggerHold.PNG" />
+    <None Include="Resources\Shaper.PNG" />
     <None Include="Resources\sciwall.png" />
     <None Include="Resources\295sp3p.png" />
     <None Include="Resources\logo mada.PNG" />

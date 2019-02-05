@@ -103,7 +103,7 @@ Public Class Settings
             For z = 0 To 31
                 cfg.sA(q).sC(z) = New ClassSettings.SingleAsicCFG.SignleChannelCFG
                 cfg.sA(q).sC(z).BiasCompEnable = IIf(gridList(q).Rows(z).Cells("Enableb").Value = 0, False, True)
-                cfg.sA(q).sC(z).BiasComp = gridList(q).Rows(z).Cells("DACb").Value = 0
+                cfg.sA(q).sC(z).BiasComp = gridList(q).Rows(z).Cells("DACb").Value
                 cfg.sA(q).sC(z).ChargeMask = IIf(gridList(q).Rows(z).Cells("DiscrQ").Value = 0, False, True)
                 cfg.sA(q).sC(z).TimeMask = IIf(gridList(q).Rows(z).Cells("DiscrT").Value = 0, False, True)
                 cfg.sA(q).sC(z).ThCompensation = gridList(q).Rows(z).Cells("THcomp").Value
@@ -194,6 +194,22 @@ Public Class Settings
             ButtonSetCfg.Enabled = True
         End If
     End Sub
+
+    Private Sub DataGridView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+
+        If sender.SelectedCells.Count > 1 Then
+
+            For Each r As DataGridViewCell In sender.SelectedCells
+                If r.RowIndex <> e.RowIndex Then
+                    sender.Rows(r.RowIndex).Cells(e.ColumnIndex).Value = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+                End If
+            Next
+
+        End If
+
+
+    End Sub
+
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TabControl1.TabPages.Clear()
         gridList.Clear()
@@ -229,6 +245,7 @@ Public Class Settings
                 dgw.Columns.Add("THcomp", "Threshold Compensation")
                 dgw.Columns.Add("Gain", "Gain")
                 dgw.Columns.Add("Offset", "Offset")
+
                 dgw.Columns(0).Width = 120
                 dgw.Columns(0).ReadOnly = True
                 dgw.Columns(1).Width = 80
@@ -238,17 +255,20 @@ Public Class Settings
                 dgw.Columns(5).Width = 120
                 dgw.Columns(6).Width = 80
                 dgw.Columns(7).Width = 80
+
                 dgw.RowHeadersVisible = False
                 dgw.AllowUserToAddRows = False
                 dgw.AllowUserToDeleteRows = False
+
+                AddHandler dgw.CellValueChanged, AddressOf DataGridView_CellValueChanged
                 k = 0
                 Do While (k < 32)
                     Dim kill As Integer = 0
-                    If ((k = 15) _
-                            OrElse ((k = 19) _
-                            OrElse (k = 27))) Then
-                        kill = 1
-                    End If
+                    'If ((k = 15) _
+                    '        OrElse ((k = 19) _
+                    '        OrElse (k = 27))) Then
+                    '    kill = 1
+                    'End If
 
                     Dim myString As String = k.ToString
                     dgw.Rows.Add(("CHANNEL " + myString), 1, 128, 0, kill, 32, 1.0, 0)
@@ -262,7 +282,7 @@ Public Class Settings
 
         A_polarity.Items.Add("Positive")
         A_polarity.Items.Add("Negative")
-        A_polarity.SelectedIndex = 1
+        A_polarity.SelectedIndex = 0
 
         A_ShaperCF.Items.Add("100fF")
         A_ShaperCF.Items.Add("200fF")
@@ -276,8 +296,8 @@ Public Class Settings
         A_ShaperCI.Items.Add("5pF")
         A_ShaperCI.SelectedIndex = 3
 
-        A_ChargeTHR.Value = 800
-        A_TimeTHR.Value = 800
+        A_ChargeTHR.Value = 1000
+        A_TimeTHR.Value = 1000
 
         TransferSize.Items.Add("10 Events")
         TransferSize.Items.Add("100 Events")
@@ -311,8 +331,21 @@ Public Class Settings
         aFileFormat.Items.Add("CSV")
         aFileFormat.Items.Add("BINARY")
         aFileFormat.SelectedIndex = 0
+
+
+        TriggerSelector.Items.Add("Time Trigger")
+        TriggerSelector.Items.Add("Charge Trigger")
+        TriggerSelector.SelectedIndex = 0
+
+        TempSensor.Items.Add("Internal (Avg)")
+        TempSensor.Items.Add("External")
+        TempSensor.SelectedIndex = 0
     End Sub
+
     Public Sub UpdateSettings()
+        MainForm.Timer3.Enabled = False
+        MainForm.TriggerModeCharge = IIf(TriggerSelector.SelectedIndex = 1, True, False)
+
         For i = 0 To MainForm.DTList.Count - 1
             MainForm.DTList(i).pCFG.Clear()
             Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
@@ -323,23 +356,35 @@ Public Class Settings
                 Dim pC As New PetirocConfig
                 For z = 0 To 31
                     pC.inputDAC(z).enable = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("Enableb").Value = 0, False, True)
-                    pC.inputDAC(z).value = gridList(i * BI.totalAsics + j).Rows(z).Cells("DACb").Value = 0
+                    pC.inputDAC(z).value = gridList(i * BI.totalAsics + j).Rows(z).Cells("DACb").Value
                     pC.InputDiscriminator(z).maskDiscriminatorQ = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("DiscrQ").Value = 0, False, True)
                     pC.InputDiscriminator(z).maskDiscriminatorT = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("DiscrT").Value = 0, False, True)
                     pC.InputDiscriminator(z).DACValue = gridList(i * BI.totalAsics + j).Rows(z).Cells("THcomp").Value
                     pC.Correction(i).Gain = gridList(i * BI.totalAsics + j).Rows(z).Cells("Gain").Value
                     pC.Correction(i).Offset = gridList(i * BI.totalAsics + j).Rows(z).Cells("Offset").Value
+                    MainForm.CorrPoints(j, z).gain = pC.Correction(i).Gain
+                    MainForm.CorrPoints(j, z).Offset = pC.Correction(i).Offset
+
                 Next
 
                 pC.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
-                pC.DAC_Q_threshold = A_ChargeTHR.Value
-                pC.DAC_T_threshold = A_TimeTHR.Value
+                pC.DAC_Q_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_ChargeTHR.Value, A_ChargeTHR.Value)
+                pC.DAC_T_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_TimeTHR.Value, A_TimeTHR.Value)
                 pC.DelayTrigger = A_DelayBox.Value
                 pC.SlowFeedbackC = A_ShaperCF.SelectedIndex
                 pC.SlowInputC = A_ShaperCI.SelectedIndex
-                pC.TriggerLatch = True
-                pC.Raz_Ext = False
-                pC.Raz_Int = True
+
+                If TriggerSelector.SelectedIndex = 1 Then
+                    pC.TriggerOut = False
+                Else
+                    pC.TriggerOut = True
+                End If
+
+                MainForm.SoftwareThreshold = SoftwareTrigger.Value
+                MainForm.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
+                'pC.TriggerLatch = True
+                'pC.Raz_Ext = False
+                'pC.Raz_Int = True
                 pC.GenerateUint32Config(ProgramWord)
                 Dim boolDV(640) As Boolean
                 Dim StringDV As String = ""
@@ -349,6 +394,7 @@ Public Class Settings
                 Next
 
                 MainForm.AppendToLog(MainForm.LogMode.mCONFIGURATION, "Configure ASIC: " & j & " - " & MainForm.DTList(i).SerialNumber & vbCrLf & StringDV)
+
 
                 Select Case j
                     Case 0
@@ -384,21 +430,40 @@ Public Class Settings
 
                 End Select
 
-                MainForm.DTList(i).ConfigureT0(T0Mode.SelectedIndex, T0Freq.Value)
+                MainForm.DTList(i).ConfigureT0(t0m, T0Freq.Value)
                 MainForm.TimePsBin = TimePsBin.Value
             Next
             System.Threading.Thread.Sleep(200)
             SetMonitor()
-            MainForm.DTList(i).SetHV(HVon.Checked, Voltage.Value)
+            MainForm.DTList(i).SetHV(HVon.Checked, Voltage.Value, MaxV.Value)
             MainForm.DTList(i).ConfigureSignalGenerator(SelfEnable.Checked,
                                             SelfEnable.Checked,
                                             SelfEnable.Checked,
                                             SelfEnable.Checked,
                                              SelfFreq.Value)
+            MainForm.DTList(i).SelectTriggerMode(MainForm.TriggerModeCharge)
+
+            MainForm.DTList(i).EnableTriggerFrame(EnableGlobalTrigger.Checked)
+            MainForm.DTList(i).EnableExternalTrigger(EnableExternalTrigger.Checked)
+            MainForm.DTList(i).EnableExternalVeto(EnableExternalVeto.Checked)
+            MainForm.DTList(i).EnableResetTDCOnT0(ResetTDConT0.Checked)
         Next
 
         MainForm.hvon.Enabled = Not HVon.Checked
         MainForm.hvoff.Enabled = HVon.Checked
+
+
+        MainForm.TempSensorSource = TempSensor.SelectedIndex
+        MainForm.DisableTempReadingAcq = DisableTempRead.Checked
+        MainForm.EnableTempComp = TempComp.Checked
+        MainForm.TempCompCoef = tempConmpCoef.Value
+        MainForm.CurrentHVSet = Voltage.Value
+        MainForm.CurrentHVON = HVon.Checked
+        MainForm.CurrentHVMax = MaxV.Value
+
+        MainForm.SumSpectrumGain = SumSpectrumGain.Value
+
+        MainForm.Timer3.Enabled = True
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonSetCfg.Click
@@ -492,7 +557,7 @@ Public Class Settings
 
     End Sub
 
-    Private Sub GroupBox3_Enter(sender As Object, e As EventArgs) Handles GroupBox3.Enter
+    Private Sub GroupBox3_Enter(sender As Object, e As EventArgs)
 
     End Sub
 
@@ -515,10 +580,76 @@ Public Class Settings
     End Sub
 
     Private Sub HVon_CheckedChanged(sender As Object, e As EventArgs) Handles HVon.CheckedChanged
-
+        If HVon.Checked = False Then
+            MainForm.CurrentHVON = False
+        End If
     End Sub
 
     Private Sub aAnalogRead_CheckedChanged(sender As Object, e As EventArgs) Handles aAnalogRead.CheckedChanged
+
+    End Sub
+
+    Private Sub NumericUpDown1_ValueChanged_1(sender As Object, e As EventArgs) Handles tempConmpCoef.ValueChanged
+
+    End Sub
+
+    Private Sub Label15_Click(sender As Object, e As EventArgs) Handles Label15.Click
+
+    End Sub
+
+    Private Sub TempComp_CheckedChanged(sender As Object, e As EventArgs) Handles TempComp.CheckedChanged
+        If TempComp.Checked Then
+            DisableTempRead.Checked = False
+            DisableTempRead.Enabled = False
+        Else
+            DisableTempRead.Enabled = True
+        End If
+    End Sub
+
+    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
+
+    End Sub
+
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim max = 0
+
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    Dim point = MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k)
+                    max = IIf(point > max, point, max)
+                Next
+            Next
+        Next
+
+
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    Dim point = MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k)
+                    gridList(j + BI.totalAsics * i).Rows(k).Cells("Gain").Value = Math.Round(max / point, 3)
+                Next
+            Next
+        Next
+
+    End Sub
+
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    gridList(j + BI.totalAsics * i).Rows(k).Cells("Offset").Value = Math.Round(-(MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k) - 40))
+
+                Next
+            Next
+        Next
+
+    End Sub
+
+    Private Sub TempSensor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TempSensor.SelectedIndexChanged
 
     End Sub
 End Class

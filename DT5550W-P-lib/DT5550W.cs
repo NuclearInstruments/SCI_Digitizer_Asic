@@ -57,6 +57,23 @@ namespace DT5550W_P_lib
         const UInt32 T0_SW = 0xFFFFF912;
         const UInt32 T0_SWMODE = 0xFFFFF913;
         const UInt32 T0_FREQ = 0xFFFFF914;
+
+        const UInt32 DAQ_TRIGGER_MODE = 0xFFFFF917;
+        const UInt32 DAQ_TRIGGER_FRAME = 0xFFFFF918;
+
+        const UInt32 DAQ_EXTERNAL_VETO = 0xFFFFF919;
+        const UInt32 DAQ_TRIGGER_EXT = 0xFFFFF91A;
+        const UInt32 DAQ_RESET_TDC_T0 = 0xFFFFF91B;
+
+
+
+
+
+
+
+
+        const UInt32 RFA_PTROC_ASIC_DISABLE = 0xFFFFF915;
+
         public PetirocConfig PetirocCfg;
 
         public List<PetirocConfig> pCFG;
@@ -306,6 +323,7 @@ namespace DT5550W_P_lib
             public int DAC_T_threshold;
             public int DelayTrigger;
 
+            public int SoftwareThreshold;
 
             public int MonitorChannel = 0;
             public tPetirocMonitorSelector PetirocMonitorSelector = 0;
@@ -317,15 +335,15 @@ namespace DT5550W_P_lib
                 for (int i = 0; i < 32; i++)
                 {
                     this.inputDAC[i].enable = true;
-                    this.inputDAC[i].value = 128;
+                    this.inputDAC[i].value = 127;
                     this.InputDiscriminator[i].maskDiscriminatorQ = false;
                     this.InputDiscriminator[i].maskDiscriminatorT = false;
-                    this.InputDiscriminator[i].DACValue = 32;
+                    this.InputDiscriminator[i].DACValue = 31;
                     this.Correction[i].Gain = 1.0;
                     this.Correction[i].Offset = 0;
                 }
                 this.inputDAC[32].enable = true;
-                this.inputDAC[32].value = 128;
+                this.inputDAC[32].value = 0;
 
                 this.PowerControl.ADC_Ramp = true;
                 this.PowerControl.DACs_6bit = true;
@@ -350,42 +368,42 @@ namespace DT5550W_P_lib
                 this.PowerControl.TDC_ramp = true;
                 this.PowerControl.TemperatureSensor = true;
 
-                this.PulseMode.ADC_Ramp = false;
-                this.PulseMode.DACs_6bit = false;
-                this.PulseMode.Delay_Discr = false;
-                this.PulseMode.Delay_Ramp = false;
-                this.PulseMode.DiscrADCQ = false;
-                this.PulseMode.DiscrADCT = false;
-                this.PulseMode.DiscrQ = false;
-                this.PulseMode.DiscrT = false;
-                this.PulseMode.Dual_10bit_DAC = false;
-                this.PulseMode.Input_DACs = false;
-                this.PulseMode.LVDS_Rx_Fast = false;
-                this.PulseMode.LVDS_Rx_Slow = false;
-                this.PulseMode.LVDS_Tx = false;
-                this.PulseMode.PreAmplifier = false;
-                this.PulseMode.SCA = false;
-                this.PulseMode.Slow_Shaper = false;
-                this.PulseMode.TDC_ramp = false;
-                this.PulseMode.TemperatureSensor = false;
+                this.PulseMode.ADC_Ramp = true;
+                this.PulseMode.DACs_6bit = true;
+                this.PulseMode.Delay_Discr = true;
+                this.PulseMode.Delay_Ramp = true;
+                this.PulseMode.DiscrADCQ = true;
+                this.PulseMode.DiscrADCT = true;
+                this.PulseMode.DiscrQ = true;
+                this.PulseMode.DiscrT = true;
+                this.PulseMode.Dual_10bit_DAC = true;
+                this.PulseMode.Input_DACs = true;
+                this.PulseMode.LVDS_Rx_Fast = true;
+                this.PulseMode.LVDS_Rx_Slow = true;
+                this.PulseMode.LVDS_Tx = true;
+                this.PulseMode.PreAmplifier = true;
+                this.PulseMode.SCA = true;
+                this.PulseMode.Slow_Shaper = true;
+                this.PulseMode.TDC_ramp = true;
+                this.PulseMode.TemperatureSensor = true;
 
 
                 this.InputPolarity = tPOLARITY.NEGATIVE;
                 this.TriggerLatch = true;
                 this.SlowFeedbackC = tFBC.fF300;
-                this.SlowInputC = tFIC.pF1_25;
+                this.SlowInputC = tFIC.pF2_5;
                 this.LvdsTxmA = tLVDS_mA.mA4;
                 this.ADC_ramp_compensation = false;
                 this.Select_80_MHz = true;
                 this.Enable_80_MHz = true;
-                this.Raz_Ext = false;
+                this.Raz_Ext = true;
                 this.Raz_Int = true;
-                this.Startb_Ext = false;
+                this.Startb_Ext = false ;  //old was false
                 this.Trigger_Mux = true;
                 this.NOR32_Time = false;
-                this.NOR32_Change = false;
+                this.NOR32_Change = true;
                 this.TriggerOut = true;
-                this.Dout_Oc = true;
+                this.Dout_Oc = false;
                 this.TransmitOn_Oc = true;
 
                 this.DAC_Q_threshold = 1024;
@@ -416,7 +434,7 @@ namespace DT5550W_P_lib
                 int[] bits = b.Cast<bool>().Select(bit => bit ? 1 : 0).ToArray();
 
                 for (int i = 0; i < bit_count; i++)
-                    bitarray[bit_position + i] = bits[bit_count - i] == 0 ? false : true;
+                    bitarray[bit_position + i] = bits[bit_count - i-1] == 0 ? false : true;
             }
 
             public void GenerateBitMonitor(bool[] datavector)
@@ -486,10 +504,10 @@ namespace DT5550W_P_lib
                 SetValue(320, (int)this.inputDAC[32].value, 8, bitarray);
 
                 //vth_discri charge
-                SetValueR(554, this.DAC_Q_threshold * 2, 10, bitarray);
+                SetValueR(554, this.DAC_Q_threshold , 10, bitarray);
 
                 //vth_time
-                SetValueR(564, this.DAC_T_threshold * 2, 10, bitarray);
+                SetValueR(564, this.DAC_T_threshold , 10, bitarray);
 
                 //sel_starb_ramp_adc_ext
                 SetSingleBit(576, this.Startb_Ext, bitarray);
@@ -530,6 +548,7 @@ namespace DT5550W_P_lib
                 SetValueR(629, (int)this.LvdsTxmA, 2, bitarray);
 
                 SetSingleBit(634, !this.Trigger_Mux, bitarray);
+                //this.NOR32_Time = true;
                 SetSingleBit(635, this.NOR32_Time, bitarray);
                 SetSingleBit(636, this.NOR32_Change, bitarray);
                 SetSingleBit(637, !this.TriggerOut, bitarray);
@@ -586,6 +605,16 @@ namespace DT5550W_P_lib
 
             }
 
+
+            public void ConvertStringToDatavector(String cfgb, bool[] datavector)
+            {
+                for (int i = 0; i < 640; i++)
+                {
+                    datavector[i] = cfgb.Substring(i,1) == "0" ? false:true;
+                }
+
+            }
+
             public string GenerateStringConfig()
             {
                 string bitstream = "";
@@ -603,6 +632,11 @@ namespace DT5550W_P_lib
                 int i, j;
                 bool[] bitarray = new bool[641];
                 GenerateBitConfig(bitarray);
+
+                //ConvertStringToDatavector("0000000000000000000000000000000000000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100010000000000000000000000000000000000000000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000011101111101000111110100110011110000000011111111011111111010011111111001111111111011011011", bitarray);
+                //ConvertStringToDatavector("0000000000000000000000000000000000000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100000001100010000000000000000000000000000000000000000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000010000011101111101000111110100110011110000000011111111011111111010011111111001111111111011011011", bitarray);
+                String CFG = GenerateStringConfig();
+                ConvertStringToDatavector(CFG, bitarray);
                 for (i = 0; i < 20; i++)
                 {
                     datavector[i] = 0;
@@ -662,6 +696,7 @@ namespace DT5550W_P_lib
             public ushort[] CoarseTime;
             public ushort[] FineTime;
             public ushort[] charge;
+            public double[] Time;
             public double[] relative_time;
             public bool[] hit;
             public t_DataPETIROC()
@@ -671,6 +706,7 @@ namespace DT5550W_P_lib
                 charge = new ushort[32];
                 hit = new bool[32];
                 relative_time = new double[32];
+                Time = new double[32];
             }
 
         }
@@ -691,9 +727,26 @@ namespace DT5550W_P_lib
             public t_DefaultDetectorLayout DefaultDetectorLayout;
         }
 
-        public void SetManualAsicInfo(int AsicCount)
+        public void SetManualAsicInfo(string AsicModel, int AsicCount)
         {
             DLL_ASIC_COUNT = AsicCount;
+
+            if (AsicCount == 1)
+            {
+                if (NI_USB3_WriteReg(0XE, RFA_PTROC_ASIC_DISABLE, ref Handle) != 0)
+                    return;
+            }
+            if (AsicCount == 2)
+            {
+                if (NI_USB3_WriteReg(0xC, RFA_PTROC_ASIC_DISABLE, ref Handle) != 0)
+                    return;
+            }
+            if (AsicCount == 4)
+            {
+                if (NI_USB3_WriteReg(0, RFA_PTROC_ASIC_DISABLE, ref Handle) != 0)
+                    return;
+            }
+
         }
         public t_BoardInfo GetBoardInfo()
         {
@@ -803,6 +856,38 @@ namespace DT5550W_P_lib
             UInt32 ControlAddress,
             UInt32 StatusAddress,
             ref IntPtr handle);
+
+
+        [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
+        unsafe private static extern int NI_USB3_SetHV(
+                   bool Enable,
+                   float voltage,
+                   ref IntPtr handle);
+
+        [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
+        unsafe private static extern int NI_USB3_GetHV(
+            ref bool Enable,
+            ref float voltage,
+            ref float current,
+            ref IntPtr handle);
+
+
+        [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
+        unsafe private static extern int NI_USB3_GetDT5550_DGBoardInfo(
+            StringBuilder model,
+            ref int asic_count,
+            ref int SN,
+            ref IntPtr handle);
+
+
+        [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
+        unsafe private static extern int NI_USB3_GetDT5550WTempSens(
+            int address,
+            ref float temperature,
+            ref IntPtr handle);
+
+
+ 
 
 
         public int NI_USB3_WriteData_M(
@@ -1355,7 +1440,7 @@ namespace DT5550W_P_lib
             return temp;
         }
 
-        public int DecodePetirocRowEvents(ref UInt32[] bufferA, UInt32 valid_wordA, ref Queue<t_DataPETIROC> pC)
+        public int DecodePetirocRowEvents(ref UInt32[] bufferA, UInt32 valid_wordA, ref Queue<t_DataPETIROC> pC, int ThresholdSoftware, int Polarity)
         {
             int DecodedPackets = 0;
             double Time=0;
@@ -1401,14 +1486,27 @@ namespace DT5550W_P_lib
                         }
                         for (i = 0; i < 32; i++)
                         {
-                            DataPETIROCA.FineTime[i] = (ushort)gray_to_bin(datarow[(i * 2) + 0], 10);
-                            DataPETIROCA.charge[i] = (ushort)gray_to_bin(datarow[(i * 2) + 1], 10);
-                            DataPETIROCA.CoarseTime[i] = (ushort)gray_to_bin(datarow[64 + i] >> 1, 9);
                             DataPETIROCA.hit[i] = (bool)((datarow[64 + i] & 0x1) == 1 ? true : false);
-                            Time = (((double)DataPETIROCA.CoarseTime[i] + 1) * 25) - (((double)(DataPETIROCA.FineTime[i] - 150)) * 0.037);
+                            DataPETIROCA.FineTime[i] = (ushort)gray_to_bin(datarow[(i * 2) + 0], 10);
+                            //if (DataPETIROCA.hit[i])
+                            int data = (int)gray_to_bin(datarow[(i * 2) + 1], 10);
+                            if (Polarity==0)
+                                data = 1024 - data;
+                            
+
+                            if (data > ThresholdSoftware)//(DataPETIROCA.hit[i])
+                                DataPETIROCA.charge[i] = (ushort)data;//(ushort) (data>100 ? (data):0);
+                            else
+                                DataPETIROCA.charge[i] = 0;
+
+                               DataPETIROCA.CoarseTime[i] = (ushort)gray_to_bin(datarow[64 + i] >> 1, 9);
+
+                            //  Time = (((double)DataPETIROCA.CoarseTime[i] + 1) * 25) - (((double)(DataPETIROCA.FineTime[i] - 150)) * 0.037);
+                            Time = (((double)DataPETIROCA.CoarseTime[i] + 1) * 25) - (((double)(DataPETIROCA.FineTime[i])) * 0.037);
                             if (DataPETIROCA.hit[i])
                                 minTime = Time < minTime ? Time : minTime;
                             DataPETIROCA.relative_time[i] = Time;
+                            DataPETIROCA.Time[i] = Time;
                         }
                         s = 2;
                         break;
@@ -1503,18 +1601,20 @@ namespace DT5550W_P_lib
                 NI_USB3_WriteReg_M(1, DT5550W.RFA_OSC_BA + DT5550W.RFA_OSC_ARM);
                 NI_USB3_WriteReg_M(0, DT5550W.RFA_OSC_BA + DT5550W.RFA_OSC_ARM);
 
+            int soffset = 0;
+
             for (int i = 0; i < samples; i++)
             {
                 UInt32 t;
-                PMD.an_probe_d[i] = -1*((data[1+(i * OscWordSize) + 0] >> 16) & 0xFFFF);
-                PMD.charge_mux_d[i] = -1 * ((data[1 + (i * OscWordSize) + 0] >> 0) & 0xFFFF);
-                PMD.an_probe_c[i] = -1 * ((data[1 + (i * OscWordSize) + 1] >> 16) & 0xFFFF);
-                PMD.charge_mux_c[i] = -1 * ((data[1 + (i * OscWordSize) + 1] >> 0) & 0xFFFF);
-                PMD.an_probe_b[i] = -1 * ((data[1 + (i * OscWordSize) + 2] >> 16) & 0xFFFF);
-                PMD.charge_mux_b[i] = -1 * ((data[1 + (i * OscWordSize) + 2] >> 0) & 0xFFFF);
-                PMD.an_probe_a[i] = -1 * ((data[1 + (i * OscWordSize) + 3] >> 16) & 0xFFFF);
-                PMD.charge_mux_a[i] = -1 * ((data[1 + (i * OscWordSize) + 3] >> 0) & 0xFFFF);
-                PMD.charge_mux_a[i] = -1 * ((data[(1 + i * OscWordSize) + 3] >> 0) & 0xFFFF);
+                PMD.an_probe_d[i] = -1*((data[soffset + (i * OscWordSize) + 0] >> 16) & 0xFFFF);
+                PMD.charge_mux_d[i] = -1 * ((data[soffset + (i * OscWordSize) + 0] >> 0) & 0xFFFF);
+                PMD.an_probe_c[i] = -1 * ((data[soffset + (i * OscWordSize) + 1] >> 16) & 0xFFFF);
+                PMD.charge_mux_c[i] = -1 * ((data[soffset + (i * OscWordSize) + 1] >> 0) & 0xFFFF);
+                PMD.an_probe_b[i] = -1 * ((data[soffset + (i * OscWordSize) + 2] >> 16) & 0xFFFF);
+                PMD.charge_mux_b[i] = -1 * ((data[soffset + (i * OscWordSize) + 2] >> 0) & 0xFFFF);
+                PMD.an_probe_a[i] = -1 * ((data[soffset + (i * OscWordSize) + 3] >> 16) & 0xFFFF);
+                PMD.charge_mux_a[i] = -1 * ((data[soffset + (i * OscWordSize) + 3] >> 0) & 0xFFFF);
+                PMD.charge_mux_a[i] = -1 * ((data[(soffset + i * OscWordSize) + 3] >> 0) & 0xFFFF);
 
                 t = data[(i * OscWordSize) + 4];
                 for (int j = 0; j < 32; j++)
@@ -1532,42 +1632,42 @@ namespace DT5550W_P_lib
                 for (int j = 0; j < 32; j++)
                     PMD.trgs_a[i, j] = (t >> j) & 0x01;
 
-                PMD.dig_probe_d[i] = (data[1 + (i * OscWordSize) + 8] >> 0) & 0x1;
-                PMD.dig_probe_c[i] = (data[1 + (i * OscWordSize) + 8] >> 1) & 0x1;
-                PMD.dig_probe_b[i] = (data[1 + (i * OscWordSize) + 8] >> 2) & 0x1;
-                PMD.dig_probe_a[i] = (data[1 + (i * OscWordSize) + 8] >> 3) & 0x1;
+                PMD.dig_probe_d[i] = (data[soffset + (i * OscWordSize) + 8] >> 0) & 0x1;
+                PMD.dig_probe_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 1) & 0x1;
+                PMD.dig_probe_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 2) & 0x1;
+                PMD.dig_probe_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 3) & 0x1;
 
-                PMD.chrage_trig_d[i] = (data[1 + (i * OscWordSize) + 8] >> 4) & 0x1;
-                PMD.chrage_trig_c[i] = (data[1 + (i * OscWordSize) + 8] >> 5) & 0x1;
-                PMD.chrage_trig_b[i] = (data[1 + (i * OscWordSize) + 8] >> 6) & 0x1;
-                PMD.chrage_trig_a[i] = (data[1 + (i * OscWordSize) + 8] >> 7) & 0x1;
+                PMD.chrage_trig_d[i] = (data[soffset + (i * OscWordSize) + 8] >> 4) & 0x1;
+                PMD.chrage_trig_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 5) & 0x1;
+                PMD.chrage_trig_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 6) & 0x1;
+                PMD.chrage_trig_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 7) & 0x1;
 
-                PMD.lemo4[i] = (data[1 + (i * OscWordSize) + 8] >> 8) & 0x1;
-                PMD.lemo3[i] = (data[1 + (i * OscWordSize) + 8] >> 9) & 0x1;
-                PMD.lemo2[i] = (data[1 + (i * OscWordSize) + 8] >> 10) & 0x1;
-                PMD.lemo1[i] = (data[1 + (i * OscWordSize) + 8] >> 11) & 0x1;
+                PMD.lemo4[i] = (data[soffset + (i * OscWordSize) + 8] >> 8) & 0x1;
+                PMD.lemo3[i] = (data[soffset + (i * OscWordSize) + 8] >> 9) & 0x1;
+                PMD.lemo2[i] = (data[soffset + (i * OscWordSize) + 8] >> 10) & 0x1;
+                PMD.lemo1[i] = (data[soffset + (i * OscWordSize) + 8] >> 11) & 0x1;
 
-                PMD.trigger_d[i] = (data[1 + (i * OscWordSize) + 8] >> 12) & 0x1;
-                PMD.trigger_c[i] = (data[1 + (i * OscWordSize) + 8] >> 13) & 0x1;
-                PMD.trigger_b[i] = (data[1 + (i * OscWordSize) + 8] >> 14) & 0x1;
-                PMD.trigger_a[i] = (data[1 + (i * OscWordSize) + 8] >> 15) & 0x1;
+                PMD.trigger_d[i] = (data[soffset + (i * OscWordSize) + 8] >> 12) & 0x1;
+                PMD.trigger_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 13) & 0x1;
+                PMD.trigger_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 14) & 0x1;
+                PMD.trigger_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 15) & 0x1;
 
-                PMD.trig_b_mux_d[i] = (data[1 + (i * OscWordSize) + 8] >> 16) & 0x1;
-                PMD.trig_b_mux_c[i] = (data[1 + (i * OscWordSize) + 8] >> 17) & 0x1;
-                PMD.trig_b_mux_b[i] = (data[1 + (i * OscWordSize) + 8] >> 18) & 0x1;
-                PMD.trig_b_mux_a[i] = (data[1 + (i * OscWordSize) + 8] >> 19) & 0x1;
+                PMD.trig_b_mux_d[i] = (data[soffset + (i * OscWordSize) + 8] >> 16) & 0x1;
+                PMD.trig_b_mux_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 17) & 0x1;
+                PMD.trig_b_mux_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 18) & 0x1;
+                PMD.trig_b_mux_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 19) & 0x1;
 
-                PMD.sr_din_d[i] = (data[1 + (i * OscWordSize) + 8] >> 20) & 0x1;
-                PMD.sr_din_c[i] = (data[1 + (i * OscWordSize) + 8] >> 21) & 0x1;
-                PMD.sr_din_b[i] = (data[1 + (i * OscWordSize) + 8] >> 22) & 0x1;
-                PMD.sr_din_a[i] = (data[1 + (i * OscWordSize) + 8] >> 23) & 0x1;
+                PMD.sr_din_d[i] = (data[soffset + (i * OscWordSize) + 8] >> 20) & 0x1;
+                PMD.sr_din_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 21) & 0x1;
+                PMD.sr_din_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 22) & 0x1;
+                PMD.sr_din_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 23) & 0x1;
 
-                PMD.sr_clk_d [i] = (data[1 + (i * OscWordSize) + 8] >> 24) & 0x1;
-                PMD.sr_clk_c[i] = (data[1 + (i * OscWordSize) + 8] >> 25) & 0x1;
-                PMD.sr_clk_b[i] = (data[1 + (i * OscWordSize) + 8] >> 26) & 0x1;
-                PMD.sr_clk_a[i] = (data[1 + (i * OscWordSize) + 8] >> 27) & 0x1;
+                PMD.sr_clk_d [i] = (data[soffset + (i * OscWordSize) + 8] >> 24) & 0x1;
+                PMD.sr_clk_c[i] = (data[soffset + (i * OscWordSize) + 8] >> 25) & 0x1;
+                PMD.sr_clk_b[i] = (data[soffset + (i * OscWordSize) + 8] >> 26) & 0x1;
+                PMD.sr_clk_a[i] = (data[soffset + (i * OscWordSize) + 8] >> 27) & 0x1;
 
-                PMD.global_trigger[i] = (data[1 + (i * OscWordSize) + 8] >> 28) & 0x1;
+                PMD.global_trigger[i] = (data[soffset + (i * OscWordSize) + 8] >> 28) & 0x1;
 
             }
 
@@ -1594,7 +1694,8 @@ namespace DT5550W_P_lib
       RFA_IIC_STATUS,
       ref Handle);
 
-            CfgClockGenerator();
+            //CfgClockGenerator();
+            PowerASIC(false);
             PowerASIC(true);
             SerialNumber = DeviceSerialNumber;
             if (retcode == 0)
@@ -1609,7 +1710,8 @@ namespace DT5550W_P_lib
             int retcode = NI_USB3_ConnectDevice(DeviceSerialNumber, ref Handle);
             if (initialize == true)
             {
-                CfgClockGenerator();
+                //CfgClockGenerator();
+                PowerASIC(false);
                 PowerASIC(true);
             }
             if (retcode == 0)
@@ -1619,8 +1721,12 @@ namespace DT5550W_P_lib
         }
 
 
-        unsafe public int SetHV(bool Enable, float voltage )
+        public int SetHV(bool Enable, float voltage, float compliance )
         {
+            voltage = voltage > compliance ? compliance : voltage;
+            return NI_USB3_SetHV(Enable, voltage, ref Handle);
+
+             
            byte [] vv = new byte[16];
 
             vv[0] = 1;
@@ -1661,10 +1767,125 @@ namespace DT5550W_P_lib
             return 0;
         }
 
+        public int SetHVTempFB(bool Enable, float voltage, float compliance, float tempCof, float temp)
+        {
+            float newVolt;
 
+            newVolt = voltage + (temp - 25) * (tempCof/1000);
+            newVolt = newVolt > compliance ? compliance : newVolt;
+            return NI_USB3_SetHV(Enable, newVolt, ref Handle);
+        }
+
+
+        public int GetHV(ref bool Enable, ref float voltage, ref float current)
+        {
+          //  return 0;
+            return NI_USB3_GetHV(ref Enable, ref voltage, ref current,  ref Handle);
+        }
+
+        public int GetSensTemperature(int sensId, ref float temperature)
+        {
+            //return 0;
+             return NI_USB3_GetDT5550WTempSens(sensId, ref temperature, ref Handle);
+        }
         public void EnableAnalogReadoutMonitor(bool enable)
         {
             NI_USB3_WriteReg((UInt32)(enable == true ? 1 : 0), DAQ_ANALOG_MONITOR, ref Handle);
+        }
+
+        public bool GetDGCardModel(
+            ref String model,
+            ref int asic_count,
+            ref int SN)
+        {
+            StringBuilder nModel = new StringBuilder();
+
+                 int res = NI_USB3_GetDT5550_DGBoardInfo(nModel, ref asic_count, ref SN, ref Handle);
+            //int res = 0;
+            if (res == 0)
+            {
+                model = nModel.ToString();
+                return true;
+            }
+            else
+                return false;
+
+        }
+
+        public bool GetCountRate(ref UInt32 [] cps)
+        {
+          //  UInt32[] data = new UInt32[1024];
+            uint read_word=0;
+            uint valid_data=0;
+            NI_USB3_ReadData_M(cps, (UInt32)128, 0x80080000, USB_BUS_MODE.REG_ACCESS , 500, ref read_word, ref valid_data);
+
+            return true;
+        }
+
+
+        public void SelectTriggerMode(bool charge_trigger)
+        {
+            if (charge_trigger)
+                NI_USB3_WriteReg(1, DAQ_TRIGGER_MODE, ref Handle);
+            else
+                NI_USB3_WriteReg(0, DAQ_TRIGGER_MODE, ref Handle);
+        }
+
+
+        public void EnableTriggerFrame(bool enable)
+        {
+            if (enable)
+                NI_USB3_WriteReg(0xF, DAQ_TRIGGER_FRAME, ref Handle);
+            else
+                NI_USB3_WriteReg(0, DAQ_TRIGGER_FRAME, ref Handle);
+        }
+        public void EnableExternalVeto(bool enable)
+        {
+            if (enable)
+                NI_USB3_WriteReg(1, DAQ_EXTERNAL_VETO, ref Handle);
+            else
+                NI_USB3_WriteReg(0, DAQ_EXTERNAL_VETO, ref Handle);
+        }
+
+        public void EnableExternalTrigger(bool enable)
+        {
+            if (enable)
+                NI_USB3_WriteReg(1, DAQ_TRIGGER_EXT, ref Handle);
+            else
+                NI_USB3_WriteReg(0, DAQ_TRIGGER_EXT, ref Handle);
+        }
+        public void EnableResetTDCOnT0(bool enable)
+        {
+            if (enable)
+                NI_USB3_WriteReg(0, DAQ_RESET_TDC_T0, ref Handle);
+            else
+                NI_USB3_WriteReg(1, DAQ_RESET_TDC_T0, ref Handle);
+        }
+
+        public void GetBuild(ref UInt32  build)
+        {
+            NI_USB3_ReadReg(ref build, 0xFFFFFFFA, ref Handle);     
+        }
+
+
+
+
+        public void SetASICVeto(bool A1, bool A2, bool A3, bool A4)
+        {
+            if (DLL_ASIC_COUNT == 1)
+            {
+                A2 = true;
+                A3 = true;
+                A4 = true;
+            }
+            if (DLL_ASIC_COUNT == 2)
+            {
+                A3 = true;
+                A4 = true;
+            }
+
+            if (NI_USB3_WriteReg((uint)((((A1?0:1))<<3) + (((A2 ? 0 : 1)) << 2) + (((A3 ? 0 : 1)) << 1) + (((A4 ? 0 : 1)) << 0)), RFA_PTROC_ASIC_DISABLE, ref Handle) != 0)
+                return;
         }
 
     }

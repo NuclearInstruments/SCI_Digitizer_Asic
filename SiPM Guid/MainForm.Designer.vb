@@ -103,6 +103,7 @@ Partial Class MainForm
         Me.ConfigurationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ConfigureAllASICToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip.SuspendLayout()
         Me.ToolStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
@@ -464,7 +465,6 @@ Partial Class MainForm
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(24, 24)
         Me.ToolStripButton2.Text = "DCR"
-        Me.ToolStripButton2.Visible = False
         '
         'StatusStrip
         '
@@ -629,20 +629,20 @@ Partial Class MainForm
         'SingleShotToolStripMenuItem
         '
         Me.SingleShotToolStripMenuItem.Name = "SingleShotToolStripMenuItem"
-        Me.SingleShotToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SingleShotToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.SingleShotToolStripMenuItem.Text = "&Single Shot"
         '
         'PeriodicToolStripMenuItem
         '
         Me.PeriodicToolStripMenuItem.Name = "PeriodicToolStripMenuItem"
-        Me.PeriodicToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.PeriodicToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.PeriodicToolStripMenuItem.Text = "&Periodic"
         '
         'StopToolStripMenuItem
         '
         Me.StopToolStripMenuItem.Enabled = False
         Me.StopToolStripMenuItem.Name = "StopToolStripMenuItem"
-        Me.StopToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.StopToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.StopToolStripMenuItem.Text = "&Stop"
         '
         'ConfigurationToolStripMenuItem
@@ -655,13 +655,18 @@ Partial Class MainForm
         'ConfigureAllASICToolStripMenuItem
         '
         Me.ConfigureAllASICToolStripMenuItem.Name = "ConfigureAllASICToolStripMenuItem"
-        Me.ConfigureAllASICToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.ConfigureAllASICToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
         Me.ConfigureAllASICToolStripMenuItem.Text = "Configure All ASIC"
         '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
+        '
+        'Timer3
+        '
+        Me.Timer3.Enabled = True
+        Me.Timer3.Interval = 500
         '
         'MainForm
         '
@@ -677,7 +682,7 @@ Partial Class MainForm
         Me.IsMdiContainer = True
         Me.MainMenuStrip = Me.MenuStrip
         Me.Name = "MainForm"
-        Me.Text = "Nuclear Instruments & CAEN    SCI-DIGITIZER for ASIC"
+        Me.Text = "Nuclear Instruments & CAEN    DT5550W Readouit Software"
         Me.MenuStrip.ResumeLayout(False)
         Me.MenuStrip.PerformLayout()
         Me.ToolStrip.ResumeLayout(False)
@@ -768,4 +773,5 @@ Partial Class MainForm
     Friend WithEvents ConfigurationToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ConfigureAllASICToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ChannelsMappingToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Timer3 As Timer
 End Class

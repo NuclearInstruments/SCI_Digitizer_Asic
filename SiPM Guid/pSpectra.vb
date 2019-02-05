@@ -85,7 +85,12 @@ Public Class pSpectra
         ListView1.Columns.Item(5).Width = 0
         ListView1.Columns.Item(6).Width = 0
         For Each c In lch
-            ListView1.Items.Add("").SubItems.AddRange({c.ID, c.X, c.Y, c.BOARD, c.MODE, (c.BOARD * 1000000 + c.Y * 1000 + c.X).ToString().PadLeft(10)})
+            If c.MODE = "sum" Then
+                ListView1.Items.Add("").SubItems.AddRange({c.ID, 0, 0, "SUM (ALL)", c.MODE, 0})
+            Else
+                ListView1.Items.Add("").SubItems.AddRange({c.ID, c.X, c.Y, c.BOARD, c.MODE, (c.BOARD * 1000000 + c.Y * 1000 + c.X).ToString().PadLeft(10)})
+            End If
+
             ListView1.Items(ListView1.Items.Count - 1).SubItems(0).Name = "CHECKED"
             ListView1.Items(ListView1.Items.Count - 1).SubItems(1).Name = "ID"
             ListView1.Items(ListView1.Items.Count - 1).SubItems(2).Name = "X"

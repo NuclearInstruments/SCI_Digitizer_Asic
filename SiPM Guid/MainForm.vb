@@ -4,7 +4,7 @@ Imports System.Windows.Forms
 Imports WeifenLuo.WinFormsUI.Docking
 Imports Newtonsoft.Json
 Imports DT5550W_P_lib
-Imports SiPM_Guid.DataStructures
+Imports SciDigitizerAsic.DataStructures
 Imports System.Text
 Imports DT5550W_P_lib.DT5550W
 
@@ -24,6 +24,26 @@ Public Class MainForm
     Public CurrentMCA As New FrameTransfers
     Public CurrentI2C As New iduec
     Public CurrentRegisterList As New List(Of Register)
+
+    Public SoftwareThreshold As Integer
+    Public InputPolarity As Integer
+
+    Public TempSensorSource As Integer = 0
+    Public DisableTempReadingAcq As Boolean = False
+    Public EnableTempComp As Boolean = True
+    Public TempCompCoef As Double = 0
+    Public CurrentHVSet As Double = 25
+    Public CurrentHVON As Boolean = False
+    Public CurrentHVMax As Double = 25
+
+    Public SumSpectrumGain As Double = 25
+
+    Public Structure CorrPoint
+        Public Offset
+        Public Gain
+    End Structure
+
+    Public CorrPoints(16, 128) As CorrPoint
 
     Public fit_enabled = False
     Public board1_id As String
@@ -67,6 +87,8 @@ Public Class MainForm
     Public sAcqTime As Double
     Public sStatus As String
     Public sTargetMode As String
+
+    Public TriggerModeCharge As Boolean
 
     Public Enum FileType
         CSV = 0
@@ -573,8 +595,15 @@ Public Class MainForm
             i = i + 1
         Next
 
-        pRT4.UpdateChannels(CHL)
         pRT5.UpdateChannels(CHL)
+        CHnL.ID = SperctrumSumIndex
+        CHnL.X = 0
+        CHnL.Y = 0
+        CHnL.BOARD = "0000"
+        CHnL.MODE = "sum"
+        CHL.Add(CHnL)
+        pRT4.UpdateChannels(CHL)
+        'pRT5.UpdateChannels(CHL)
         pRT.pImmediate_ReLoad(EY + 1, EX + 1)
         pRT2.pImmediate_ReLoad(EY + 1, EX + 1)
 
@@ -613,13 +642,33 @@ Public Class MainForm
         If Connection.ShowDialog() Then
             Dim newDt As New DT5550W
             newDt.Connect(Connection.ComboBox1.Text)
+
+            AppendToLog(LogMode.mINFO, "Connected to board: " & Connection.ComboBox1.Text)
+            Dim build As UInt32
+            newDt.GetBuild(build)
+            AppendToLog(LogMode.mINFO, "Build firmware version: " & Hex(build))
             If Connection.ComboBox3.Text <> "Auto" Then
-                newDt.SetManualAsicInfo(Connection.ComboBox3.Text)
+                newDt.SetManualAsicInfo(Connection.ComboBox2.Text, Connection.ComboBox3.Text)
+                AppendToLog(LogMode.mINFO, "Manual Daughter Board configuration: ")
+                AppendToLog(LogMode.mINFO, " --> MODEL:  " & Connection.ComboBox2.Text)
+                AppendToLog(LogMode.mINFO, " --> ASIC N: " & Connection.ComboBox3.Text)
+            Else
+                Dim model As String = ""
+                Dim asic_count As Integer
+                Dim SN As Integer
+                newDt.GetDGCardModel(model, asic_count, SN)
+                newDt.SetManualAsicInfo(model, asic_count)
+                AppendToLog(LogMode.mINFO, "Daughter Board automatic detected: ")
+                AppendToLog(LogMode.mINFO, " --> MODEL:  " & model)
+                AppendToLog(LogMode.mINFO, " --> ASIC N: " & asic_count)
+                AppendToLog(LogMode.mINFO, " --> SN:     " & SN)
             End If
+
             DTList.Add(newDt)
             AssignDefaultChannelMapping()
             AssignDefaultBoardChannelMapping()
         Else
+            End
             wRun.Enabled = False
             wSingle.Enabled = False
             wRunStop.Enabled = False
@@ -699,6 +748,7 @@ Public Class MainForm
     End Sub
 
     Public Sub RunOscilloscope()
+        Timer3.Enabled = False
         AppendToLog(LogMode.mINFO, "Starting monitor oscilloscope with periodic update")
         Timer2.Enabled = True
 
@@ -741,6 +791,7 @@ Public Class MainForm
     End Sub
 
     Public Sub StopRun()
+
         pRT4.stopspectrum()
         pRT5.stopspectrum()
         pRT6.stopspectrum()
@@ -776,19 +827,24 @@ Public Class MainForm
         AppendToLog(LogMode.mACQUISITION, "Run completed")
 
         ACQLOCK = False
+        Timer3.Enabled = True
     End Sub
     Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles WspectrumStop.Click
+
         StopRun()
 
     End Sub
 
     Public MatrixCumulative(1) As UInt64
+    Public MatrixCumulativePerAsic(16, 64) As UInt64
+    Public MatrixCumulativePerAsicCount(16, 64) As UInt64
     Public MatrixInst(1) As UInt64
     Public RawESpectrum(1, 1024) As UInt64
     Public RawTSpectrum(1, 1024) As UInt64
     Public RawHitCounter(1, 1) As UInt64
     Public AnalogMonitor(1, 1) As UInt64
     Public ConnectedChannels As UInt32
+    Public SperctrumSumIndex As UInt32
     Public Sub Allocator()
         Dim TotalChannels = 0
         Dim TotalAsic = 0
@@ -800,12 +856,13 @@ Public Class MainForm
             maxChnA = IIf(BI.channelsPerAsic > maxChnA, BI.channelsPerAsic, maxChnA)
         Next
 
-        ReDim RawESpectrum(TotalChannels, 1024)
+        ReDim RawESpectrum(TotalChannels + 1, 1024)
         ReDim RawTSpectrum(TotalChannels, 8192)
         ReDim RawHitCounter(1, TotalChannels)
         ReDim MatrixCumulative(TotalChannels)
         ReDim MatrixInst(TotalChannels)
         ReDim AnalogMonitor(TotalAsic, maxChnA)
+        SperctrumSumIndex = TotalChannels
     End Sub
 
     Public Sub ResetLive()
@@ -830,6 +887,14 @@ Public Class MainForm
         For i = 0 To r1
             MatrixCumulative(i) = 0
         Next
+
+        For i = 0 To 15
+            For j = 0 To 63
+                MatrixCumulativePerAsic(i, j) = 0
+                MatrixCumulativePerAsicCount(i, j) = 0
+            Next
+        Next
+
 
         r1 = MatrixInst.GetUpperBound(0)
         For i = 0 To r1
@@ -862,6 +927,9 @@ Public Class MainForm
     Public TSM As TimeSpectrumMode = 2
     Public TimePsBin As UInt64 = 70
     Dim StartTime As Date
+
+
+
     Public Sub AcquisitionThread(board As DT5550W, file As String, TransferSize As Integer, BoardArrayOffset As Integer)
         Dim BI As DT5550W.t_BoardInfo = board.GetBoardInfo
         Dim Buffer(BI.DigitalDataPacketSize * TransferSize * 2) As UInt32
@@ -916,11 +984,51 @@ Public Class MainForm
         End If
 
 
+
+        Dim TempTime = Now
         sByteCounter = 0
         StartTime = Now
         While running
             DwnTime = Now
+            If DisableTempReadingAcq = False Then
+                If (Now - TempTime).TotalMilliseconds > 10000 Then
+                    Dim tA = -1000, tb = -1000
+                    If TempSensorSource = 0 Then
+                        board.GetSensTemperature(0, tA)
+                        If board.GetBoardInfo.totalAsics > 2 Then
+                            board.GetSensTemperature(1, tb)
+                        End If
+                    Else
+                        board.GetSensTemperature(2, tA)
+                    End If
+
+                    If EnableTempComp Then
+                        Dim tAv = 0
+                        If tb > -150 Then
+                            tAv = (tA + tb) / 2
+                        Else
+                            tAv = tA
+                        End If
+                        board.SetHVTempFB(CurrentHVON, CurrentHVSet, CurrentHVMax, TempCompCoef, tAv)
+                    End If
+
+                    Me.Invoke(Sub()
+                                  plog.UpdateSiPMTemp(tA, tb)
+                                  Dim enable, voltage, current
+                                  If board.GetHV(enable, voltage, current) Then
+                                      plog.UpdateHvStatus(enable, voltage, current)
+                                  End If
+
+                              End Sub
+                    )
+
+
+                    TempTime = Now
+                End If
+            End If
+
             board.GetRawBuffer(Buffer, TransferSize, 4000, BI.DigitalDataPacketSize, ValidWord)
+            'boa
             tDwnTime = Now - DwnTime
             sAcqTime = tDwnTime.TotalMilliseconds
             If EnableSaveFile = True Then   'FILE SAVE
@@ -942,12 +1050,25 @@ Public Class MainForm
             If CurrentProcessMode > ProcessMode.OFF Then
                 EventsBefore = TotalEvents
                 ClustersBefore = TotalClusters
-                DecodedEvents = board.DecodePetirocRowEvents(Buffer, ValidWord, Events)
+                DecodedEvents = board.DecodePetirocRowEvents(Buffer, ValidWord, Events, 0, InputPolarity)
+
+
                 DecodedClusters = 0
                 If CurrentProcessMode = ProcessMode.EVENT_DECODE Then
                     While Events.Count > 0
+
+
                         Dim strline = ""
                         Dim e = Events.Dequeue
+
+                        For j = 0 To BI.channelsPerAsic - 1
+                            Dim vtemp As Double = (CType(e.charge(j), Double) + CorrPoints(e.AsicID, j).Offset) * CorrPoints(e.AsicID, j).Gain
+                            vtemp = IIf(vtemp < 0, 0, vtemp)
+                            vtemp = IIf(vtemp > 1023, 1023, vtemp)
+                            e.charge(j) = vtemp
+                            e.charge(j) = IIf(e.charge(j) > SoftwareThreshold, e.charge(j), 0)
+                        Next
+
                         If SaveFileType = FileType.CSV And EnableSaveFile = True Then
                             strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode_ns & ";" & e.EventTimecode & ";" & String.Join(";", e.hit) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
                             tx.WriteLine(strline)
@@ -960,19 +1081,24 @@ Public Class MainForm
                             MatrixInst(t) = 0
                         Next
 
-
+                        Dim EnergySum = 0
                         Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
                         For j = 0 To BI.channelsPerAsic - 1
                             Dim c = SpXIndx + j
                             If c < RawESpectrum.GetUpperBound(0) Then
                                 If e.charge(j) > 4 Then
                                     RawESpectrum(c, e.charge(j)) += 1
+                                    EnergySum += e.charge(j)
+                                    'RawESpectrum(SperctrumSumIndex, e.charge(j)) += 1
                                 End If
+                                MatrixCumulative(c) += e.charge(j) ' quest due righe erano dentro hit
+                                MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
+                                MatrixCumulativePerAsicCount(e.AsicID, j) += 1
+                                MatrixInst(c) = e.charge(j)
+
                                 If e.hit(j) = True Then
-                                    MatrixCumulative(c) += e.charge(j)
-                                    MatrixInst(c) = e.charge(j)
                                     Dim time As Double = 0
-                                    time = e.EventTimecode_ns + e.relative_time(j)
+                                    time = e.Time(j) 'e.EventTimecode_ns + e.relative_time(j)
                                     Dim deltaTime = time
                                     deltaTime = (deltaTime * 1000) / (TimePsBin)
                                     If deltaTime >= 0 And deltaTime < RawTSpectrum.GetUpperBound(1) Then
@@ -982,6 +1108,13 @@ Public Class MainForm
                                 End If
                             End If
                         Next
+
+
+                        Dim spesum_bin
+                        spesum_bin = Math.Round(Math.Min(EnergySum * SumSpectrumGain, 1023))
+                        If spesum_bin > 0 Then
+                            RawESpectrum(SperctrumSumIndex, spesum_bin) += 1
+                        End If
 
                         TotalEvents += DecodedEvents
                         pRT4.PostData(RawESpectrum, RawESpectrum.GetUpperBound(1))
@@ -1043,6 +1176,18 @@ Public Class MainForm
                             newCluster.timecode_ns = newCluster.timecode * BI.FPGATimecode_ns
                             newCluster.Runtimecode_ns = newCluster.Runtimecode * BI.FPGATimecode_ns
                             For Each e In newCluster.Events
+
+                                For j = 0 To BI.channelsPerAsic - 1
+                                    Dim vtemp As Double = (CType(e.charge(j), Double) + CorrPoints(e.AsicID, j).Offset) * CorrPoints(e.AsicID, j).Gain
+                                    vtemp = IIf(vtemp < 0, 0, vtemp)
+                                    vtemp = IIf(vtemp > 1023, 1023, vtemp)
+                                    e.charge(j) = vtemp
+
+                                    e.charge(j) = vtemp '(CType(e.charge(j), Double) + CorrPoints(e.AsicID, j).Offset) * CorrPoints(e.AsicID, j).Gain
+                                    e.charge(j) = IIf(e.charge(j) > SoftwareThreshold, e.charge(j), 0)
+                                Next
+
+
                                 e.EventTimecode -= timecode_min
                                 e.EventTimecode_ns = e.EventTimecode * BI.FPGATimecode_ns
                                 e.RunEventTimecode -= Runtimecode_min
@@ -1082,7 +1227,7 @@ Public Class MainForm
                                 For Each e In Clusters(i).Events
                                     For j = 0 To BI.channelsPerAsic - 1
                                         If e.hit(j) Then
-                                            Dim time As Double = e.EventTimecode_ns + e.relative_time(j)
+                                            Dim time As Double = e.Time(j) ' e.EventTimecode_ns + e.relative_time(j)
                                             TimeRef = IIf(time < TimeRef, time, TimeRef)
                                         End If
                                         'Console.WriteLine(e.FineTime(j))
@@ -1098,7 +1243,7 @@ Public Class MainForm
                                     If e.AsicID = 0 Then
                                         For j = 0 To BI.channelsPerAsic - 1
                                             If e.hit(j) Then
-                                                Dim time As Double = e.EventTimecode_ns + e.relative_time(j)
+                                                Dim time As Double = e.Time(j) ' e.EventTimecode_ns + e.relative_time(j)
                                                 TimeRef = IIf(time < TimeRef, time, TimeRef)
                                             End If
                                             'Console.WriteLine(e.FineTime(j))
@@ -1110,28 +1255,34 @@ Public Class MainForm
                             For t = 0 To MatrixInst.GetUpperBound(0)
                                 MatrixInst(t) = 0
                             Next
+                            Dim EnergySum As Double = 0
                             For Each e In Clusters(i).Events
 
                                 Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
+
                                 For j = 0 To BI.channelsPerAsic - 1
                                     Dim c = SpXIndx + j
                                     If c < RawESpectrum.GetUpperBound(0) Then
                                         If e.charge(j) > 4 Then
                                             RawESpectrum(c, e.charge(j)) += 1
+                                            EnergySum += e.charge(j)
                                         End If
+
+                                        MatrixCumulative(c) += e.charge(j) ' quest due righe erano dentro hit
+                                        MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
+                                        MatrixCumulativePerAsicCount(e.AsicID, j) += 1
+                                        MatrixInst(c) = e.charge(j)
                                         If e.hit(j) = True Then
-                                            MatrixCumulative(c) += e.charge(j)
-                                            MatrixInst(c) = e.charge(j)
 
                                             Dim time As Double = 0
 
 
                                             If TSM = TimeSpectrumMode.FIRST_REF Or TimeSpectrumMode.FIRST_REF_ASIC_0 Then
-                                                time = e.EventTimecode_ns + e.relative_time(j)
+                                                time = e.Time(j) 'e.EventTimecode_ns + e.relative_time(j)
                                             End If
 
                                             If TSM = TimeSpectrumMode.T0REF Then
-                                                time = Clusters(i).timecode_ns + e.EventTimecode_ns + e.relative_time(j)
+                                                time = e.Time(j) 'Clusters(i).timecode_ns + e.EventTimecode_ns + e.relative_time(j)
                                                 TimeRef = 0
                                             End If
 
@@ -1144,7 +1295,17 @@ Public Class MainForm
                                         End If
                                     End If
                                 Next
+
+
+
                             Next
+
+                            Dim spesum_bin
+                            spesum_bin = Math.Round(Math.Min(EnergySum * SumSpectrumGain, 1023))
+
+                            If spesum_bin > 0 Then
+                                RawESpectrum(SperctrumSumIndex, spesum_bin) += 1
+                            End If
                         Catch ex As Exception
                             MsgBox(ex.Message)
                             AppendToLog(LogMode.mPROCESS, "Process ERROR: " & ex.Message, BI.SerialNumber)
@@ -1224,6 +1385,8 @@ Public Class MainForm
     End Sub
 
     Public Sub StartRun()
+        Timer3.Enabled = False
+
         running = True
         ACQLOCK = True
         System.Threading.Thread.Sleep(100)
@@ -1288,7 +1451,7 @@ Public Class MainForm
     End Sub
 
     Public Sub StopRunMonitor()
-
+        Timer3.Enabled = False
         Timer2.Enabled = False
         wSingle.Enabled = True
         wRun.Enabled = True
@@ -1314,6 +1477,7 @@ Public Class MainForm
         AppendToLog(LogMode.mINFO, "Stop monitor periodic acquisition")
 
         ACQLOCK = False
+        Timer3.Enabled = True
     End Sub
     Private Sub wRunStop_Click(sender As Object, e As EventArgs) Handles wRunStop.Click
 
@@ -1323,7 +1487,7 @@ Public Class MainForm
     End Sub
 
     Private Sub ToolStripButton2_Click_1(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
-
+        CPSMonitor.Show()
     End Sub
     Dim lastCheck As DateTime = Now
 
@@ -1475,7 +1639,7 @@ Public Class MainForm
             Else
                 sets.HVon.Checked = True
                 For Each dt In DTList
-                    dt.SetHV(sets.HVon.Checked, sets.Voltage.Value)
+                    dt.SetHV(sets.HVon.Checked, sets.Voltage.Value, sets.MaxV.Value)
                 Next
                 hvon.Enabled = False
                 hvoff.Enabled = True
@@ -1489,7 +1653,7 @@ Public Class MainForm
             Else
                 sets.HVon.Checked = False
                 For Each dt In DTList
-                    dt.SetHV(sets.HVon.Checked, sets.Voltage.Value)
+                    dt.SetHV(sets.HVon.Checked, sets.Voltage.Value, sets.MaxV.Value)
                 Next
                 hvon.Enabled = True
                 hvoff.Enabled = False
@@ -1656,4 +1820,83 @@ Public Class MainForm
         End If
     End Sub
 
+    Private Sub Timer3_Tick(sender As Object, e As EventArgs) Handles Timer3.Tick
+        Dim enable As Boolean = False
+        Dim voltage As Double = 0
+        Dim current As Double = 0
+        Dim tA As Double = -1000
+        Dim tB As Double = -1000
+        Dim genable = -1
+        For Each dt In DTList
+            If dt.GetHV(enable, voltage, current) Then
+                plog.UpdateHvStatus(enable, voltage, current)
+                If enable Then
+                    genable = 1
+                Else
+                    genable = Math.Max(genable, 0)
+                End If
+            End If
+
+            dt.GetSensTemperature(0, tA)
+            If dt.GetBoardInfo.totalAsics > 2 Then
+                dt.GetSensTemperature(1, tB)
+            End If
+
+            If TempSensorSource = 0 Then
+                dt.GetSensTemperature(0, tA)
+                If dt.GetBoardInfo.totalAsics > 2 Then
+                    dt.GetSensTemperature(1, tB)
+                End If
+            Else
+                dt.GetSensTemperature(2, tA)
+            End If
+
+            If EnableTempComp Then
+                Dim tAv = 0
+                If tB > -150 Then
+                    tAv = (tA + tB) / 2
+                Else
+                    tAv = tA
+                End If
+                dt.SetHVTempFB(CurrentHVON, CurrentHVSet, CurrentHVMax, TempCompCoef, tAv)
+            End If
+
+
+            plog.UpdateSiPMTemp(tA, tB)
+
+
+        Next
+        If genable >= 0 Then
+            If genable = 1 Then
+                hvon.Enabled = False
+                hvoff.Enabled = True
+
+            Else
+                hvon.Enabled = True
+                hvoff.Enabled = False
+
+            End If
+
+        End If
+
+        Dim cps(1024) As UInt32
+        If Not IsNothing(CPSMonitor) Then
+            CPSMonitor.cps.Rows.Clear()
+            For Each dt In DTList
+                dt.GetCountRate(cps)
+                For i = 0 To dt.GetBoardInfo.totalAsics - 1
+                    For j = 0 To dt.GetBoardInfo.channelsPerAsic
+                        CPSMonitor.cps.Rows.Add(j & "(" & Chr(i + Asc("A")) & ") " & dt.GetBoardInfo.SerialNumber.Substring(4), cps(j + dt.GetBoardInfo.channelsPerAsic * i))
+                    Next
+                Next
+
+            Next
+
+        End If
+
+    End Sub
+
+    Private Sub DefaultConfigurationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultConfigurationToolStripMenuItem.Click
+
+    End Sub
 End Class
