@@ -67,7 +67,7 @@ Public Class RunStart
 
     Public Structure BoardConfig
         Public BoardSN As String
-        Public ConfigPetiroc As List(Of DT5550W_P_lib.DT5550W.PetirocConfig)
+        Public ConfigPetiroc As List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
     End Structure
 
     Structure RunInfoGlobal
@@ -114,9 +114,9 @@ Public Class RunStart
         For Each dt In MainForm.DTList
             Dim aCFG As New BoardConfig
             aCFG.BoardSN = dt.SerialNumber
-            aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W.PetirocConfig)
-            If dt.pCFG.Count > 0 Then
-                For Each pc In dt.pCFG
+            aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
+            If dt.PetirocClass.pCFG.Count > 0 Then
+                For Each pc In dt.PetirocClass.pCFG
                     aCFG.ConfigPetiroc.Add(pc)
                 Next
             End If

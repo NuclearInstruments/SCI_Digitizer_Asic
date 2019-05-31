@@ -347,13 +347,13 @@ Public Class Settings
         MainForm.TriggerModeCharge = IIf(TriggerSelector.SelectedIndex = 1, True, False)
 
         For i = 0 To MainForm.DTList.Count - 1
-            MainForm.DTList(i).pCFG.Clear()
+            MainForm.DTList(i).PetirocClass.pCFG.Clear()
             Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
             For j = 0 To BI.totalAsics - 1
 
                 Dim strPtrc As String
                 Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
-                Dim pC As New PetirocConfig
+                Dim pC As New DT5550W_PETIROC.PetirocConfig
                 For z = 0 To 31
                     pC.inputDAC(z).enable = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("Enableb").Value = 0, False, True)
                     pC.inputDAC(z).value = gridList(i * BI.totalAsics + j).Rows(z).Cells("DACb").Value
@@ -398,34 +398,34 @@ Public Class Settings
 
                 Select Case j
                     Case 0
-                        MainForm.DTList(i).ConfigPetiroc(True, False, False, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(True, False, False, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 1
-                        MainForm.DTList(i).ConfigPetiroc(False, True, False, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, True, False, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 2
-                        MainForm.DTList(i).ConfigPetiroc(False, False, True, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, False, True, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 3
-                        MainForm.DTList(i).ConfigPetiroc(False, False, False, True, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, False, False, True, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                 End Select
-                Dim t0m As DT5550W_P_lib.DT5550W.T0Mode
+                Dim t0m As DT5550W_P_lib.T0Mode
 
                 Select Case T0Mode.SelectedIndex
                     Case 0
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_STARTRUN
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_STARTRUN
                         MainForm.TSM = MainForm.TimeSpectrumMode.FIRST_REF
                     Case 1
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_STARTRUN
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_STARTRUN
                         MainForm.TSM = MainForm.TimeSpectrumMode.FIRST_REF_ASIC_0
 
                     Case 2
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_PERIODIC
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_PERIODIC
                         MainForm.TSM = MainForm.TimeSpectrumMode.T0REF
 
                     Case 3
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.EXTERNAL
+                        t0m = DT5550W_P_lib.T0Mode.EXTERNAL
                         MainForm.TSM = MainForm.TimeSpectrumMode.T0REF
 
                 End Select
@@ -508,7 +508,7 @@ Public Class Settings
             For j = 0 To BI.totalAsics - 1
 
                 Dim MonitorWord() As UInt32 = New UInt32((7) - 1) {}
-                Dim pC As New PetirocConfig
+                Dim pC As New DT5550W_PETIROC.PetirocConfig
                 pC.PetirocMonitorSelector = monitorMux.SelectedIndex
 
                 pC.MonitorChannel = moniorCH.Value
@@ -650,6 +650,10 @@ Public Class Settings
     End Sub
 
     Private Sub TempSensor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TempSensor.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
 
     End Sub
 End Class

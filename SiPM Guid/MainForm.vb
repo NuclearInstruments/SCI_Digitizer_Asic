@@ -6,12 +6,13 @@ Imports Newtonsoft.Json
 Imports DT5550W_P_lib
 Imports SciDigitizerAsic.DataStructures
 Imports System.Text
-Imports DT5550W_P_lib.DT5550W
+Imports DT5550W_P_lib.DT5550W_HAL
+Imports DT5550W_P_lib.DT5550W_PETIROC
 
 Public Class MainForm
     Public TransferSize As Integer = 10
-    Public DTList As List(Of DT5550W)
-    Public dt_obj As DT5550W = New DT5550W
+    Public DTList As List(Of DT5550W_HAL)
+    Public dt_obj As DT5550W_HAL = New DT5550W_HAL()
     Public nboard As Integer = 0
 
     Public GC As New List(Of AsicChannel)
@@ -111,9 +112,11 @@ Public Class MainForm
     Public RunCompleted As Boolean = False
 
     Public Sub UpdateOscilloscope()
-        Dim PMD As New DT5550W_P_lib.DT5550W.PetirocMonitorData(2048)
-        DTList(pRT8.ComboBox1.SelectedIndex).GetMoitor(PMD, 2048)
+        Dim PMD As New DT5550W_P_lib.DT5550W_PETIROC.PetirocMonitorData(2048)
+        DTList(pRT8.ComboBox1.SelectedIndex).GetMonitor(PMD, 2048)
         pRT8.Plot(PMD)
+
+
 
     End Sub
 
@@ -469,23 +472,23 @@ Public Class MainForm
     End Sub
     Public Sub AssignDefaultBoardChannelMapping()
 
-        Dim boardCM() As DT5550W.tChannelMapping
-            Dim Xoffset = 0
-            Dim pixOffset = 0
-            For Each dt In DTList
-                If (dt.GetDefaultChannelMapping(boardCM)) Then
-                    For i = 0 To boardCM.Length - 1
-                        GC(pixOffset).Asic = boardCM(i).ASICID
-                        GC(pixOffset).X = Xoffset + boardCM(i).X
-                        GC(pixOffset).Y = boardCM(i).Y
+        Dim boardCM() As DT5550W_P_lib.tChannelMapping
+        Dim Xoffset = 0
+        Dim pixOffset = 0
+        For Each dt In DTList
+            If (dt.GetDefaultChannelMapping(boardCM)) Then
+                For i = 0 To boardCM.Length - 1
+                    GC(pixOffset).Asic = boardCM(i).ASICID
+                    GC(pixOffset).X = Xoffset + boardCM(i).X
+                    GC(pixOffset).Y = boardCM(i).Y
 
-                        pixOffset += 1
-                    Next
-                End If
+                    pixOffset += 1
+                Next
+            End If
 
-                Dim BI = dt.GetBoardInfo
-                Xoffset += BI.totalAsics * 4
-            Next
+            Dim BI = dt.GetBoardInfo
+            Xoffset += BI.totalAsics * 4
+        Next
 
 
     End Sub
@@ -494,8 +497,8 @@ Public Class MainForm
         GC.Clear()
         Dim brdCnt = 0
         For Each dt In DTList
-            Dim boardInfo As DT5550W.t_BoardInfo = dt.GetBoardInfo
-            If boardInfo.DefaultDetectorLayout = DT5550W.t_BoardInfo.t_DefaultDetectorLayout.MATRIX_8x8 Then
+            Dim boardInfo As t_BoardInfo = dt.GetBoardInfo
+            If boardInfo.DefaultDetectorLayout = t_BoardInfo.t_DefaultDetectorLayout.MATRIX_8x8 Then
                 For i = 0 To boardInfo.totalAsics - 1
                     For j = 0 To boardInfo.channelsPerAsic - 1
                         Dim ch As New AsicChannel
@@ -511,7 +514,7 @@ Public Class MainForm
                 Next
             End If
 
-            If boardInfo.DefaultDetectorLayout = DT5550W.t_BoardInfo.t_DefaultDetectorLayout.LINEAR Then
+            If boardInfo.DefaultDetectorLayout = t_BoardInfo.t_DefaultDetectorLayout.LINEAR Then
                 For i = 0 To boardInfo.totalAsics - 1
                     For j = 0 To boardInfo.channelsPerAsic - 1
                         Dim ch As New AsicChannel
@@ -586,9 +589,9 @@ Public Class MainForm
             'chl.Add("[" & eGC.Y + 1 & "," & eGC.X + 1 & "]")
             If eGC.ValidLocation Then
                 CHnL.ID = i
-            CHnL.X = eGC.X + 1
-            CHnL.Y = eGC.Y + 1
-            CHnL.BOARD = eGC.Board.Substring(4)
+                CHnL.X = eGC.X + 1
+                CHnL.Y = eGC.Y + 1
+                CHnL.BOARD = eGC.Board.Substring(4)
                 CHnL.MODE = "channel"
             End If
             CHL.Add(CHnL)
@@ -638,31 +641,32 @@ Public Class MainForm
         '  rdc = New MADAReadOut
         '  rdc.caller = Me
         ' rdc.ConnectToBoard(board1, board2)
-        DTList = New List(Of DT5550W)
+        DTList = New List(Of DT5550W_HAL)
         If Connection.ShowDialog() Then
-            Dim newDt As New DT5550W
-            newDt.Connect(Connection.ComboBox1.Text)
+            Dim newDt As New DT5550W_HAL
+            If Connection.ComboBox3.Text <> "Auto" Then
+                Dim AM As t_AsicModels = t_AsicModels.PETIROC
+                newDt.Connect(Connection.ComboBox1.Text, AM, Connection.ComboBox3.Text)
+                AppendToLog(LogMode.mINFO, "Manual Daughter Board configuration: ")
+                AppendToLog(LogMode.mINFO, " --> MODEL:  " & Connection.ComboBox2.Text)
+                AppendToLog(LogMode.mINFO, " --> ASIC N: " & Connection.ComboBox3.Text)
+
+            Else
+                Dim model As String = ""
+                Dim asic_count As Integer
+                Dim SN As Integer
+                newDt.Connect(Connection.ComboBox1.Text)
+                newDt.GetDGCardModel(model, asic_count, SN)
+                AppendToLog(LogMode.mINFO, " --> MODEL:  " & model)
+                AppendToLog(LogMode.mINFO, " --> ASIC N: " & asic_count)
+                AppendToLog(LogMode.mINFO, " --> SN:     " & SN)
+            End If
+
 
             AppendToLog(LogMode.mINFO, "Connected to board: " & Connection.ComboBox1.Text)
             Dim build As UInt32
             newDt.GetBuild(build)
             AppendToLog(LogMode.mINFO, "Build firmware version: " & Hex(build))
-            If Connection.ComboBox3.Text <> "Auto" Then
-                newDt.SetManualAsicInfo(Connection.ComboBox2.Text, Connection.ComboBox3.Text)
-                AppendToLog(LogMode.mINFO, "Manual Daughter Board configuration: ")
-                AppendToLog(LogMode.mINFO, " --> MODEL:  " & Connection.ComboBox2.Text)
-                AppendToLog(LogMode.mINFO, " --> ASIC N: " & Connection.ComboBox3.Text)
-            Else
-                Dim model As String = ""
-                Dim asic_count As Integer
-                Dim SN As Integer
-                newDt.GetDGCardModel(model, asic_count, SN)
-                newDt.SetManualAsicInfo(model, asic_count)
-                AppendToLog(LogMode.mINFO, "Daughter Board automatic detected: ")
-                AppendToLog(LogMode.mINFO, " --> MODEL:  " & model)
-                AppendToLog(LogMode.mINFO, " --> ASIC N: " & asic_count)
-                AppendToLog(LogMode.mINFO, " --> SN:     " & SN)
-            End If
 
             DTList.Add(newDt)
             AssignDefaultChannelMapping()
@@ -850,7 +854,7 @@ Public Class MainForm
         Dim TotalAsic = 0
         Dim maxChnA = 0
         For Each dt In DTList
-            Dim BI As DT5550W.t_BoardInfo = dt.GetBoardInfo
+            Dim BI As t_BoardInfo = dt.GetBoardInfo
             TotalChannels += BI.totalChannels
             TotalAsic += BI.totalAsics
             maxChnA = IIf(BI.channelsPerAsic > maxChnA, BI.channelsPerAsic, maxChnA)
@@ -915,7 +919,7 @@ Public Class MainForm
         Public Runtimecode_ns As Double
 
         Public id As UInt64
-        Public Events As New List(Of DT5550W.t_DataPETIROC)
+        Public Events As New List(Of t_DataPETIROC)
     End Class
 
     Public Enum TimeSpectrumMode
@@ -930,12 +934,12 @@ Public Class MainForm
 
 
 
-    Public Sub AcquisitionThread(board As DT5550W, file As String, TransferSize As Integer, BoardArrayOffset As Integer)
-        Dim BI As DT5550W.t_BoardInfo = board.GetBoardInfo
+    Public Sub AcquisitionThread(board As DT5550W_HAL, file As String, TransferSize As Integer, BoardArrayOffset As Integer)
+        Dim BI As t_BoardInfo = board.GetBoardInfo
         Dim Buffer(BI.DigitalDataPacketSize * TransferSize * 2) As UInt32
         Dim ValidWord As UInt32 = 0
         board.FlushFIFO()
-        Dim Events As New Queue(Of DT5550W.t_DataPETIROC)
+        Dim Events As New Queue(Of DT5550W_PETIROC.t_DataPETIROC)
         Dim Clusters As New List(Of Cluster)
         Dim TotalEvents = 0
         Dim DecodedEvents = 0
@@ -1037,7 +1041,7 @@ Public Class MainForm
             End If
         End If
 
-            Dim TempTime = Now
+        Dim TempTime = Now
         sByteCounter = 0
         StartTime = Now
         While running
@@ -1485,7 +1489,7 @@ Public Class MainForm
         Dim t As New Task(Sub()
                               Dim CHO = 0
                               For i = 0 To BoardLaunch - 1
-                                  Dim BI As DT5550W.t_BoardInfo = DTList(i).GetBoardInfo
+                                  Dim BI As t_BoardInfo = DTList(i).GetBoardInfo
                                   CHO += BI.totalChannels
                               Next
                               AcquisitionThread(DTList(BoardLaunch), "c:\temp\temp.txt", TransferSize, CHO)

@@ -44,7 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DT5550W.cs" />
+    <Compile Include="DT5550W-CITIROC.cs" />
+    <Compile Include="DT5550W-PETIROC.cs" />
+    <Compile Include="DT5550W_common.cs" />
+    <Compile Include="DT5550W_HAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

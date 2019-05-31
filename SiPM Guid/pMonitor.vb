@@ -167,7 +167,7 @@ Public Class pMonitor
     End Sub
 
 
-    Public Sub Plot(PMD As DT5550W_P_lib.DT5550W.PetirocMonitorData)
+    Public Sub Plot(PMD As DT5550W_P_lib.DT5550W_PETIROC.PetirocMonitorData)
         Dim tmpYData2(2048 * 9) As Single
         Dim v1 = 0
         Dim v2 = 0
@@ -247,7 +247,7 @@ Public Class pMonitor
 
         Pesgo1.Invalidate()
 
-            Pesgo1.PeFunction.ReinitializeResetImage()
+        Pesgo1.PeFunction.ReinitializeResetImage()
 
     End Sub
 
