@@ -66,9 +66,8 @@ namespace DT5550W_P_lib
         const UInt32 DAQ_RESET_TDC_T0 = 0xFFFFF91B;
 
 
-
-
-
+        const UInt32 HOLD_EXT_DALAY = 0xFFFFF91C;
+        const UInt32 HOLD_EXT_ENABLE = 0xFFFFF91D;
 
 
 
@@ -1597,6 +1596,26 @@ namespace DT5550W_P_lib
             if (phy.NI_USB3_WriteReg_M((uint)((((A1?0:1))<<3) + (((A2 ? 0 : 1)) << 2) + (((A3 ? 0 : 1)) << 1) + (((A4 ? 0 : 1)) << 0)), RFA_PTROC_ASIC_DISABLE) != 0)
                 return;
         }
+
+
+        public void ConfigureExtHold(float delay, bool ext_hold_enable)
+        {
+            UInt32 idelay;
+            if (ext_hold_enable)
+            {
+                phy.NI_USB3_WriteReg_M((UInt32)1, HOLD_EXT_ENABLE);
+            }
+            else
+            {
+                phy.NI_USB3_WriteReg_M((UInt32)0, HOLD_EXT_ENABLE);
+            }
+
+            idelay = (UInt32) (delay / 3.125)+1;    
+
+            phy.NI_USB3_WriteReg_M((UInt32)idelay, HOLD_EXT_DALAY);
+            
+        }
+
 
     }
 

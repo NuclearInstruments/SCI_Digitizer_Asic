@@ -52,19 +52,21 @@ namespace DT5550W_P_lib
                 return false;
             }
                 
-            if (model == "PETIROC")
+            if (model == "PET")
             {
+                ConnectedAsic = t_AsicModels.PETIROC;
                 PetirocClass = new DT5550W_PETIROC(ref phy);
-                PetirocClass.SetManualAsicInfo("PETIROC", asic_count);
+                PetirocClass.SetManualAsicInfo("PET", asic_count);
                 PetirocClass.PowerASIC(false);
                 PetirocClass.PowerASIC(true);
             }
             else
             {
-                if (model == "CITIROC")
+                if (model == "CIT")
                 {
+                    ConnectedAsic = t_AsicModels.PETIROC;
                     CitirocClass = new DT5550W_CITIROC(ref phy);
-                    CitirocClass.SetManualAsicInfo("CITIROC", asic_count);
+                    CitirocClass.SetManualAsicInfo("CIT", asic_count);
                 }
                 else
                 {
@@ -91,7 +93,7 @@ namespace DT5550W_P_lib
                 if (ConnectedAsic == t_AsicModels.PETIROC)
                 {
                     PetirocClass = new DT5550W_PETIROC(ref phy);
-                    PetirocClass.SetManualAsicInfo("PETIROC", AsicCount);
+                    PetirocClass.SetManualAsicInfo("PET", AsicCount);
                     PetirocClass.PowerASIC(false);
                     PetirocClass.PowerASIC(true);
 
@@ -100,7 +102,7 @@ namespace DT5550W_P_lib
                 if(ConnectedAsic == t_AsicModels.CITIROC)
                 {
                     CitirocClass = new DT5550W_CITIROC(ref phy);
-                    CitirocClass.SetManualAsicInfo("CITIROC", AsicCount);
+                    CitirocClass.SetManualAsicInfo("CIT", AsicCount);
                 }
 
                 phy.NI_USB3_SetIICControllerBaseAddress_M(
@@ -426,6 +428,14 @@ namespace DT5550W_P_lib
                 CitirocClass.FlushFIFO();        
         }
 
+
+        public void ConfigureExtHold(float delay, bool ext_hold_enable)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                PetirocClass.ConfigureExtHold(delay, ext_hold_enable);
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                ;
+        }
 
     }
 }

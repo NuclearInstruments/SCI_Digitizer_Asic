@@ -39,9 +39,7 @@ Partial Class Settings
         Me.A_ShaperCI = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.EnableGlobalTrigger = New System.Windows.Forms.CheckBox()
-        Me.EnableExternalTrigger = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.EnableExternalVeto = New System.Windows.Forms.CheckBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
@@ -108,6 +106,10 @@ Partial Class Settings
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.TriggerMode = New System.Windows.Forms.ComboBox()
+        Me.ExtTrigDelay = New System.Windows.Forms.NumericUpDown()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -117,7 +119,6 @@ Partial Class Settings
         Me.TabPage3.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage4.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -138,6 +139,7 @@ Partial Class Settings
         CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -314,9 +316,11 @@ Partial Class Settings
         '
         'TabPage4
         '
-        Me.TabPage4.Controls.Add(Me.PictureBox2)
+        Me.TabPage4.Controls.Add(Me.Label27)
+        Me.TabPage4.Controls.Add(Me.Label26)
+        Me.TabPage4.Controls.Add(Me.ExtTrigDelay)
+        Me.TabPage4.Controls.Add(Me.TriggerMode)
         Me.TabPage4.Controls.Add(Me.EnableGlobalTrigger)
-        Me.TabPage4.Controls.Add(Me.EnableExternalTrigger)
         Me.TabPage4.Controls.Add(Me.GroupBox2)
         Me.TabPage4.Controls.Add(Me.A_TimeTHR)
         Me.TabPage4.Controls.Add(Me.Label3)
@@ -339,35 +343,15 @@ Partial Class Settings
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
         '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = Global.SciDigitizerAsic.My.Resources.Resources.TriggerHold
-        Me.PictureBox2.Location = New System.Drawing.Point(306, 52)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(349, 190)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 77
-        Me.PictureBox2.TabStop = False
-        '
         'EnableGlobalTrigger
         '
         Me.EnableGlobalTrigger.AutoSize = True
-        Me.EnableGlobalTrigger.Location = New System.Drawing.Point(669, 23)
+        Me.EnableGlobalTrigger.Location = New System.Drawing.Point(570, 20)
         Me.EnableGlobalTrigger.Name = "EnableGlobalTrigger"
         Me.EnableGlobalTrigger.Size = New System.Drawing.Size(128, 17)
         Me.EnableGlobalTrigger.TabIndex = 76
         Me.EnableGlobalTrigger.Text = "Enable Global Trigger"
         Me.EnableGlobalTrigger.UseVisualStyleBackColor = True
-        '
-        'EnableExternalTrigger
-        '
-        Me.EnableExternalTrigger.AutoSize = True
-        Me.EnableExternalTrigger.Location = New System.Drawing.Point(519, 23)
-        Me.EnableExternalTrigger.Name = "EnableExternalTrigger"
-        Me.EnableExternalTrigger.Size = New System.Drawing.Size(136, 17)
-        Me.EnableExternalTrigger.TabIndex = 75
-        Me.EnableExternalTrigger.Text = "Enable External Trigger"
-        Me.EnableExternalTrigger.UseVisualStyleBackColor = True
         '
         'GroupBox2
         '
@@ -376,9 +360,9 @@ Partial Class Settings
         Me.GroupBox2.Controls.Add(Me.CheckBox3)
         Me.GroupBox2.Controls.Add(Me.CheckBox2)
         Me.GroupBox2.Controls.Add(Me.CheckBox1)
-        Me.GroupBox2.Location = New System.Drawing.Point(16, 163)
+        Me.GroupBox2.Location = New System.Drawing.Point(570, 84)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(239, 79)
+        Me.GroupBox2.Size = New System.Drawing.Size(195, 79)
         Me.GroupBox2.TabIndex = 74
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "TRIGGER VETO"
@@ -386,7 +370,7 @@ Partial Class Settings
         'EnableExternalVeto
         '
         Me.EnableExternalVeto.AutoSize = True
-        Me.EnableExternalVeto.Location = New System.Drawing.Point(13, 47)
+        Me.EnableExternalVeto.Location = New System.Drawing.Point(13, 51)
         Me.EnableExternalVeto.Name = "EnableExternalVeto"
         Me.EnableExternalVeto.Size = New System.Drawing.Size(125, 17)
         Me.EnableExternalVeto.TabIndex = 4
@@ -437,7 +421,7 @@ Partial Class Settings
         '
         Me.A_TimeTHR.BackColor = System.Drawing.Color.White
         Me.A_TimeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 21)
+        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 51)
         Me.A_TimeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
         Me.A_TimeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.A_TimeTHR.Name = "A_TimeTHR"
@@ -447,7 +431,7 @@ Partial Class Settings
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(13, 23)
+        Me.Label3.Location = New System.Drawing.Point(11, 53)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(91, 13)
         Me.Label3.TabIndex = 24
@@ -457,7 +441,7 @@ Partial Class Settings
         '
         Me.A_ChargeTHR.BackColor = System.Drawing.Color.White
         Me.A_ChargeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 49)
+        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 79)
         Me.A_ChargeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
         Me.A_ChargeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.A_ChargeTHR.Name = "A_ChargeTHR"
@@ -467,7 +451,7 @@ Partial Class Settings
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(13, 51)
+        Me.Label2.Location = New System.Drawing.Point(12, 81)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(92, 13)
         Me.Label2.TabIndex = 23
@@ -477,7 +461,7 @@ Partial Class Settings
         '
         Me.TriggerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.TriggerSelector.FormattingEnabled = True
-        Me.TriggerSelector.Location = New System.Drawing.Point(142, 75)
+        Me.TriggerSelector.Location = New System.Drawing.Point(142, 105)
         Me.TriggerSelector.Name = "TriggerSelector"
         Me.TriggerSelector.Size = New System.Drawing.Size(113, 21)
         Me.TriggerSelector.TabIndex = 70
@@ -485,7 +469,7 @@ Partial Class Settings
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(235, 139)
+        Me.Label17.Location = New System.Drawing.Point(510, 138)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(20, 13)
         Me.Label17.TabIndex = 69
@@ -495,7 +479,7 @@ Partial Class Settings
         '
         Me.A_DelayBox.BackColor = System.Drawing.Color.White
         Me.A_DelayBox.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_DelayBox.Location = New System.Drawing.Point(390, 21)
+        Me.A_DelayBox.Location = New System.Drawing.Point(417, 21)
         Me.A_DelayBox.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
         Me.A_DelayBox.Name = "A_DelayBox"
         Me.A_DelayBox.Size = New System.Drawing.Size(102, 20)
@@ -505,7 +489,7 @@ Partial Class Settings
         '
         Me.SelfFreq.BackColor = System.Drawing.Color.White
         Me.SelfFreq.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.SelfFreq.Location = New System.Drawing.Point(142, 137)
+        Me.SelfFreq.Location = New System.Drawing.Point(417, 136)
         Me.SelfFreq.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
         Me.SelfFreq.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
         Me.SelfFreq.Name = "SelfFreq"
@@ -516,7 +500,7 @@ Partial Class Settings
         'SelfEnable
         '
         Me.SelfEnable.AutoSize = True
-        Me.SelfEnable.Location = New System.Drawing.Point(19, 139)
+        Me.SelfEnable.Location = New System.Drawing.Point(282, 138)
         Me.SelfEnable.Name = "SelfEnable"
         Me.SelfEnable.Size = New System.Drawing.Size(80, 17)
         Me.SelfEnable.TabIndex = 67
@@ -525,17 +509,17 @@ Partial Class Settings
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(303, 24)
+        Me.Label4.Location = New System.Drawing.Point(279, 24)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(70, 13)
+        Me.Label4.Size = New System.Drawing.Size(120, 13)
         Me.Label4.TabIndex = 27
-        Me.Label4.Text = "Delay Trigger"
+        Me.Label4.Text = "Internal Trigger Delay"
         '
         'SoftwareTrigger
         '
         Me.SoftwareTrigger.BackColor = System.Drawing.Color.White
         Me.SoftwareTrigger.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.SoftwareTrigger.Location = New System.Drawing.Point(142, 102)
+        Me.SoftwareTrigger.Location = New System.Drawing.Point(142, 137)
         Me.SoftwareTrigger.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
         Me.SoftwareTrigger.Name = "SoftwareTrigger"
         Me.SoftwareTrigger.Size = New System.Drawing.Size(113, 20)
@@ -543,7 +527,7 @@ Partial Class Settings
         '
         'Label18
         '
-        Me.Label18.Location = New System.Drawing.Point(10, 78)
+        Me.Label18.Location = New System.Drawing.Point(10, 108)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(99, 18)
         Me.Label18.TabIndex = 71
@@ -551,7 +535,7 @@ Partial Class Settings
         '
         'Label19
         '
-        Me.Label19.Location = New System.Drawing.Point(10, 104)
+        Me.Label19.Location = New System.Drawing.Point(10, 139)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(94, 17)
         Me.Label19.TabIndex = 72
@@ -1046,6 +1030,41 @@ Partial Class Settings
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
+        'TriggerMode
+        '
+        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TriggerMode.FormattingEnabled = True
+        Me.TriggerMode.Location = New System.Drawing.Point(142, 21)
+        Me.TriggerMode.Name = "TriggerMode"
+        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
+        Me.TriggerMode.TabIndex = 78
+        '
+        'ExtTrigDelay
+        '
+        Me.ExtTrigDelay.BackColor = System.Drawing.Color.White
+        Me.ExtTrigDelay.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.ExtTrigDelay.Location = New System.Drawing.Point(417, 53)
+        Me.ExtTrigDelay.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.ExtTrigDelay.Name = "ExtTrigDelay"
+        Me.ExtTrigDelay.Size = New System.Drawing.Size(102, 20)
+        Me.ExtTrigDelay.TabIndex = 79
+        '
+        'Label26
+        '
+        Me.Label26.Location = New System.Drawing.Point(11, 24)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(70, 13)
+        Me.Label26.TabIndex = 80
+        Me.Label26.Text = "Trigger Mode"
+        '
+        'Label27
+        '
+        Me.Label27.Location = New System.Drawing.Point(279, 55)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(132, 18)
+        Me.Label27.TabIndex = 81
+        Me.Label27.Text = "External Trigger Delay (ns)"
+        '
         'Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1065,7 +1084,6 @@ Partial Class Settings
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage4.ResumeLayout(False)
         Me.TabPage4.PerformLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1090,6 +1108,7 @@ Partial Class Settings
         CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1160,9 +1179,7 @@ Partial Class Settings
     Friend WithEvents TabPage8 As TabPage
     Friend WithEvents Label22 As Label
     Friend WithEvents Label21 As Label
-    Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents EnableGlobalTrigger As CheckBox
-    Friend WithEvents EnableExternalTrigger As CheckBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents EnableExternalVeto As CheckBox
     Friend WithEvents CheckBox4 As CheckBox
@@ -1180,4 +1197,8 @@ Partial Class Settings
     Friend WithEvents Button1 As Button
     Friend WithEvents SumSpectrumGain As NumericUpDown
     Friend WithEvents Label25 As Label
+    Friend WithEvents TriggerMode As ComboBox
+    Friend WithEvents ExtTrigDelay As NumericUpDown
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label26 As Label
 End Class

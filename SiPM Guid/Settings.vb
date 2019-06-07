@@ -40,6 +40,8 @@ Public Class Settings
         Public SignalPolarity As String
         Public ChargeThreshold As Integer
         Public TimeThreshold As Integer
+        Public TriggerMode As Integer
+        Public ExternalStartDelay As Integer
         Public DelayTrigger As Integer
         Public ShaperCF As String
         Public ShaperCI As String
@@ -94,7 +96,8 @@ Public Class Settings
         cfg.ProcessMode = aProcessingMode.Text
         cfg.FileFormat = aFileFormat.Text
         cfg.ClusterTimens = aClusterTime.Value
-
+        cfg.TriggerMode = TriggerMode.SelectedIndex
+        cfg.ExternalStartDelay = ExtTrigDelay.Value
         ReDim cfg.sA(asicCount)
 
         For q = 0 To asicCount - 1
@@ -163,6 +166,8 @@ Public Class Settings
             aProcessingMode.Text = cfg.ProcessMode
             aFileFormat.Text = cfg.FileFormat
             aClusterTime.Value = cfg.ClusterTimens
+            TriggerMode.SelectedIndex = cfg.TriggerMode
+            ExtTrigDelay.Value = cfg.ExternalStartDelay
 
 
             Dim asC As Integer = IIf(cfg.AsicCount >= asicCount, asicCount, cfg.AsicCount)
@@ -340,6 +345,11 @@ Public Class Settings
         TempSensor.Items.Add("Internal (Avg)")
         TempSensor.Items.Add("External")
         TempSensor.SelectedIndex = 0
+
+        TriggerMode.Items.Add("Internal Trigger")
+        TriggerMode.Items.Add("INT/EXT Trigger")
+        TriggerMode.Items.Add("External")
+        TriggerMode.SelectedIndex = 0
     End Sub
 
     Public Sub UpdateSettings()
@@ -378,6 +388,31 @@ Public Class Settings
                     pC.TriggerOut = False
                 Else
                     pC.TriggerOut = True
+                End If
+
+                'disable T disciminator if external trigger is selected
+                If TriggerMode.SelectedIndex = 2 Then
+                    pC.PowerControl.DiscrT = False
+                    pC.PowerControl.Delay_Discr = False
+                    pC.PowerControl.Delay_Ramp = False
+                    pC.PowerControl.TDC_ramp = False
+                    pC.PulseMode.DiscrT = False
+                    pC.PulseMode.Delay_Discr = False
+                    pC.PulseMode.Delay_Ramp = False
+                    pC.PulseMode.TDC_ramp = False
+                    For z = 0 To 31
+                        pC.InputDiscriminator(z).maskDiscriminatorQ = True
+                        pC.InputDiscriminator(z).maskDiscriminatorT = True
+                    Next
+                Else
+                    pC.PowerControl.DiscrT = True
+                    pC.PowerControl.Delay_Discr = True
+                    pC.PowerControl.Delay_Ramp = True
+                    pC.PowerControl.TDC_ramp = True
+                    pC.PulseMode.DiscrT = True
+                    pC.PulseMode.Delay_Discr = True
+                    pC.PulseMode.Delay_Ramp = True
+                    pC.PulseMode.TDC_ramp = True
                 End If
 
                 MainForm.SoftwareThreshold = SoftwareTrigger.Value
@@ -444,7 +479,21 @@ Public Class Settings
             MainForm.DTList(i).SelectTriggerMode(MainForm.TriggerModeCharge)
 
             MainForm.DTList(i).EnableTriggerFrame(EnableGlobalTrigger.Checked)
-            MainForm.DTList(i).EnableExternalTrigger(EnableExternalTrigger.Checked)
+
+            If TriggerMode.SelectedIndex = 0 Then
+                MainForm.DTList(i).EnableExternalTrigger(False)
+                MainForm.DTList(i).ConfigureExtHold(1, False)
+            End If
+            If TriggerMode.SelectedIndex = 1 Then
+                MainForm.DTList(i).EnableExternalTrigger(True)
+                MainForm.DTList(i).ConfigureExtHold(1, False)
+            End If
+            If TriggerMode.SelectedIndex = 2 Then
+                MainForm.DTList(i).EnableExternalTrigger(False)
+                MainForm.DTList(i).ConfigureExtHold(ExtTrigDelay.Value, True)
+            End If
+
+
             MainForm.DTList(i).EnableExternalVeto(EnableExternalVeto.Checked)
             MainForm.DTList(i).EnableResetTDCOnT0(ResetTDConT0.Checked)
         Next
@@ -654,6 +703,10 @@ Public Class Settings
     End Sub
 
     Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
+
+    End Sub
+
+    Private Sub TriggerMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TriggerMode.SelectedIndexChanged
 
     End Sub
 End Class
