@@ -238,11 +238,7 @@ namespace DT5550W_P_lib
                 public bool LVDS_Tx;
             };
 
-            public enum tPOLARITY
-            {
-                POSITIVE = 0,
-                NEGATIVE = 1
-            }
+          
 
 
             public enum tFBC
@@ -1306,7 +1302,7 @@ namespace DT5550W_P_lib
 
             q = 0;
             chmap = new tChannelMapping[BI.totalAsics * BI.channelsPerAsic];
-            if (BI.AsicType == t_BoardInfo.t_AsicType.PETIROC)
+           // if (BI.AsicType == t_BoardInfo.t_AsicType.PETIROC)
             {
                 int[] xx = { 2, 3, 3, 2, 2, 3, 3, 2, 2, 3, 3, 2, 2, 3, 3, 2, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1 };
                 int[] yy = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0 };

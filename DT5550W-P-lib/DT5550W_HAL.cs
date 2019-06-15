@@ -17,8 +17,7 @@ namespace DT5550W_P_lib
         public DT5550W_PETIROC PetirocClass;
         public DT5550W_CITIROC CitirocClass;
         private t_AsicModels ConnectedAsic;
-
-     
+        
         public  DT5550W_HAL()
         {
             ConnectedAsic = t_AsicModels.INVALID; 
@@ -33,7 +32,7 @@ namespace DT5550W_P_lib
         }
         public bool Connect(String DeviceSerialNumber)
         {
-            String model ="";
+            String model = "AAAAAAAAAAAAAAAAAAA";
             int asic_count = 0;
             int SN = 0;
 
@@ -51,7 +50,7 @@ namespace DT5550W_P_lib
             {
                 return false;
             }
-                
+
             if (model == "PET")
             {
                 ConnectedAsic = t_AsicModels.PETIROC;
@@ -64,7 +63,7 @@ namespace DT5550W_P_lib
             {
                 if (model == "CIT")
                 {
-                    ConnectedAsic = t_AsicModels.PETIROC;
+                    ConnectedAsic = t_AsicModels.CITIROC;
                     CitirocClass = new DT5550W_CITIROC(ref phy);
                     CitirocClass.SetManualAsicInfo("CIT", asic_count);
                 }
@@ -72,8 +71,9 @@ namespace DT5550W_P_lib
                 {
                     return false;
                 }
-            }
 
+            }
+      
             if (retcode == 0)
                 return true;
             else
@@ -216,7 +216,7 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 PetirocClass.SelectTriggerMode(charge_trigger);
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                CitirocClass.SelectTriggerMode(charge_trigger);
+                ;
             
         }
 
@@ -225,7 +225,7 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 PetirocClass.EnableTriggerFrame(enable);
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                CitirocClass.EnableTriggerFrame(enable);
+                ;
 
         }
 
@@ -242,7 +242,7 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 PetirocClass.EnableExternalTrigger(enable);
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                CitirocClass.EnableExternalTrigger(enable);
+                ;
         }
 
         public void EnableResetTDCOnT0(bool enable)
@@ -281,13 +281,22 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.CITIROC)
                 CitirocClass.PulseT0();
         }
-        public bool GetMonitor(ref DT5550W_PETIROC.PetirocMonitorData PMD, uint samples)
+        public bool GetMonitorPetiroc(ref DT5550W_PETIROC.PetirocMonitorData PMD, uint samples)
         {
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 return PetirocClass.GetMonitor(ref PMD, samples);
 
             return false;
         }
+
+        public bool GetMonitorCitiroc(ref CitirocMonitorData PMD)
+        {
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                return CitirocClass.GetMonitor(ref PMD);
+
+            return false;
+        }
+
 
         public bool GetDefaultChannelMapping(ref tChannelMapping[] chmap)
         {
@@ -317,13 +326,24 @@ namespace DT5550W_P_lib
             return -1;
         }
 
-        public int DecodeCitirocRowEvents(ref UInt32[] bufferA, UInt32 valid_wordA, ref Queue<DT5550W_CITIROC.t_CitirocDATA> pC, int ThresholdSoftware)
+        public int DecodeCitirocRowEvents(ref Queue<t_DataCITIROC> pC, int ThresholdSoftware)
         {
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                return CitirocClass.DecodeCitirocRowEvents(ref bufferA, valid_wordA, ref pC, ThresholdSoftware);
+                return CitirocClass.DecodeCitirocRowEvents(ref pC, ThresholdSoftware);
 
             return -1;
         }
+
+
+        public bool  CitirocPushRawDataInBuffer(ref UInt32[] bufferA, UInt32 valid_wordA)
+        {
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                return CitirocClass.PushRawDataInBuffer(ref bufferA, valid_wordA);
+
+            return false;
+        }
+
+
         public bool PetirocAcquisitionDelay(uint value)
         {
             if (ConnectedAsic == t_AsicModels.PETIROC)
@@ -342,7 +362,7 @@ namespace DT5550W_P_lib
             return false;
         }
 
-        public bool ConfigureMonitorPetiroc(bool progA, bool progB, bool progC, bool progD, UInt32[] cfg)
+        public bool ConfigureMonitor(bool progA, bool progB, bool progC, bool progD, UInt32[] cfg)
         {
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 return PetirocClass.ConfigureMonitorPetiroc(progA, progB, progC, progD, cfg);
@@ -385,7 +405,7 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 PetirocClass.VetoSw(veto);
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                CitirocClass.VetoSw(veto);
+                ;
         }
 
         public bool PetirocResetB(bool value)
@@ -435,6 +455,15 @@ namespace DT5550W_P_lib
                 PetirocClass.ConfigureExtHold(delay, ext_hold_enable);
             if (ConnectedAsic == t_AsicModels.CITIROC)
                 ;
+        }
+
+
+        public void CITIROC_SetTriggerMode(TriggerMode TM)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                ;
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                CitirocClass.SelectTriggerMode(TM);
         }
 
     }

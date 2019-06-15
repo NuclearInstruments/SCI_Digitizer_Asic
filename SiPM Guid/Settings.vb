@@ -1,11 +1,20 @@
 ﻿Imports DT5550W_P_lib
 Imports DT5550W_P_lib.DT5550W
 Imports SiPM_Guid.AcquisitionClass
-
+Imports System.Reflection
 Public Class Settings
 
     Dim gridList As New List(Of DataGridView)
+    Public Sub EnableDoubleBuffered(ByVal dgv As DataGridView)
 
+        Dim dgvType As Type = dgv.[GetType]()
+
+        Dim pi As PropertyInfo = dgvType.GetProperty("DoubleBuffered",
+                                                 BindingFlags.Instance Or BindingFlags.NonPublic)
+
+        pi.SetValue(dgv, True, Nothing)
+
+    End Sub
 
     Public Class ClassSettings
         Public Class SingleAsicCFG
@@ -227,6 +236,9 @@ Public Class Settings
 
                 Dim ControlPage As New TabPage
                 Dim dgw As New DataGridView
+
+                EnableDoubleBuffered(dgw)
+
                 gridList.Add(dgw)
                 ControlPage.Controls.Add(dgw)
                 ControlPage.Text = "(" & ABCDLETTERS(j) & ") " & MainForm.DTList(i).SerialNumber
@@ -377,7 +389,7 @@ Public Class Settings
 
                 Next
 
-                pC.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
+                pC.InputPolarity = IIf(A_polarity.SelectedIndex = 0, tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
                 pC.DAC_Q_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_ChargeTHR.Value, A_ChargeTHR.Value)
                 pC.DAC_T_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_TimeTHR.Value, A_TimeTHR.Value)
                 pC.DelayTrigger = A_DelayBox.Value
@@ -416,7 +428,7 @@ Public Class Settings
                 End If
 
                 MainForm.SoftwareThreshold = SoftwareTrigger.Value
-                MainForm.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
+                MainForm.InputPolarity = IIf(A_polarity.SelectedIndex = 0, tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
                 'pC.TriggerLatch = True
                 'pC.Raz_Ext = False
                 'pC.Raz_Int = True
@@ -576,13 +588,13 @@ Public Class Settings
 
                 Select Case j
                     Case 0
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(True, False, False, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(True, False, False, False, MonitorWord)
                     Case 1
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, True, False, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, True, False, False, MonitorWord)
                     Case 2
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, False, True, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, False, True, False, MonitorWord)
                     Case 3
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, False, False, True, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, False, False, True, MonitorWord)
                 End Select
 
                 MainForm.DTList(i).EnableAnalogReadoutMonitor(aAnalogRead.Checked)
@@ -707,6 +719,10 @@ Public Class Settings
     End Sub
 
     Private Sub TriggerMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TriggerMode.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub SumSpectrumGain_ValueChanged(sender As Object, e As EventArgs) Handles SumSpectrumGain.ValueChanged
 
     End Sub
 End Class

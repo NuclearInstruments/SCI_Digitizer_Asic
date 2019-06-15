@@ -1,11 +1,20 @@
 ﻿
 Imports DT5550W_P_lib
 Imports SciDigitizerAsic.Settings.ClassSettings
-
+Imports System.Reflection
 Public Class Settings_Citiroc
     Dim gridList As New List(Of DataGridView)
 
+    Public Sub EnableDoubleBuffered(ByVal dgv As DataGridView)
 
+        Dim dgvType As Type = dgv.[GetType]()
+
+        Dim pi As PropertyInfo = dgvType.GetProperty("DoubleBuffered",
+                                                 BindingFlags.Instance Or BindingFlags.NonPublic)
+
+        pi.SetValue(dgv, True, Nothing)
+
+    End Sub
     Public Function GetSettingsClass() As WeeRocAsicCommonSettings
         Dim cfg As New WeeRocAsicCommonSettings
         Dim asicCount As Integer = 0
@@ -26,7 +35,7 @@ Public Class Settings_Citiroc
         cfg.HvOutputOn = HVon.Checked
         cfg.HVVoltage = Voltage.Value
         cfg.T0Freq = T0Freq.Value
-        cfg.SelfTriggerEnable = SelfEnable.Checked
+
         cfg.SelfTRiggerFreq = SelfFreq.Value
         cfg.MonitorMux = monitorMuxAnalog.Text
         cfg.Channel = moniorCHAnalog.Value
@@ -45,7 +54,7 @@ Public Class Settings_Citiroc
         cfg.SCABias = ScaBias.Text
         cfg.InputDacReference = InputDacReference.Text
         cfg.PreampBias = PreampBias.Text
-        cfg.TriggerSelector = TriggerSelector.Text
+
         cfg.TriggerMode = TriggerMode.Text
         cfg.TriggerLatch = LatchTrigger.Checked
 
@@ -111,7 +120,7 @@ Public Class Settings_Citiroc
             HVon.Checked = cfg.HvOutputOn
             Voltage.Value = cfg.HVVoltage
             T0Freq.Value = cfg.T0Freq
-            SelfEnable.Checked = cfg.SelfTriggerEnable
+
             SelfFreq.Value = cfg.SelfTRiggerFreq
             monitorMuxAnalog.Text = cfg.MonitorMux
             moniorCHAnalog.Value = cfg.Channel
@@ -130,7 +139,7 @@ Public Class Settings_Citiroc
             ScaBias.Text = cfg.SCABias
             InputDacReference.Text = cfg.InputDacReference
             PreampBias.Text = cfg.PreampBias
-            TriggerSelector.Text = cfg.TriggerSelector
+
             TriggerMode.Text = cfg.TriggerMode
             LatchTrigger.Checked = cfg.TriggerLatch
 
@@ -195,6 +204,9 @@ Public Class Settings_Citiroc
 
                 Dim ControlPage As New TabPage
                 Dim dgw As New DataGridView
+
+                EnableDoubleBuffered(dgw)
+
                 gridList.Add(dgw)
                 ControlPage.Controls.Add(dgw)
                 ControlPage.Text = "(" & ABCDLETTERS(j) & ") " & MainForm.DTList(i).SerialNumber
@@ -215,6 +227,7 @@ Public Class Settings_Citiroc
                 dgw.Columns.Add(chk)
                 chk.HeaderText = "Test (LG)"
                 chk.Name = "testLG"
+                chk = New DataGridViewCheckBoxColumn
                 dgw.Columns.Add(chk)
                 chk.HeaderText = "Test (HG)"
                 chk.Name = "testHG"
@@ -254,7 +267,7 @@ Public Class Settings_Citiroc
                     'End If
 
                     Dim myString As String = k.ToString
-                    dgw.Rows.Add(("CHANNEL " + myString), 1, 128, 0, kill, 32, 1.0, 0)
+                    dgw.Rows.Add(("CHANNEL " + myString), 1, 128, 0, 0, 0, 0, 4, 7, 7, 1.0, 0)
                     k = (k + 1)
                 Loop
                 TabControl1.TabPages.Add(ControlPage)
@@ -263,12 +276,12 @@ Public Class Settings_Citiroc
 
         Next
 
-        EnergyModeHG.Items.Add("SCA")
         EnergyModeHG.Items.Add("Peak Sense")
+        EnergyModeHG.Items.Add("SCA")
         EnergyModeHG.SelectedIndex = 0
 
-        EnergyModeLG.Items.Add("SCA")
         EnergyModeLG.Items.Add("Peak Sense")
+        EnergyModeLG.Items.Add("SCA")
         EnergyModeLG.SelectedIndex = 0
 
         For i = 0 To 7
@@ -290,6 +303,9 @@ Public Class Settings_Citiroc
         PreampBias.Items.Add("Weak")
         PreampBias.SelectedIndex = 0
 
+        ScaBias.Items.Add("Normal")
+        ScaBias.Items.Add("Weak")
+        ScaBias.SelectedIndex = 0
 
         A_ChargeTHR.Value = 300
         A_TimeTHR.Value = 300
@@ -300,10 +316,10 @@ Public Class Settings_Citiroc
         TransferSize.Items.Add("10000 Events")
         TransferSize.SelectedIndex = 0
 
-        T0Mode.Items.Add("FIRST PHOTON")
-        T0Mode.Items.Add("FIRST PHOTON ASIC 0")
-        T0Mode.Items.Add("INTERNAL - PERIODIC")
+        'T0Mode.Items.Add("FIRST PHOTON")
+        'T0Mode.Items.Add("FIRST PHOTON ASIC 0")
         T0Mode.Items.Add("EXTERNAL - LEMO 1")
+        T0Mode.Items.Add("INTERNAL - PERIODIC")
         T0Mode.SelectedIndex = 0
 
         monitorMuxAnalog.Items.Add("None")
@@ -330,18 +346,373 @@ Public Class Settings_Citiroc
         aFileFormat.SelectedIndex = 0
 
 
-        TriggerSelector.Items.Add("Time Trigger")
-        TriggerSelector.Items.Add("Charge Trigger")
-        TriggerSelector.SelectedIndex = 0
 
         TempSensor.Items.Add("Internal (Avg)")
         TempSensor.Items.Add("External")
         TempSensor.SelectedIndex = 0
 
+        TriggerMode.Items.Add("Time")
+        TriggerMode.Items.Add("Charge")
+        TriggerMode.Items.Add("External")
+        TriggerMode.Items.Add("Common (Time)")
+        TriggerMode.Items.Add("Common (Charge)")
         TriggerMode.Items.Add("Self Trigger")
-        TriggerMode.Items.Add("Common Trigger")
-        TriggerMode.Items.Add("External Trigger")
-        TriggerSelector.SelectedIndex = 0
+        TriggerMode.SelectedIndex = 0
+
+    End Sub
+
+    Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
+
+    End Sub
+
+    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
+
+    End Sub
+
+    Public Sub UpdateSettings()
+        MainForm.Timer3.Enabled = False
+        For i = 0 To MainForm.DTList.Count - 1
+            MainForm.DTList(i).CitirocClass.pCFG.Clear()
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                Dim strPtrc As String
+                Dim ProgramWord() As UInt32 = New UInt32((36) - 1) {}
+                Dim pC As New DT5550W_CITIROC.CitirocConfig
+                For z = 0 To 31
+                    pC.sc_cmdInputDac(z) = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("Enableb").Value = 0, 0, 1)
+                    pC.sc_inputDac(z) = gridList(i * BI.totalAsics + j).Rows(z).Cells("DACb").Value
+                    pC.sc_mask(z) = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("TriggerMask").Value = 0, 1, 0)
+                    pC.sc_paHgGain(z) = gridList(i * BI.totalAsics + j).Rows(z).Cells("gainHG").Value
+                    pC.sc_paLgGain(z) = gridList(i * BI.totalAsics + j).Rows(z).Cells("gainLG").Value
+                    pC.sc_CtestHg(z) = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("testHG").Value = 0, 0, 1)
+                    pC.sc_CtestLg(z) = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("testLG").Value = 0, 0, 1)
+                    pC.sc_calibDacT(z) = gridList(i * BI.totalAsics + j).Rows(z).Cells("THcompTime").Value
+                    pC.sc_calibDacQ(z) = gridList(i * BI.totalAsics + j).Rows(z).Cells("THcompCharge").Value
+                    MainForm.CorrPoints(j, z).Gain = gridList(i * BI.totalAsics + j).Rows(z).Cells("Gain").Value
+                    MainForm.CorrPoints(j, z).Offset = gridList(i * BI.totalAsics + j).Rows(z).Cells("Offset").Value
+
+                    pC.sc_enPa(z) = 0
+
+                Next
+
+
+                pC.sc_scaOrPdHg = IIf(EnergyModeHG.Text = "Peak Sense", 0, 1)  ' peak detector on HG
+                pC.sc_scaOrPdLg = IIf(EnergyModeLG.Text = "Peak Sense", 0, 1)  ' peak detector on LG
+                pC.sc_bypassPd = 0 ' Bypass Peak Sensing
+                pC.sc_selTrigExtPd = 0 'Select peak sensing cell trigger [0 : internal trigger – 1 : external trigger] 
+                pC.sc_shapingTimeLg = ShapingTimeLG.SelectedIndex
+                pC.sc_shapingTimeHg = ShapingTimeHG.SelectedIndex
+                pC.sc_latchDiscri = IIf(LatchTrigger.Checked, 1, 0)  'Select latched (RS : 1) or direct output (trigger : 0) on charge discriminator
+                pC.sc_dacRef = IIf(InputDacReference.Text = "4.5V", 1, 0)  '8-bit input DAC Voltage Reference (1 = internal 4,5V , 0 = internal 2,5V) 
+                pC.sc_threshold1 = A_ChargeTHR.Value
+                pC.sc_threshold2 = A_TimeTHR.Value
+                pC.sc_testBitOtaQ = 1 'Output OTA buffer bias automatic off [0 : auto-bias – 1 : force on]
+                pC.sc_triggerPolarity = 0 'Output trigger polarity choice [0 : positive(rising edge) – 1 : negative(falling edge)]
+
+                pC.sc_paLgBias = IIf(PreampBias.Text = "Normal", 0, 1) 'Low Gain PreAmp bias [0: normal bias - 1: weak bias]
+
+                pC.sc_fshOnLg = IIf(FastShaperSource.Text = "Low Gain", 1, 0) ' Select preamp to connect to Fast Shaper [0: fast shaper on HG preamp – 1: fast shaper on LG preamp]
+
+                pC.sc_biasSca = IIf(ScaBias.Text = "Normal", 0, 1) 'SCA bias ( 1 = weak bias, 0 = high bias 5MHz ReadOut Speed) 
+
+
+                pC.sc_enDiscri = 1
+                pC.sc_ppDiscri = 1
+                pC.sc_enDiscriT = 1
+                pC.sc_ppDiscriT = 1
+                pC.sc_enCalibDacQ = 1
+                pC.sc_ppCalibDacQ = 1
+                pC.sc_enCalibDacT = 1
+                pC.sc_ppCalibDacT = 1
+                pC.sc_ppThHg = 1
+                pC.sc_enThHg = 1
+                pC.sc_ppThLg = 1
+                pC.sc_enThLg = 1
+
+                pC.sc_ppPdetHg = 1
+                pC.sc_enPdetHg = 1
+                pC.sc_ppPdetLg = 1
+                pC.sc_enPdetLg = 1
+                pC.sc_ppFshBuffer = 1
+                pC.sc_enFsh = 1
+                pC.sc_ppFsh = 1
+                pC.sc_ppSshLg = 1
+                pC.sc_enSshLg = 1
+                pC.sc_ppSshHg = 1
+                pC.sc_enSshHg = 1
+
+                pC.sc_ppPaLg = 1
+                pC.sc_enPaLg = 1
+                pC.sc_ppPaHg = 1
+                pC.sc_enPaHg = 1
+
+                pC.sc_enInputDac = 1
+
+                pC.sc_ppTemp = 1
+                pC.sc_enTemp = 1
+                pC.sc_ppBg = 1
+                pC.sc_enBg = 1
+                pC.sc_enThresholdDac1 = 1
+                pC.sc_ppThresholdDac1 = 1
+                pC.sc_enThresholdDac2 = 1
+                pC.sc_ppThresholdDac2 = 1
+                pC.sc_enHgOtaQ = 1
+                pC.sc_ppHgOtaQ = 1
+                pC.sc_enLgOtaQ = 1
+                pC.sc_ppLgOtaQ = 1
+                pC.sc_enProbeOtaQ = 1
+                pC.sc_ppProbeOtaQ = 1
+
+                pC.sc_enValEvtReceiver = 1
+                pC.sc_ppValEvtReceiver = 1
+                pC.sc_enRazChnReceiver = 1
+                pC.sc_ppRazChnReceiver = 1
+                pC.sc_enDigitalMuxOutput = 1
+                pC.sc_enOr32 = 1
+                pC.sc_enNor32Oc = 1
+
+                pC.sc_enNor32TOc = 1
+                pC.sc_enTriggersOutput = 1
+
+                pC.GenerateUint32Config(ProgramWord)
+
+                Dim boolDV(1143) As Boolean
+                Dim StringDV As String = ""
+                pC.GenerateBitConfig(boolDV)
+                For tt = 0 To 1143
+                    StringDV &= IIf(boolDV(tt), "1", "0")
+                Next
+
+                MainForm.AppendToLog(MainForm.LogMode.mCONFIGURATION, "Configure ASIC: " & j & " - " & MainForm.DTList(i).SerialNumber & vbCrLf & StringDV)
+
+
+                Select Case j
+                    Case 0
+                        MainForm.DTList(i).ConfigureAsic(True, False, False, False, ProgramWord)
+                        MainForm.DTList(i).CitirocClass.pCFG.Add(pC)
+                    Case 1
+                        MainForm.DTList(i).ConfigureAsic(False, True, False, False, ProgramWord)
+                        MainForm.DTList(i).CitirocClass.pCFG.Add(pC)
+                    Case 2
+                        MainForm.DTList(i).ConfigureAsic(False, False, True, False, ProgramWord)
+                        MainForm.DTList(i).CitirocClass.pCFG.Add(pC)
+                    Case 3
+                        MainForm.DTList(i).ConfigureAsic(False, False, False, True, ProgramWord)
+                        MainForm.DTList(i).CitirocClass.pCFG.Add(pC)
+                End Select
+
+
+            Next
+
+            MainForm.DTList(i).SetHV(HVon.Checked, Voltage.Value, MaxV.Value)
+            MainForm.DTList(i).ConfigureSignalGenerator(True, True, True, True,
+                                         SelfFreq.Value)
+
+            MainForm.DTList(i).SetASICVeto(swVeto1.Checked,
+            swVeto2.Checked,
+            swVeto3.Checked,
+            swVeto4.Checked)
+
+             MainForm.DTList(i).EnableExternalVeto(EnableExternalVeto.Checked)
+            Select Case TriggerMode.Text
+                Case "Time"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.TIME_TRIG)
+                Case "Charge"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.CHARGE_TRIG)
+                Case "External"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.EXT_TRIG)
+                Case "Common (Time)"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.GBL_TRIG_TIME)
+                Case "Common (Charge)"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.GBL_TRIG_CHARGE)
+                Case "Self Trigger"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.SELF_TRIG)
+            End Select
+
+            Select Case T0Mode.Text
+                Case "EXTERNAL - LEMO 1"
+                    MainForm.DTList(i).ConfigureT0(DT5550W_P_lib.T0Mode.EXTERNAL, T0Freq.Value)
+                Case "INTERNAL - PERIODIC"
+                    MainForm.DTList(i).ConfigureT0(DT5550W_P_lib.T0Mode.SOFTWARE_PERIODIC, T0Freq.Value)
+            End Select
+
+
+        Next
+
+
+
+        MainForm.hvon.Enabled = Not HVon.Checked
+        MainForm.hvoff.Enabled = HVon.Checked
+
+        MainForm.SoftwareThreshold = SoftwareTrigger.Value
+        MainForm.InputPolarity = DT5550W_P_lib.tPOLARITY.POSITIVE
+
+
+
+        MainForm.TempSensorSource = TempSensor.SelectedIndex
+        MainForm.DisableTempReadingAcq = DisableTempRead.Checked
+        MainForm.EnableTempComp = TempComp.Checked
+        MainForm.TempCompCoef = tempConmpCoef.Value
+        MainForm.CurrentHVSet = Voltage.Value
+        MainForm.CurrentHVON = HVon.Checked
+        MainForm.CurrentHVMax = MaxV.Value
+
+        MainForm.SumSpectrumGain = SumSpectrumGain.Value
+
+        MainForm.Timer3.Enabled = True
+        MainForm.TransferSize = Math.Pow(10, TransferSize.SelectedIndex + 1)
+
+        Select Case aProcessingMode.SelectedIndex
+            Case 0
+                MainForm.CurrentProcessMode = MainForm.ProcessMode.ALL
+            Case 1
+                MainForm.CurrentProcessMode = MainForm.ProcessMode.EVENT_DECODE
+            Case 2
+                MainForm.CurrentProcessMode = MainForm.ProcessMode.OFF
+        End Select
+
+        Select Case aFileFormat.SelectedIndex
+            Case 0
+                MainForm.SaveFileType = MainForm.FileType.CSV
+            Case 1
+                MainForm.SaveFileType = MainForm.FileType.BINARY
+        End Select
+
+        Try
+            MainForm.ClusterMaxTime = aClusterTime.Value
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+
+
+    Public Sub SetMonitor()
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+
+                Dim MonitorWord() As UInt32 = New UInt32(7) {}
+                Dim pC As New DT5550W_CITIROC.CitirocConfig
+
+                Select Case monitorMuxAnalog.Text
+                    Case "None"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.NONE
+                    Case "Preamp Output (LG)"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.LG_PRE
+                    Case "Slow Shaper Output (LG)"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.LG_SHAPER
+                    Case "Preamp Output (HG)"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.HG_PRE
+                    Case "Slow Shaper Output (HG)"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.HG_SHAPER
+                    Case "Fast Shaper"
+                        pC.AnalogProble = DT5550W_CITIROC.CitirocConfig.tAnalogProbe.FAST_SHAPER
+                End Select
+
+                Select Case monitorMuxDigital.Text
+                    Case "None"
+                        pC.DigitalProble = DT5550W_CITIROC.CitirocConfig.tDigitalProbe.NONE
+                    Case "Peak Detector (LG)"
+                        pC.DigitalProble = DT5550W_CITIROC.CitirocConfig.tDigitalProbe.LG_PEAK_DET_MODE
+                    Case "Peak Detector (HG)"
+                        pC.DigitalProble = DT5550W_CITIROC.CitirocConfig.tDigitalProbe.HG_PEAK_DET_MODE
+
+                End Select
+
+
+
+                pC.ChannelOutputAnalog = moniorCHAnalog.Value
+                pC.ChannelOutputDigital = moniorCHDigital.Value
+                pC.GenerateUint32Monitor(MonitorWord)
+
+
+                Dim boolDV(256) As Boolean
+                Dim StringDV As String = ""
+                pC.GenerateBitMonitor(boolDV)
+                For tt = 0 To 255
+                    StringDV &= IIf(boolDV(tt), "1", "0")
+                Next
+
+                MainForm.AppendToLog(MainForm.LogMode.mCONFIGURATION, "Monitor ASIC: " & j & " - " & MainForm.DTList(i).SerialNumber & vbCrLf & StringDV)
+
+
+                Select Case j
+                    Case 0
+                        MainForm.DTList(i).ConfigureMonitor(True, False, False, False, MonitorWord)
+                    Case 1
+                        MainForm.DTList(i).ConfigureMonitor(False, True, False, False, MonitorWord)
+                    Case 2
+                        MainForm.DTList(i).ConfigureMonitor(False, False, True, False, MonitorWord)
+                    Case 3
+                        MainForm.DTList(i).ConfigureMonitor(False, False, False, True, MonitorWord)
+                End Select
+
+
+            Next
+        Next
+    End Sub
+
+    Private Sub ButtonSetCfg_Click(sender As Object, e As EventArgs) Handles ButtonSetCfg.Click
+        UpdateSettings()
+
+    End Sub
+
+    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
+
+    End Sub
+
+    Private Sub Label27_Click(sender As Object, e As EventArgs) Handles Label27.Click
+
+    End Sub
+
+    Private Sub TriggerMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TriggerMode.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub ButtonSetMonitor_Click(sender As Object, e As EventArgs) Handles ButtonSetMonitor.Click
+        SetMonitor()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    gridList(j + BI.totalAsics * i).Rows(k).Cells("Offset").Value = Math.Round(-(MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k) - 40))
+
+                Next
+            Next
+        Next
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim max = 0
+
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    Dim point = MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k)
+                    max = IIf(point > max, point, max)
+                Next
+            Next
+        Next
+
+
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            For j = 0 To BI.totalAsics - 1
+                For k = 0 To BI.channelsPerAsic - 1
+                    Dim point = MainForm.MatrixCumulativePerAsic(j, k) / MainForm.MatrixCumulativePerAsicCount(j, k)
+                    gridList(j + BI.totalAsics * i).Rows(k).Cells("Gain").Value = Math.Round(max / point, 3)
+                Next
+            Next
+        Next
+    End Sub
+
+    Private Sub Label16_Click(sender As Object, e As EventArgs) Handles Label16.Click
 
     End Sub
 End Class

@@ -1,4 +1,5 @@
-﻿Public Class Mapping
+﻿Imports System.Reflection
+Public Class Mapping
 
     Dim CURRENTMAP(,) As String
     Dim ROWS As Integer = 4
@@ -13,6 +14,16 @@
     Dim numeric_row As New NumericUpDown
     Dim inhibit = True
 
+    Public Sub EnableDoubleBuffered(ByVal dgv As DataGridView)
+
+        Dim dgvType As Type = dgv.[GetType]()
+
+        Dim pi As PropertyInfo = dgvType.GetProperty("DoubleBuffered",
+                                                 BindingFlags.Instance Or BindingFlags.NonPublic)
+
+        pi.SetValue(dgv, True, Nothing)
+
+    End Sub
     Public Sub EnableDisableUpdate(disable As Boolean)
         If disable Then
             ButtonSave.Enabled = False
@@ -42,7 +53,7 @@
     Private Sub Mapping_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         DefaultLayout()
-
+        EnableDoubleBuffered(DGW)
     End Sub
 
     Private Sub Mapping_Resize(sender As Object, e As EventArgs) Handles Me.Resize

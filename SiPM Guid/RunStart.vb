@@ -31,10 +31,10 @@ Public Class RunStart
         cTargetMode.SelectedIndex = 0
         pRun.Text = My.Settings.parRun + 1
         pMRun.Text = My.Settings.parAcq + 1
-        If MainForm.sets.HVon.Checked Then
+        If MainForm.sets_petiroc.HVon.Checked Then
             pBias.Text = "0 V"
         Else
-            pBias.Text = MainForm.sets.Voltage.Value & " V"
+            pBias.Text = MainForm.sets_petiroc.Voltage.Value & " V"
         End If
 
         pBoard.Text = 1
@@ -68,6 +68,7 @@ Public Class RunStart
     Public Structure BoardConfig
         Public BoardSN As String
         Public ConfigPetiroc As List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
+        Public ConfigCitiroc As List(Of DT5550W_P_lib.DT5550W_CITIROC.CitirocConfig)
     End Structure
 
     Structure RunInfoGlobal
@@ -82,6 +83,8 @@ Public Class RunStart
         Public TargetValue As Double
         Public Note As String
     End Structure
+
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         My.Settings.parRun = pRun.Text
         My.Settings.parAcq = pMRun.Text
@@ -104,24 +107,49 @@ Public Class RunStart
         RIG.GlobalRun.RunId = pRun.Text
         RIG.GlobalRun.MachineRun = pMRun.Text
         RIG.GlobalRun.DateTime = pDT.Text
-        RIG.GlobalRun.PacketSize = MainForm.sets.TransferSize.Text
-        RIG.GlobalRun.T0Mode = MainForm.sets.T0Mode.Text
-        RIG.GlobalRun.T0freq = MainForm.sets.T0Freq.Value
-        RIG.GlobalRun.psbin = MainForm.sets.TimePsBin.Value
-        RIG.GlobalRun.HVon = MainForm.sets.HVon.Checked
-        RIG.GlobalRun.HVVoltage = MainForm.sets.Voltage.Value
-        RIG.BoardConfiguration = New List(Of BoardConfig)
-        For Each dt In MainForm.DTList
-            Dim aCFG As New BoardConfig
-            aCFG.BoardSN = dt.SerialNumber
-            aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
-            If dt.PetirocClass.pCFG.Count > 0 Then
-                For Each pc In dt.PetirocClass.pCFG
-                    aCFG.ConfigPetiroc.Add(pc)
+
+        Select Case MainForm.GBL_ASIC_MODEL
+            Case DT5550W_P_lib.t_AsicModels.PETIROC
+                RIG.GlobalRun.PacketSize = MainForm.sets_petiroc.TransferSize.Text
+                RIG.GlobalRun.T0Mode = MainForm.sets_petiroc.T0Mode.Text
+                RIG.GlobalRun.T0freq = MainForm.sets_petiroc.T0Freq.Value
+                RIG.GlobalRun.psbin = MainForm.sets_petiroc.TimePsBin.Value
+                RIG.GlobalRun.HVon = MainForm.sets_petiroc.HVon.Checked
+                RIG.GlobalRun.HVVoltage = MainForm.sets_petiroc.Voltage.Value
+                RIG.BoardConfiguration = New List(Of BoardConfig)
+
+                For Each dt In MainForm.DTList
+                    Dim aCFG As New BoardConfig
+                    aCFG.BoardSN = dt.SerialNumber
+                    aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
+                    If dt.PetirocClass.pCFG.Count > 0 Then
+                        For Each pc In dt.PetirocClass.pCFG
+                            aCFG.ConfigPetiroc.Add(pc)
+                        Next
+                    End If
+                    RIG.BoardConfiguration.Add(aCFG)
                 Next
-            End If
-            RIG.BoardConfiguration.Add(aCFG)
-        Next
+            Case DT5550W_P_lib.t_AsicModels.CITIROC
+                RIG.GlobalRun.PacketSize = MainForm.sets_citiroc.TransferSize.Text
+                RIG.GlobalRun.T0Mode = MainForm.sets_citiroc.T0Mode.Text
+                RIG.GlobalRun.T0freq = MainForm.sets_citiroc.T0Freq.Value
+                RIG.GlobalRun.HVon = MainForm.sets_citiroc.HVon.Checked
+                RIG.GlobalRun.HVVoltage = MainForm.sets_citiroc.Voltage.Value
+                RIG.BoardConfiguration = New List(Of BoardConfig)
+
+                For Each dt In MainForm.DTList
+                    Dim aCFG As New BoardConfig
+                    aCFG.BoardSN = dt.SerialNumber
+                    aCFG.ConfigCitiroc = New List(Of DT5550W_P_lib.DT5550W_CITIROC.CitirocConfig)
+                    If dt.CitirocClass.pCFG.Count > 0 Then
+                        For Each pc In dt.CitirocClass.pCFG
+                            aCFG.ConfigCitiroc.Add(pc)
+                        Next
+                    End If
+                    RIG.BoardConfiguration.Add(aCFG)
+                Next
+        End Select
+
         RIG.TargetType = cTargetMode.Text
         Dim targmult As Double = 1
         If cTargetMode.Text = "Time" Then

@@ -14,7 +14,7 @@ Public Class Connection
         ComboBox2.Items.Clear()
         ComboBox2.Items.Add("Auto")
         ComboBox2.Items.Add("Petiroc 2A")
-        'ComboBox2.Items.Add("Citiroc")
+        ComboBox2.Items.Add("Citiroc")
         'ComboBox2.Items.Add("Maroc")
         ComboBox2.SelectedIndex = 0
 

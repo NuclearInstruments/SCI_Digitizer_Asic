@@ -29,23 +29,40 @@ Partial Class Settings_Citiroc
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.ShapingTimeLG = New System.Windows.Forms.ComboBox()
+        Me.ShapingTimeHG = New System.Windows.Forms.ComboBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.FastShaperSource = New System.Windows.Forms.ComboBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.EnergyModeLG = New System.Windows.Forms.ComboBox()
+        Me.EnergyModeHG = New System.Windows.Forms.ComboBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.PreampBias = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.InputDacReference = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ScaBias = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.TriggerMode = New System.Windows.Forms.ComboBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.LatchTrigger = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.EnableExternalVeto = New System.Windows.Forms.CheckBox()
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.swVeto4 = New System.Windows.Forms.CheckBox()
+        Me.swVeto3 = New System.Windows.Forms.CheckBox()
+        Me.swVeto2 = New System.Windows.Forms.CheckBox()
+        Me.swVeto1 = New System.Windows.Forms.CheckBox()
         Me.A_TimeTHR = New System.Windows.Forms.NumericUpDown()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.A_ChargeTHR = New System.Windows.Forms.NumericUpDown()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.TriggerSelector = New System.Windows.Forms.ComboBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.SelfFreq = New System.Windows.Forms.NumericUpDown()
-        Me.SelfEnable = New System.Windows.Forms.CheckBox()
         Me.SoftwareTrigger = New System.Windows.Forms.NumericUpDown()
-        Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.TabPage5 = New System.Windows.Forms.TabPage()
         Me.T0Mode = New System.Windows.Forms.ComboBox()
@@ -78,39 +95,21 @@ Partial Class Settings_Citiroc
         Me.aProcessingMode = New System.Windows.Forms.ComboBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.TabPage8 = New System.Windows.Forms.TabPage()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.moniorCHDigital = New System.Windows.Forms.NumericUpDown()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.monitorMuxDigital = New System.Windows.Forms.ComboBox()
+        Me.Label28 = New System.Windows.Forms.Label()
         Me.monitorMuxAnalog = New System.Windows.Forms.ComboBox()
-        Me.ButtonSetMonitor = New System.Windows.Forms.Button()
         Me.moniorCHAnalog = New System.Windows.Forms.NumericUpDown()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ButtonSetCfg = New System.Windows.Forms.Button()
+        Me.ButtonSetMonitor = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.LatchTrigger = New System.Windows.Forms.CheckBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.ScaBias = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.InputDacReference = New System.Windows.Forms.ComboBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.PreampBias = New System.Windows.Forms.ComboBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.EnergyModeLG = New System.Windows.Forms.ComboBox()
-        Me.EnergyModeHG = New System.Windows.Forms.ComboBox()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.FastShaperSource = New System.Windows.Forms.ComboBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.ShapingTimeHG = New System.Windows.Forms.ComboBox()
-        Me.ShapingTimeLG = New System.Windows.Forms.ComboBox()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.TriggerMode = New System.Windows.Forms.ComboBox()
-        Me.monitorMuxDigital = New System.Windows.Forms.ComboBox()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.moniorCHDigital = New System.Windows.Forms.NumericUpDown()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -134,10 +133,10 @@ Partial Class Settings_Citiroc
         CType(Me.SumSpectrumGain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage8.SuspendLayout()
+        CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
-        CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -240,8 +239,153 @@ Partial Class Settings_Citiroc
         Me.TabPage3.Text = "Asic General"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
+        'ShapingTimeLG
+        '
+        Me.ShapingTimeLG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ShapingTimeLG.FormattingEnabled = True
+        Me.ShapingTimeLG.Location = New System.Drawing.Point(172, 134)
+        Me.ShapingTimeLG.Name = "ShapingTimeLG"
+        Me.ShapingTimeLG.Size = New System.Drawing.Size(113, 21)
+        Me.ShapingTimeLG.TabIndex = 85
+        '
+        'ShapingTimeHG
+        '
+        Me.ShapingTimeHG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ShapingTimeHG.FormattingEnabled = True
+        Me.ShapingTimeHG.Location = New System.Drawing.Point(172, 98)
+        Me.ShapingTimeHG.Name = "ShapingTimeHG"
+        Me.ShapingTimeHG.Size = New System.Drawing.Size(113, 21)
+        Me.ShapingTimeHG.TabIndex = 84
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(24, 137)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(98, 13)
+        Me.Label26.TabIndex = 83
+        Me.Label26.Text = "Shaping Time  (LG)"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(23, 104)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(100, 13)
+        Me.Label22.TabIndex = 82
+        Me.Label22.Text = "Shaping Time  (HG)"
+        '
+        'FastShaperSource
+        '
+        Me.FastShaperSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.FastShaperSource.FormattingEnabled = True
+        Me.FastShaperSource.Location = New System.Drawing.Point(172, 170)
+        Me.FastShaperSource.Name = "FastShaperSource"
+        Me.FastShaperSource.Size = New System.Drawing.Size(113, 21)
+        Me.FastShaperSource.TabIndex = 81
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(24, 173)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(101, 13)
+        Me.Label21.TabIndex = 80
+        Me.Label21.Text = "Fast Shaper Source"
+        '
+        'EnergyModeLG
+        '
+        Me.EnergyModeLG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.EnergyModeLG.FormattingEnabled = True
+        Me.EnergyModeLG.Location = New System.Drawing.Point(172, 62)
+        Me.EnergyModeLG.Name = "EnergyModeLG"
+        Me.EnergyModeLG.Size = New System.Drawing.Size(113, 21)
+        Me.EnergyModeLG.TabIndex = 79
+        '
+        'EnergyModeHG
+        '
+        Me.EnergyModeHG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.EnergyModeHG.FormattingEnabled = True
+        Me.EnergyModeHG.Location = New System.Drawing.Point(172, 27)
+        Me.EnergyModeHG.Name = "EnergyModeHG"
+        Me.EnergyModeHG.Size = New System.Drawing.Size(113, 21)
+        Me.EnergyModeHG.TabIndex = 78
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(24, 66)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(95, 13)
+        Me.Label10.TabIndex = 77
+        Me.Label10.Text = "Energy Mode (HG)"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(25, 30)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(93, 13)
+        Me.Label6.TabIndex = 76
+        Me.Label6.Text = "Energy Mode (LG)"
+        '
+        'PreampBias
+        '
+        Me.PreampBias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.PreampBias.FormattingEnabled = True
+        Me.PreampBias.Location = New System.Drawing.Point(506, 98)
+        Me.PreampBias.Name = "PreampBias"
+        Me.PreampBias.Size = New System.Drawing.Size(113, 21)
+        Me.PreampBias.TabIndex = 75
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(358, 101)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(66, 13)
+        Me.Label5.TabIndex = 74
+        Me.Label5.Text = "Preamp Bias"
+        '
+        'InputDacReference
+        '
+        Me.InputDacReference.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.InputDacReference.FormattingEnabled = True
+        Me.InputDacReference.Location = New System.Drawing.Point(506, 62)
+        Me.InputDacReference.Name = "InputDacReference"
+        Me.InputDacReference.Size = New System.Drawing.Size(113, 21)
+        Me.InputDacReference.TabIndex = 73
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(358, 65)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(109, 13)
+        Me.Label4.TabIndex = 72
+        Me.Label4.Text = "Input DAC Reference"
+        '
+        'ScaBias
+        '
+        Me.ScaBias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ScaBias.FormattingEnabled = True
+        Me.ScaBias.Location = New System.Drawing.Point(506, 27)
+        Me.ScaBias.Name = "ScaBias"
+        Me.ScaBias.Size = New System.Drawing.Size(113, 21)
+        Me.ScaBias.TabIndex = 71
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(358, 30)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(51, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "SCA Bias"
+        '
         'TabPage4
         '
+        Me.TabPage4.Controls.Add(Me.Label18)
         Me.TabPage4.Controls.Add(Me.TriggerMode)
         Me.TabPage4.Controls.Add(Me.Label27)
         Me.TabPage4.Controls.Add(Me.LatchTrigger)
@@ -250,12 +394,9 @@ Partial Class Settings_Citiroc
         Me.TabPage4.Controls.Add(Me.Label3)
         Me.TabPage4.Controls.Add(Me.A_ChargeTHR)
         Me.TabPage4.Controls.Add(Me.Label2)
-        Me.TabPage4.Controls.Add(Me.TriggerSelector)
         Me.TabPage4.Controls.Add(Me.Label17)
         Me.TabPage4.Controls.Add(Me.SelfFreq)
-        Me.TabPage4.Controls.Add(Me.SelfEnable)
         Me.TabPage4.Controls.Add(Me.SoftwareTrigger)
-        Me.TabPage4.Controls.Add(Me.Label18)
         Me.TabPage4.Controls.Add(Me.Label19)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
@@ -265,13 +406,50 @@ Partial Class Settings_Citiroc
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
         '
+        'Label18
+        '
+        Me.Label18.Location = New System.Drawing.Point(303, 49)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(99, 18)
+        Me.Label18.TabIndex = 80
+        Me.Label18.Text = "Self Trigger Freq"
+        '
+        'TriggerMode
+        '
+        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TriggerMode.FormattingEnabled = True
+        Me.TriggerMode.Location = New System.Drawing.Point(143, 20)
+        Me.TriggerMode.Name = "TriggerMode"
+        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
+        Me.TriggerMode.TabIndex = 79
+        '
+        'Label27
+        '
+        Me.Label27.Location = New System.Drawing.Point(11, 23)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(99, 18)
+        Me.Label27.TabIndex = 78
+        Me.Label27.Text = "Trigger Mode"
+        '
+        'LatchTrigger
+        '
+        Me.LatchTrigger.AutoSize = True
+        Me.LatchTrigger.Checked = True
+        Me.LatchTrigger.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.LatchTrigger.Location = New System.Drawing.Point(306, 22)
+        Me.LatchTrigger.Name = "LatchTrigger"
+        Me.LatchTrigger.Size = New System.Drawing.Size(89, 17)
+        Me.LatchTrigger.TabIndex = 77
+        Me.LatchTrigger.Text = "Latch Trigger"
+        Me.LatchTrigger.UseVisualStyleBackColor = True
+        '
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.EnableExternalVeto)
-        Me.GroupBox2.Controls.Add(Me.CheckBox4)
-        Me.GroupBox2.Controls.Add(Me.CheckBox3)
-        Me.GroupBox2.Controls.Add(Me.CheckBox2)
-        Me.GroupBox2.Controls.Add(Me.CheckBox1)
+        Me.GroupBox2.Controls.Add(Me.swVeto4)
+        Me.GroupBox2.Controls.Add(Me.swVeto3)
+        Me.GroupBox2.Controls.Add(Me.swVeto2)
+        Me.GroupBox2.Controls.Add(Me.swVeto1)
         Me.GroupBox2.Location = New System.Drawing.Point(13, 153)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(239, 79)
@@ -289,51 +467,51 @@ Partial Class Settings_Citiroc
         Me.EnableExternalVeto.Text = "Enable External Veto"
         Me.EnableExternalVeto.UseVisualStyleBackColor = True
         '
-        'CheckBox4
+        'swVeto4
         '
-        Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(121, 24)
-        Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox4.TabIndex = 3
-        Me.CheckBox4.Text = "4"
-        Me.CheckBox4.UseVisualStyleBackColor = True
+        Me.swVeto4.AutoSize = True
+        Me.swVeto4.Location = New System.Drawing.Point(121, 24)
+        Me.swVeto4.Name = "swVeto4"
+        Me.swVeto4.Size = New System.Drawing.Size(32, 17)
+        Me.swVeto4.TabIndex = 3
+        Me.swVeto4.Text = "4"
+        Me.swVeto4.UseVisualStyleBackColor = True
         '
-        'CheckBox3
+        'swVeto3
         '
-        Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(89, 24)
-        Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox3.TabIndex = 2
-        Me.CheckBox3.Text = "3"
-        Me.CheckBox3.UseVisualStyleBackColor = True
+        Me.swVeto3.AutoSize = True
+        Me.swVeto3.Location = New System.Drawing.Point(89, 24)
+        Me.swVeto3.Name = "swVeto3"
+        Me.swVeto3.Size = New System.Drawing.Size(32, 17)
+        Me.swVeto3.TabIndex = 2
+        Me.swVeto3.Text = "3"
+        Me.swVeto3.UseVisualStyleBackColor = True
         '
-        'CheckBox2
+        'swVeto2
         '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(51, 24)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox2.TabIndex = 1
-        Me.CheckBox2.Text = "2"
-        Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.swVeto2.AutoSize = True
+        Me.swVeto2.Location = New System.Drawing.Point(51, 24)
+        Me.swVeto2.Name = "swVeto2"
+        Me.swVeto2.Size = New System.Drawing.Size(32, 17)
+        Me.swVeto2.TabIndex = 1
+        Me.swVeto2.Text = "2"
+        Me.swVeto2.UseVisualStyleBackColor = True
         '
-        'CheckBox1
+        'swVeto1
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(13, 24)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox1.TabIndex = 0
-        Me.CheckBox1.Text = "1"
-        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.swVeto1.AutoSize = True
+        Me.swVeto1.Location = New System.Drawing.Point(13, 24)
+        Me.swVeto1.Name = "swVeto1"
+        Me.swVeto1.Size = New System.Drawing.Size(32, 17)
+        Me.swVeto1.TabIndex = 0
+        Me.swVeto1.Text = "1"
+        Me.swVeto1.UseVisualStyleBackColor = True
         '
         'A_TimeTHR
         '
         Me.A_TimeTHR.BackColor = System.Drawing.Color.White
         Me.A_TimeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 21)
+        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 47)
         Me.A_TimeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
         Me.A_TimeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.A_TimeTHR.Name = "A_TimeTHR"
@@ -343,7 +521,7 @@ Partial Class Settings_Citiroc
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(13, 23)
+        Me.Label3.Location = New System.Drawing.Point(13, 49)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(91, 13)
         Me.Label3.TabIndex = 24
@@ -353,7 +531,7 @@ Partial Class Settings_Citiroc
         '
         Me.A_ChargeTHR.BackColor = System.Drawing.Color.White
         Me.A_ChargeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 54)
+        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 74)
         Me.A_ChargeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
         Me.A_ChargeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.A_ChargeTHR.Name = "A_ChargeTHR"
@@ -363,25 +541,16 @@ Partial Class Settings_Citiroc
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(13, 56)
+        Me.Label2.Location = New System.Drawing.Point(13, 76)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(92, 13)
         Me.Label2.TabIndex = 23
         Me.Label2.Text = "Charge Threshold"
         '
-        'TriggerSelector
-        '
-        Me.TriggerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TriggerSelector.FormattingEnabled = True
-        Me.TriggerSelector.Location = New System.Drawing.Point(447, 21)
-        Me.TriggerSelector.Name = "TriggerSelector"
-        Me.TriggerSelector.Size = New System.Drawing.Size(113, 21)
-        Me.TriggerSelector.TabIndex = 70
-        '
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(547, 164)
+        Me.Label17.Location = New System.Drawing.Point(517, 49)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(20, 13)
         Me.Label17.TabIndex = 69
@@ -391,23 +560,13 @@ Partial Class Settings_Citiroc
         '
         Me.SelfFreq.BackColor = System.Drawing.Color.White
         Me.SelfFreq.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.SelfFreq.Location = New System.Drawing.Point(447, 162)
+        Me.SelfFreq.Location = New System.Drawing.Point(422, 47)
         Me.SelfFreq.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
         Me.SelfFreq.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
         Me.SelfFreq.Name = "SelfFreq"
         Me.SelfFreq.Size = New System.Drawing.Size(80, 20)
         Me.SelfFreq.TabIndex = 68
         Me.SelfFreq.Value = New Decimal(New Integer() {1000, 0, 0, 0})
-        '
-        'SelfEnable
-        '
-        Me.SelfEnable.AutoSize = True
-        Me.SelfEnable.Location = New System.Drawing.Point(315, 162)
-        Me.SelfEnable.Name = "SelfEnable"
-        Me.SelfEnable.Size = New System.Drawing.Size(80, 17)
-        Me.SelfEnable.TabIndex = 67
-        Me.SelfEnable.Text = "Self Trigger"
-        Me.SelfEnable.UseVisualStyleBackColor = True
         '
         'SoftwareTrigger
         '
@@ -418,14 +577,6 @@ Partial Class Settings_Citiroc
         Me.SoftwareTrigger.Name = "SoftwareTrigger"
         Me.SoftwareTrigger.Size = New System.Drawing.Size(113, 20)
         Me.SoftwareTrigger.TabIndex = 73
-        '
-        'Label18
-        '
-        Me.Label18.Location = New System.Drawing.Point(315, 24)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(99, 18)
-        Me.Label18.TabIndex = 71
-        Me.Label18.Text = "Trigger Selector"
         '
         'Label19
         '
@@ -750,12 +901,12 @@ Partial Class Settings_Citiroc
         '
         'TabPage8
         '
+        Me.TabPage8.Controls.Add(Me.Label30)
         Me.TabPage8.Controls.Add(Me.moniorCHDigital)
         Me.TabPage8.Controls.Add(Me.Label29)
         Me.TabPage8.Controls.Add(Me.monitorMuxDigital)
         Me.TabPage8.Controls.Add(Me.Label28)
         Me.TabPage8.Controls.Add(Me.monitorMuxAnalog)
-        Me.TabPage8.Controls.Add(Me.ButtonSetMonitor)
         Me.TabPage8.Controls.Add(Me.moniorCHAnalog)
         Me.TabPage8.Controls.Add(Me.Label12)
         Me.TabPage8.Controls.Add(Me.Label11)
@@ -767,28 +918,60 @@ Partial Class Settings_Citiroc
         Me.TabPage8.Text = "Monitor"
         Me.TabPage8.UseVisualStyleBackColor = True
         '
+        'Label30
+        '
+        Me.Label30.Location = New System.Drawing.Point(14, 119)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(137, 14)
+        Me.Label30.TabIndex = 64
+        '
+        'moniorCHDigital
+        '
+        Me.moniorCHDigital.BackColor = System.Drawing.Color.White
+        Me.moniorCHDigital.Location = New System.Drawing.Point(380, 63)
+        Me.moniorCHDigital.Maximum = New Decimal(New Integer() {31, 0, 0, 0})
+        Me.moniorCHDigital.Name = "moniorCHDigital"
+        Me.moniorCHDigital.Size = New System.Drawing.Size(102, 20)
+        Me.moniorCHDigital.TabIndex = 63
+        '
+        'Label29
+        '
+        Me.Label29.Location = New System.Drawing.Point(313, 67)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(70, 13)
+        Me.Label29.TabIndex = 62
+        Me.Label29.Text = "Channel"
+        '
+        'monitorMuxDigital
+        '
+        Me.monitorMuxDigital.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.monitorMuxDigital.FormattingEnabled = True
+        Me.monitorMuxDigital.Location = New System.Drawing.Point(138, 63)
+        Me.monitorMuxDigital.Name = "monitorMuxDigital"
+        Me.monitorMuxDigital.Size = New System.Drawing.Size(145, 21)
+        Me.monitorMuxDigital.TabIndex = 60
+        '
+        'Label28
+        '
+        Me.Label28.Location = New System.Drawing.Point(14, 67)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(137, 14)
+        Me.Label28.TabIndex = 61
+        Me.Label28.Text = "Digital Monitor Mux"
+        '
         'monitorMuxAnalog
         '
         Me.monitorMuxAnalog.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.monitorMuxAnalog.FormattingEnabled = True
         Me.monitorMuxAnalog.Location = New System.Drawing.Point(138, 19)
         Me.monitorMuxAnalog.Name = "monitorMuxAnalog"
-        Me.monitorMuxAnalog.Size = New System.Drawing.Size(103, 21)
+        Me.monitorMuxAnalog.Size = New System.Drawing.Size(145, 21)
         Me.monitorMuxAnalog.TabIndex = 22
-        '
-        'ButtonSetMonitor
-        '
-        Me.ButtonSetMonitor.Location = New System.Drawing.Point(686, 19)
-        Me.ButtonSetMonitor.Name = "ButtonSetMonitor"
-        Me.ButtonSetMonitor.Size = New System.Drawing.Size(75, 23)
-        Me.ButtonSetMonitor.TabIndex = 0
-        Me.ButtonSetMonitor.Text = "Set"
-        Me.ButtonSetMonitor.UseVisualStyleBackColor = True
         '
         'moniorCHAnalog
         '
         Me.moniorCHAnalog.BackColor = System.Drawing.Color.White
-        Me.moniorCHAnalog.Location = New System.Drawing.Point(338, 20)
+        Me.moniorCHAnalog.Location = New System.Drawing.Point(380, 20)
         Me.moniorCHAnalog.Maximum = New Decimal(New Integer() {31, 0, 0, 0})
         Me.moniorCHAnalog.Name = "moniorCHAnalog"
         Me.moniorCHAnalog.Size = New System.Drawing.Size(102, 20)
@@ -796,7 +979,7 @@ Partial Class Settings_Citiroc
         '
         'Label12
         '
-        Me.Label12.Location = New System.Drawing.Point(271, 24)
+        Me.Label12.Location = New System.Drawing.Point(313, 24)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(70, 13)
         Me.Label12.TabIndex = 58
@@ -813,6 +996,7 @@ Partial Class Settings_Citiroc
         'Panel3
         '
         Me.Panel3.Controls.Add(Me.ButtonSetCfg)
+        Me.Panel3.Controls.Add(Me.ButtonSetMonitor)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(3, 654)
         Me.Panel3.Name = "Panel3"
@@ -821,13 +1005,22 @@ Partial Class Settings_Citiroc
         '
         'ButtonSetCfg
         '
-        Me.ButtonSetCfg.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.ButtonSetCfg.Location = New System.Drawing.Point(309, 0)
+        Me.ButtonSetCfg.Location = New System.Drawing.Point(186, 3)
         Me.ButtonSetCfg.Name = "ButtonSetCfg"
         Me.ButtonSetCfg.Size = New System.Drawing.Size(178, 21)
         Me.ButtonSetCfg.TabIndex = 0
         Me.ButtonSetCfg.Text = "APPLY SETTINGS"
         Me.ButtonSetCfg.UseVisualStyleBackColor = True
+        '
+        'ButtonSetMonitor
+        '
+        Me.ButtonSetMonitor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonSetMonitor.Location = New System.Drawing.Point(428, 3)
+        Me.ButtonSetMonitor.Name = "ButtonSetMonitor"
+        Me.ButtonSetMonitor.Size = New System.Drawing.Size(178, 21)
+        Me.ButtonSetMonitor.TabIndex = 0
+        Me.ButtonSetMonitor.Text = "APPLY MONITOR"
+        Me.ButtonSetMonitor.UseVisualStyleBackColor = True
         '
         'TabControl1
         '
@@ -859,211 +1052,6 @@ Partial Class Settings_Citiroc
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'LatchTrigger
-        '
-        Me.LatchTrigger.AutoSize = True
-        Me.LatchTrigger.Location = New System.Drawing.Point(318, 103)
-        Me.LatchTrigger.Name = "LatchTrigger"
-        Me.LatchTrigger.Size = New System.Drawing.Size(89, 17)
-        Me.LatchTrigger.TabIndex = 77
-        Me.LatchTrigger.Text = "Latch Trigger"
-        Me.LatchTrigger.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(358, 30)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(51, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "SCA Bias"
-        '
-        'ScaBias
-        '
-        Me.ScaBias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ScaBias.FormattingEnabled = True
-        Me.ScaBias.Location = New System.Drawing.Point(506, 27)
-        Me.ScaBias.Name = "ScaBias"
-        Me.ScaBias.Size = New System.Drawing.Size(113, 21)
-        Me.ScaBias.TabIndex = 71
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(358, 65)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(109, 13)
-        Me.Label4.TabIndex = 72
-        Me.Label4.Text = "Input DAC Reference"
-        '
-        'InputDacReference
-        '
-        Me.InputDacReference.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.InputDacReference.FormattingEnabled = True
-        Me.InputDacReference.Location = New System.Drawing.Point(506, 62)
-        Me.InputDacReference.Name = "InputDacReference"
-        Me.InputDacReference.Size = New System.Drawing.Size(113, 21)
-        Me.InputDacReference.TabIndex = 73
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(358, 101)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(66, 13)
-        Me.Label5.TabIndex = 74
-        Me.Label5.Text = "Preamp Bias"
-        '
-        'PreampBias
-        '
-        Me.PreampBias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.PreampBias.FormattingEnabled = True
-        Me.PreampBias.Location = New System.Drawing.Point(506, 98)
-        Me.PreampBias.Name = "PreampBias"
-        Me.PreampBias.Size = New System.Drawing.Size(113, 21)
-        Me.PreampBias.TabIndex = 75
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(25, 30)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(93, 13)
-        Me.Label6.TabIndex = 76
-        Me.Label6.Text = "Energy Mode (LG)"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(24, 66)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(95, 13)
-        Me.Label10.TabIndex = 77
-        Me.Label10.Text = "Energy Mode (HG)"
-        '
-        'EnergyModeLG
-        '
-        Me.EnergyModeLG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.EnergyModeLG.FormattingEnabled = True
-        Me.EnergyModeLG.Location = New System.Drawing.Point(172, 62)
-        Me.EnergyModeLG.Name = "EnergyModeLG"
-        Me.EnergyModeLG.Size = New System.Drawing.Size(113, 21)
-        Me.EnergyModeLG.TabIndex = 79
-        '
-        'EnergyModeHG
-        '
-        Me.EnergyModeHG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.EnergyModeHG.FormattingEnabled = True
-        Me.EnergyModeHG.Location = New System.Drawing.Point(172, 27)
-        Me.EnergyModeHG.Name = "EnergyModeHG"
-        Me.EnergyModeHG.Size = New System.Drawing.Size(113, 21)
-        Me.EnergyModeHG.TabIndex = 78
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(24, 173)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(101, 13)
-        Me.Label21.TabIndex = 80
-        Me.Label21.Text = "Fast Shaper Source"
-        '
-        'FastShaperSource
-        '
-        Me.FastShaperSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.FastShaperSource.FormattingEnabled = True
-        Me.FastShaperSource.Location = New System.Drawing.Point(172, 170)
-        Me.FastShaperSource.Name = "FastShaperSource"
-        Me.FastShaperSource.Size = New System.Drawing.Size(113, 21)
-        Me.FastShaperSource.TabIndex = 81
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(23, 104)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(100, 13)
-        Me.Label22.TabIndex = 82
-        Me.Label22.Text = "Shaping Time  (HG)"
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(24, 137)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(98, 13)
-        Me.Label26.TabIndex = 83
-        Me.Label26.Text = "Shaping Time  (LG)"
-        '
-        'ShapingTimeHG
-        '
-        Me.ShapingTimeHG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ShapingTimeHG.FormattingEnabled = True
-        Me.ShapingTimeHG.Location = New System.Drawing.Point(172, 98)
-        Me.ShapingTimeHG.Name = "ShapingTimeHG"
-        Me.ShapingTimeHG.Size = New System.Drawing.Size(113, 21)
-        Me.ShapingTimeHG.TabIndex = 84
-        '
-        'ShapingTimeLG
-        '
-        Me.ShapingTimeLG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ShapingTimeLG.FormattingEnabled = True
-        Me.ShapingTimeLG.Location = New System.Drawing.Point(172, 134)
-        Me.ShapingTimeLG.Name = "ShapingTimeLG"
-        Me.ShapingTimeLG.Size = New System.Drawing.Size(113, 21)
-        Me.ShapingTimeLG.TabIndex = 85
-        '
-        'Label27
-        '
-        Me.Label27.Location = New System.Drawing.Point(315, 59)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(99, 18)
-        Me.Label27.TabIndex = 78
-        Me.Label27.Text = "Trigger Mode"
-        '
-        'TriggerMode
-        '
-        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TriggerMode.FormattingEnabled = True
-        Me.TriggerMode.Location = New System.Drawing.Point(447, 56)
-        Me.TriggerMode.Name = "TriggerMode"
-        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
-        Me.TriggerMode.TabIndex = 79
-        '
-        'monitorMuxDigital
-        '
-        Me.monitorMuxDigital.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.monitorMuxDigital.FormattingEnabled = True
-        Me.monitorMuxDigital.Location = New System.Drawing.Point(138, 63)
-        Me.monitorMuxDigital.Name = "monitorMuxDigital"
-        Me.monitorMuxDigital.Size = New System.Drawing.Size(103, 21)
-        Me.monitorMuxDigital.TabIndex = 60
-        '
-        'Label28
-        '
-        Me.Label28.Location = New System.Drawing.Point(14, 67)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(137, 14)
-        Me.Label28.TabIndex = 61
-        Me.Label28.Text = "Digital Monitor Mux"
-        '
-        'moniorCHDigital
-        '
-        Me.moniorCHDigital.BackColor = System.Drawing.Color.White
-        Me.moniorCHDigital.Location = New System.Drawing.Point(338, 63)
-        Me.moniorCHDigital.Maximum = New Decimal(New Integer() {31, 0, 0, 0})
-        Me.moniorCHDigital.Name = "moniorCHDigital"
-        Me.moniorCHDigital.Size = New System.Drawing.Size(102, 20)
-        Me.moniorCHDigital.TabIndex = 63
-        '
-        'Label29
-        '
-        Me.Label29.Location = New System.Drawing.Point(271, 67)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(70, 13)
-        Me.Label29.TabIndex = 62
-        Me.Label29.Text = "Channel"
         '
         'Settings_Citiroc
         '
@@ -1099,10 +1087,10 @@ Partial Class Settings_Citiroc
         CType(Me.SumSpectrumGain, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage8.ResumeLayout(False)
+        CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
-        CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1117,20 +1105,17 @@ Partial Class Settings_Citiroc
     Friend WithEvents TabPage4 As TabPage
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents EnableExternalVeto As CheckBox
-    Friend WithEvents CheckBox4 As CheckBox
-    Friend WithEvents CheckBox3 As CheckBox
-    Friend WithEvents CheckBox2 As CheckBox
-    Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents swVeto4 As CheckBox
+    Friend WithEvents swVeto3 As CheckBox
+    Friend WithEvents swVeto2 As CheckBox
+    Friend WithEvents swVeto1 As CheckBox
     Friend WithEvents A_TimeTHR As NumericUpDown
     Friend WithEvents Label3 As Label
     Friend WithEvents A_ChargeTHR As NumericUpDown
     Friend WithEvents Label2 As Label
-    Friend WithEvents TriggerSelector As ComboBox
     Friend WithEvents Label17 As Label
     Friend WithEvents SelfFreq As NumericUpDown
-    Friend WithEvents SelfEnable As CheckBox
     Friend WithEvents SoftwareTrigger As NumericUpDown
-    Friend WithEvents Label18 As Label
     Friend WithEvents Label19 As Label
     Friend WithEvents TabPage5 As TabPage
     Friend WithEvents T0Mode As ComboBox
@@ -1196,4 +1181,6 @@ Partial Class Settings_Citiroc
     Friend WithEvents Label29 As Label
     Friend WithEvents monitorMuxDigital As ComboBox
     Friend WithEvents Label28 As Label
+    Friend WithEvents Label18 As Label
+    Friend WithEvents Label30 As Label
 End Class

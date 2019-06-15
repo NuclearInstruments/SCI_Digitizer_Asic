@@ -8,39 +8,105 @@ namespace DT5550W_P_lib
 {
     public class DT5550W_CITIROC
     {
+        const UInt32 SCI_REG_ALL_FIFO_RESET = 0xFFFFF908;
+        const UInt32 SCI_REG_T0_SOFT_FREQ = 0x00000000;
+        const UInt32 SCI_REG_T0_SEL = 0x00000001;
+        const UInt32 SCI_REG_TRIG_A_SEL = 0x00000003;
+        const UInt32 SCI_REG_VET_A_EN = 0x00000004;
+        const UInt32 SCI_REG_VET_B_EN = 0x00000005;
+        const UInt32 SCI_REG_VET_C_EN = 0x00000006;
+        const UInt32 SCI_REG_VET_D_EN = 0x00000007;
+        const UInt32 SCI_REG_SW_VET_A = 0x00000008;
+        const UInt32 SCI_REG_SW_VET_B = 0x00000009;
+        const UInt32 SCI_REG_SW_VET_C = 0x0000000A;
+        const UInt32 SCI_REG_SW_VET_D = 0x0000000B;
+        const UInt32 SCI_REG_TRIG_GBL_SEL = 0x0000000C;
+        const UInt32 SCI_REG_EXT_DELAY = 0x0000000D;
+        const UInt32 SCI_REG_SW_TRIG_FREQ = 0x0000000E;
+        const UInt32 SCI_REG_A_RATE = 0x00020007;
+        const UInt32 SCI_REG_B_RATE = 0x00020008;
+        const UInt32 SCI_REG_C_RATE = 0x00020009;
+        const UInt32 SCI_REG_D_RATE = 0x0002000A;
+        const UInt32 SCI_REG_T0_COUNT = 0x0002000B;
+        const UInt32 SCI_REG_A_TRG = 0x0002000C;
+        const UInt32 SCI_REG_B_TRG = 0x0002000D;
+        const UInt32 SCI_REG_C_TRG = 0x0002000E;
+        const UInt32 SCI_REG_D_TRG = 0x0002000F;
+        const UInt32 SCI_REG_RUNSTART = 0x00020010;
+        const UInt32 SCI_REG_RUN_TIME_LSB = 0x00020011;
+        const UInt32 SCI_REG_RUN_TIME_MSB = 0x00020012;
+        const UInt32 SCI_REG_DEAD_TIME_LSB = 0x00020013;
+        const UInt32 SCI_REG_DEAD_TIME_MSB = 0x00020014;
+        const UInt32 SCI_REG_A_LOST = 0x00020015;
+        const UInt32 SCI_REG_B_LOST = 0x00020016;
+        const UInt32 SCI_REG_C_LOST = 0x00020017;
+        const UInt32 SCI_REG_D_LOST = 0x00020018;
+        const UInt32 SCI_REG_i2c_master_0_CTRL = 0x1;
+        const UInt32 SCI_REG_i2c_master_0_MON = 0x2;
 
-        const UInt32 RFA_PTROC_BA_A = 0x80010000;
-        const UInt32 RFA_PTROC_BA_B = 0x80020000;
-        const UInt32 RFA_PTROC_BA_C = 0x80030000;
-        const UInt32 RFA_PTROC_BA_D = 0x80040000;
-        const UInt32 RFA_PTROC_PROG = 20;
-        const UInt32 RFA_PTROC_PROGMONITOR = 21;
+        const UInt32 SCI_REG_CitirocCfg0_REG_CFG0 = 0x10007E;
+        const UInt32 SCI_REG_CitirocCfg0_START_REG_CFG = 0x1000A2;
 
-        const UInt32 DAQ_VETO = 0xFFFFF907;
-        const UInt32 DAQ_VETO_sw = 0xFFFFF90B;
-        const UInt32 DAQ_ANALOG_MONITOR = 0xFFFFF916;
-        const UInt32 DAQ_FLUSH_FIFO = 0xFFFFF908;
-        const UInt32 DIGOUT_LEN = 0xFFFFF90C;
+const UInt32 SCI_REG_Oscilloscope_0_FIFOADDRESS = 0x90000;
+        const UInt32 SCI_REG_Oscilloscope_0_READ_STATUS = 0xA0000;
+        const UInt32 SCI_REG_Oscilloscope_0_READ_POSITION = 0xA0001;
+        const UInt32 SCI_REG_Oscilloscope_0_CONFIG_TRIGGER_MODE = 0xA0002;
+        const UInt32 SCI_REG_Oscilloscope_0_CONFIG_PRETRIGGER = 0xA0003;
+        const UInt32 SCI_REG_Oscilloscope_0_CONFIG_TRIGGER_LEVEL = 0xA0004;
+        const UInt32 SCI_REG_Oscilloscope_0_CONFIG_ARM = 0xA0005;
+        const UInt32 SCI_REG_Oscilloscope_0_CONFIG_DECIMATOR = 0xA0006;
 
-        const UInt32 SIGGEN_PERIOD = 0xFFFFF90E;
-        const UInt32 SIGGEN_ENABLE = 0xFFFFF90D;
+const UInt32 SCI_REG_Oscilloscope_1_FIFOADDRESS = 0xB0000;
+        const UInt32 SCI_REG_Oscilloscope_1_READ_STATUS = 0xC0000;
+        const UInt32 SCI_REG_Oscilloscope_1_READ_POSITION = 0xC0001;
+        const UInt32 SCI_REG_Oscilloscope_1_CONFIG_TRIGGER_MODE = 0xC0002;
+        const UInt32 SCI_REG_Oscilloscope_1_CONFIG_PRETRIGGER = 0xC0003;
+        const UInt32 SCI_REG_Oscilloscope_1_CONFIG_TRIGGER_LEVEL = 0xC0004;
+        const UInt32 SCI_REG_Oscilloscope_1_CONFIG_ARM = 0xC0005;
+        const UInt32 SCI_REG_Oscilloscope_1_CONFIG_DECIMATOR = 0xC0006;
 
-        const UInt32 T0_SOURCE = 0xFFFFF911;
-        const UInt32 T0_SW = 0xFFFFF912;
-        const UInt32 T0_SWMODE = 0xFFFFF913;
-        const UInt32 T0_FREQ = 0xFFFFF914;
+const UInt32 SCI_REG_Oscilloscope_2_FIFOADDRESS = 0xF0000;
+        const UInt32 SCI_REG_Oscilloscope_2_READ_STATUS = 0x100000;
+        const UInt32 SCI_REG_Oscilloscope_2_READ_POSITION = 0x100001;
+        const UInt32 SCI_REG_Oscilloscope_2_CONFIG_TRIGGER_MODE = 0x100002;
+        const UInt32 SCI_REG_Oscilloscope_2_CONFIG_PRETRIGGER = 0x100003;
+        const UInt32 SCI_REG_Oscilloscope_2_CONFIG_TRIGGER_LEVEL = 0x100004;
+        const UInt32 SCI_REG_Oscilloscope_2_CONFIG_ARM = 0x100005;
+        const UInt32 SCI_REG_Oscilloscope_2_CONFIG_DECIMATOR = 0x100006;
 
-        const UInt32 DAQ_TRIGGER_MODE = 0xFFFFF917;
-        const UInt32 DAQ_TRIGGER_FRAME = 0xFFFFF918;
+const UInt32 SCI_REG_Oscilloscope_3_FIFOADDRESS = 0x10000;
+        const UInt32 SCI_REG_Oscilloscope_3_READ_STATUS = 0x20000;
+        const UInt32 SCI_REG_Oscilloscope_3_READ_POSITION = 0x20001;
+        const UInt32 SCI_REG_Oscilloscope_3_CONFIG_TRIGGER_MODE = 0x20002;
+        const UInt32 SCI_REG_Oscilloscope_3_CONFIG_PRETRIGGER = 0x20003;
+        const UInt32 SCI_REG_Oscilloscope_3_CONFIG_TRIGGER_LEVEL = 0x20004;
+        const UInt32 SCI_REG_Oscilloscope_3_CONFIG_ARM = 0x20005;
+        const UInt32 SCI_REG_Oscilloscope_3_CONFIG_DECIMATOR = 0x20006;
 
-        const UInt32 DAQ_EXTERNAL_VETO = 0xFFFFF919;
-        const UInt32 DAQ_TRIGGER_EXT = 0xFFFFF91A;
-        const UInt32 DAQ_RESET_TDC_T0 = 0xFFFFF91B;
+const UInt32 SCI_REG_CitirocFrame0_FIFOADDRESS = 0x2001A;
+        const UInt32 SCI_REG_CitirocFrame0_CONTROL = 0x2001B;
+        const UInt32 SCI_REG_CitirocFrame0_STATUS = 0x2001C;
 
-        const UInt32 RFA_IIC_CONTROL = 0x80050008;
-        const UInt32 RFA_IIC_STATUS = 0x80050009;
+const UInt32 SCI_REG_RateMeter_0_FIFOADDRESS = 0x70000;
 
-        const UInt32 RFA_PTROC_ASIC_DISABLE = 0xFFFFF915;
+const UInt32 SCI_REG_RateMeter_1_FIFOADDRESS = 0xD0000;
+
+const UInt32 SCI_REG_RateMeter_2_FIFOADDRESS = 0x30000;
+
+const UInt32 SCI_REG_RateMeter_3_FIFOADDRESS = 0x50000;
+
+const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
+        const UInt32 SCI_REG_CitirocCfg1_START_REG_CFG = 0x10002D;
+
+        const UInt32 SCI_REG_CitirocCfg2_REG_CFG0 = 0x100030;
+        const UInt32 SCI_REG_CitirocCfg2_START_REG_CFG = 0x100054;
+
+        const UInt32 SCI_REG_CitirocCfg3_REG_CFG0 = 0x100057;
+        const UInt32 SCI_REG_CitirocCfg3_START_REG_CFG = 0x10007B;
+
+
+
+
         int DLL_ASIC_COUNT = 4;
         public CitirocConfig CitirocCfg;
 
@@ -54,6 +120,24 @@ namespace DT5550W_P_lib
 
         public class CitirocConfig
         {
+
+            public enum tAnalogProbe
+            {
+                NONE,
+                LG_PRE,
+                LG_SHAPER,
+                HG_PRE,
+                HG_SHAPER,
+                FAST_SHAPER
+            }
+
+            public enum tDigitalProbe
+            {
+                NONE,
+                HG_PEAK_DET_MODE,
+                LG_PEAK_DET_MODE
+            }
+
             const int NbChannels = 32;
             public int[] sc_calibDacT = new int[NbChannels];
             public int[] sc_calibDacQ = new int[NbChannels];
@@ -132,6 +216,11 @@ namespace DT5550W_P_lib
             public int sc_enNor32TOc;
             public int sc_enTriggersOutput;
 
+            public int ChannelOutputAnalog;
+            public int ChannelOutputDigital;
+
+            public tAnalogProbe  AnalogProble;
+            public tDigitalProbe DigitalProble;
 
             private static string IntToBin(int value, int len) // To convert a value from integer to binary representation into a string
             {
@@ -152,16 +241,72 @@ namespace DT5550W_P_lib
 
             public void GenerateBitMonitor(bool[] datavector)
             {
-                bool[] bitarray = new bool[195];
+                
 
-                for (int i = 0; i < 195; i++)
+                bool result = false;
+                char[] tmpProbeStream = new char[256];
+
+                for (int i = 0; i < 256; i++) tmpProbeStream[i] = '0';
+
+                tmpProbeStream[(int)ChannelOutputAnalog] = (AnalogProble == tAnalogProbe.FAST_SHAPER ) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputAnalog + 32] = (AnalogProble == tAnalogProbe.LG_SHAPER) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputDigital + 64] = (DigitalProble == tDigitalProbe.LG_PEAK_DET_MODE) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputAnalog + 96] = (AnalogProble == tAnalogProbe.HG_SHAPER) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputDigital + 128] = (DigitalProble == tDigitalProbe.HG_PEAK_DET_MODE) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputAnalog * 2 + 160] = (AnalogProble == tAnalogProbe.HG_PRE) ? '1' : '0';
+                tmpProbeStream[(int)ChannelOutputAnalog * 2 + 160 + 1] = (AnalogProble == tAnalogProbe.LG_PRE) ? '1' : '0';
+
+                string probeStream = new string(tmpProbeStream);
+
+                int intLenProbeStream = probeStream.Length;
+                byte[] bytProbe = new byte[intLenProbeStream / 8];
+
+                probeStream = strRev(probeStream);
+
+                for (int i = 0; i < (intLenProbeStream / 8); i++)
                 {
-                    datavector[i] = bitarray[i];
+                    string strProbeCmdTmp = probeStream.Substring(i * 8, 8);
+                    strProbeCmdTmp = strRev(strProbeCmdTmp);
+                    UInt32 intCmdTmp = Convert.ToUInt32(strProbeCmdTmp, 2);
+                    bytProbe[i] = Convert.ToByte(intCmdTmp);
+                }
+
+                for (int i = 0; i < 256; i++)
+                {
+                    datavector[i] = tmpProbeStream[i] == '1' ? true : false;
                 }
 
             }
 
-            public void GenerateBitConfig(bool[] datavector)
+
+            public string GenerateStringMonitor()
+            {
+                string bitstream = "";
+                bool[] bitarray = new bool[256];
+                GenerateBitMonitor(bitarray);
+                for (int i = 0; i < 256; i++)
+                {
+                    bitstream = bitstream + (bitarray[i] ? "1" : "0");
+                }
+                return bitstream;
+            }
+
+            public void GenerateUint32Monitor(UInt32[] datavector)
+            {
+                int i, j;
+                bool[] bitarray = new bool[32 * 8];
+                GenerateBitMonitor(bitarray);
+                for (i = 0; i < 8; i++)
+                {
+                    datavector[i] = 0;
+                    for (j = 0; j < 32; j++)
+                    {
+                        datavector[i] += ((UInt32)(bitarray[(i * 32) + j] == true ? 1 : 0)) << j;
+                    }
+                }
+            }
+
+            public void GenerateBitConfig(ref bool[] datavector)
             {
 
                 string strSC;
@@ -274,7 +419,7 @@ namespace DT5550W_P_lib
             {
                 string bitstream = "";
                 bool[] bitarray = new bool[1144];
-                GenerateBitConfig(bitarray);
+                GenerateBitConfig(ref bitarray);
                 for (int i = 0; i < 1144; i++)
                 {
                     bitstream = bitstream + (bitarray[i] ? "1" : "0");
@@ -286,7 +431,7 @@ namespace DT5550W_P_lib
             {
                 int i, j;
                 bool[] bitarray = new bool[1152];
-                GenerateBitConfig(bitarray);
+                GenerateBitConfig(ref bitarray);
 
                 String CFG = GenerateStringConfig();
                 ConvertStringToDatavector(CFG, bitarray);
@@ -300,58 +445,12 @@ namespace DT5550W_P_lib
                 }
             }
 
-            public string GenerateStringMonitor()
-            {
-                string bitstream = "";
-                bool[] bitarray = new bool[195];
-                GenerateBitMonitor(bitarray);
-                for (int i = 0; i < 195; i++)
-                {
-                    bitstream = bitstream + (bitarray[i] ? "1" : "0");
-                }
-                return bitstream;
-            }
-
-            public void GenerateUint32Monitor(UInt32[] datavector)
-            {
-                int i, j;
-                bool[] bitarray = new bool[32 * 7];
-                GenerateBitMonitor(bitarray);
-                for (i = 0; i < 7; i++)
-                {
-                    datavector[i] = 0;
-                    for (j = 0; j < 32; j++)
-                    {
-                        datavector[i] += ((UInt32)(bitarray[(i * 32) + j] == true ? 1 : 0)) << j;
-                    }
-                }
-            }
+           
 
         }
 
 
-        public class t_CitirocDATA
-        {
-            public UInt64 EventTimecode;
-            public UInt64 RunEventTimecode;
-            public UInt64 EventCounter;
-            public UInt16 AsicID;
-
-            public double EventTimecode_ns;
-            public double RunEventTimecode_ns;
-
-            public ushort[] chargeHG;
-            public ushort[] chargeLG;
-            public bool[] hit;
-            public t_CitirocDATA()
-            {
-                chargeLG = new ushort[32];
-                chargeHG = new ushort[32];
-                hit = new bool[32];
-            }
-
-        }
-
+  
         public DT5550W_CITIROC(ref PHY_LINK _PHY_LINK)
         {
             phy = _PHY_LINK;
@@ -365,21 +464,7 @@ namespace DT5550W_P_lib
         {
             DLL_ASIC_COUNT = AsicCount;
 
-            if (AsicCount == 1)
-            {
-                if (phy.NI_USB3_WriteReg_M(0XE, RFA_PTROC_ASIC_DISABLE) != 0)
-                    return;
-            }
-            if (AsicCount == 2)
-            {
-                if (phy.NI_USB3_WriteReg_M(0xC, RFA_PTROC_ASIC_DISABLE) != 0)
-                    return;
-            }
-            if (AsicCount == 4)
-            {
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_ASIC_DISABLE) != 0)
-                    return;
-            }
+          
 
         }
 
@@ -406,8 +491,8 @@ namespace DT5550W_P_lib
             int retcode = phy.NI_USB3_ConnectDevice_M(DeviceSerialNumber);
 
             phy.NI_USB3_SetIICControllerBaseAddress_M(
-                  RFA_IIC_CONTROL,
-                  RFA_IIC_STATUS);
+                  SCI_REG_i2c_master_0_CTRL,
+                  SCI_REG_i2c_master_0_MON);
 
 
             SerialNumber = DeviceSerialNumber;
@@ -487,46 +572,102 @@ namespace DT5550W_P_lib
 
         public bool GetCountRate(ref UInt32[] cps)
         {
-            //  UInt32[] data = new UInt32[1024];
+            UInt32[] data = new UInt32[1024];
+            int i;
             uint read_word = 0;
             uint valid_data = 0;
-            phy.NI_USB3_ReadData_M(cps, (UInt32)128, 0x80080000, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
+            phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_0_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
+            for (i=0;i<32;i++)
+            {
+                cps[i + 0] = data[i];
+            }
+
+
+            phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_1_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
+            for (i = 0; i < 32; i++)
+            {
+                cps[i + 32] = data[i];
+            }
+
+            phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_2_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
+            for (i = 0; i < 32; i++)
+            {
+                cps[i + 64] = data[i];
+            }
+
+            phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_3_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
+            for (i = 0; i < 32; i++)
+            {
+                cps[i + 96] = data[i];
+            }
+
 
             return true;
         }
 
 
-        public void SelectTriggerMode(bool charge_trigger)
+        public void SelectTriggerMode(TriggerMode TGMode)
         {
-            if (charge_trigger)
-                phy.NI_USB3_WriteReg_M(1, DAQ_TRIGGER_MODE);
-            else
-                phy.NI_USB3_WriteReg_M(0, DAQ_TRIGGER_MODE);
+            uint trig_mode=0;
+            uint gbltrig_mode=0;
+            switch (TGMode)
+            {
+                case TriggerMode.TIME_TRIG:
+                    trig_mode = 0;
+                    break;
+
+                case TriggerMode.CHARGE_TRIG:
+                    trig_mode = 1;
+                    break;
+
+                case TriggerMode.EXT_TRIG:
+                    trig_mode = 2;
+                    break;
+
+                case TriggerMode.GBL_TRIG_TIME:
+                    gbltrig_mode = 0;
+                    trig_mode = 3;
+                    break;
+
+                case TriggerMode.GBL_TRIG_CHARGE:
+                    gbltrig_mode = 0;
+                    trig_mode = 3;
+                    break;
+
+                case TriggerMode.SELF_TRIG:
+                    trig_mode = 4;
+                    break;
+
+              
+            }
+          //  phy.NI_USB3_WriteReg_M(0, SCI_REG_TRIG_A_SEL);
+            phy.NI_USB3_WriteReg_M(trig_mode, SCI_REG_TRIG_A_SEL);
+            phy.NI_USB3_WriteReg_M(gbltrig_mode, SCI_REG_TRIG_GBL_SEL);
+
+
+
         }
 
 
-        public void EnableTriggerFrame(bool enable)
-        {
-            if (enable)
-                phy.NI_USB3_WriteReg_M(0xF, DAQ_TRIGGER_FRAME);
-            else
-                phy.NI_USB3_WriteReg_M(0, DAQ_TRIGGER_FRAME);
-        }
+       
         public void EnableExternalVeto(bool enable)
         {
             if (enable)
-                phy.NI_USB3_WriteReg_M(1, DAQ_EXTERNAL_VETO);
+            {
+                phy.NI_USB3_WriteReg_M(1, SCI_REG_VET_A_EN);
+                phy.NI_USB3_WriteReg_M(1, SCI_REG_VET_B_EN);
+                phy.NI_USB3_WriteReg_M(1, SCI_REG_VET_C_EN);
+                phy.NI_USB3_WriteReg_M(1, SCI_REG_VET_D_EN);
+            }
             else
-                phy.NI_USB3_WriteReg_M(0, DAQ_EXTERNAL_VETO);
+            {
+                phy.NI_USB3_WriteReg_M(0, SCI_REG_VET_A_EN);
+                phy.NI_USB3_WriteReg_M(0, SCI_REG_VET_B_EN);
+                phy.NI_USB3_WriteReg_M(0, SCI_REG_VET_C_EN);
+                phy.NI_USB3_WriteReg_M(0, SCI_REG_VET_D_EN);
+            }
         }
 
-        public void EnableExternalTrigger(bool enable)
-        {
-            if (enable)
-                phy.NI_USB3_WriteReg_M(1, DAQ_TRIGGER_EXT);
-            else
-                phy.NI_USB3_WriteReg_M(0, DAQ_TRIGGER_EXT);
-        }
 
         public void GetBuild(ref UInt32 build)
         {
@@ -547,8 +688,14 @@ namespace DT5550W_P_lib
                 A4 = true;
             }
 
-            if (phy.NI_USB3_WriteReg_M((uint)((((A1 ? 0 : 1)) << 3) + (((A2 ? 0 : 1)) << 2) + (((A3 ? 0 : 1)) << 1) + (((A4 ? 0 : 1)) << 0)), RFA_PTROC_ASIC_DISABLE) != 0)
-                return;
+            phy.NI_USB3_WriteReg_M((uint)(A1 ? 1 : 0), SCI_REG_SW_VET_A);
+            phy.NI_USB3_WriteReg_M((uint)(A2 ? 1 : 0), SCI_REG_SW_VET_B);
+            phy.NI_USB3_WriteReg_M((uint)(A3 ? 1 : 0), SCI_REG_SW_VET_C);
+            phy.NI_USB3_WriteReg_M((uint)(A4 ? 1 : 0), SCI_REG_SW_VET_D);
+
+
+            //if (phy.NI_USB3_WriteReg_M((uint)((((A1 ? 0 : 1)) << 3) + (((A2 ? 0 : 1)) << 2) + (((A3 ? 0 : 1)) << 1) + (((A4 ? 0 : 1)) << 0)), RFA_PTROC_ASIC_DISABLE) != 0)
+            //   return;
         }
 
 
@@ -558,49 +705,49 @@ namespace DT5550W_P_lib
 
             if (progA)
             {
-                for (int i = 0; i < 20; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_A + (uint)i) != 0)
+                for (int i = 0; i < 36; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg0_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_A + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(1, SCI_REG_CitirocCfg0_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_A + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg0_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progB)
             {
-                for (int i = 0; i < 20; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_B + (uint)i) != 0)
+                for (int i = 0; i < 36; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg1_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_B + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(1, SCI_REG_CitirocCfg1_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_B + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg1_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progC)
             {
-                for (int i = 0; i < 20; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_C + (uint)i) != 0)
+                for (int i = 0; i < 36; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg2_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_C + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(1, SCI_REG_CitirocCfg2_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_C + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg2_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progD)
             {
-                for (int i = 0; i < 20; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_D + (uint)i) != 0)
+                for (int i = 0; i < 36; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg3_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_D + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(1, SCI_REG_CitirocCfg3_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_D + RFA_PTROC_PROG) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg3_START_REG_CFG) != 0)
                     return false;
             }
             return true;
@@ -613,49 +760,49 @@ namespace DT5550W_P_lib
         {
             if (progA)
             {
-                for (int i = 0; i < 7; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_A + (uint)i) != 0)
+                for (int i = 0; i < 8; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg0_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_A + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(2, SCI_REG_CitirocCfg0_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_A + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg0_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progB)
             {
-                for (int i = 0; i < 7; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_B + (uint)i) != 0)
+                for (int i = 0; i < 8; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg1_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_B + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(2, SCI_REG_CitirocCfg1_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_B + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg1_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progC)
             {
-                for (int i = 0; i < 7; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_C + (uint)i) != 0)
+                for (int i = 0; i < 8; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg2_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_C + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(2, SCI_REG_CitirocCfg2_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_C + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg2_START_REG_CFG) != 0)
                     return false;
             }
 
             if (progD)
             {
-                for (int i = 0; i < 7; i++)
-                    if (phy.NI_USB3_WriteReg_M(cfg[i], RFA_PTROC_BA_D + (uint)i) != 0)
+                for (int i = 0; i < 8; i++)
+                    if (phy.NI_USB3_WriteReg_M(cfg[i], SCI_REG_CitirocCfg3_REG_CFG0 + (uint)i) != 0)
                         return false;
 
-                if (phy.NI_USB3_WriteReg_M(1, RFA_PTROC_BA_D + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(2, SCI_REG_CitirocCfg3_START_REG_CFG) != 0)
                     return false;
-                if (phy.NI_USB3_WriteReg_M(0, RFA_PTROC_BA_D + RFA_PTROC_PROGMONITOR) != 0)
+                if (phy.NI_USB3_WriteReg_M(0, SCI_REG_CitirocCfg3_START_REG_CFG) != 0)
                     return false;
             }
             return true;
@@ -666,22 +813,21 @@ namespace DT5550W_P_lib
 
         public void FlushFIFO()
         {
-            phy.NI_USB3_WriteReg_M(0, DAQ_FLUSH_FIFO);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_RUNSTART);
             System.Threading.Thread.Sleep(1);
-            phy.NI_USB3_WriteReg_M(1, DAQ_FLUSH_FIFO);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_RUNSTART);
             System.Threading.Thread.Sleep(1);
-            phy.NI_USB3_WriteReg_M(0, DAQ_FLUSH_FIFO);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_RUNSTART);
         }
 
 
-        public void VetoSw(bool veto)
-        {
-            phy.NI_USB3_WriteReg_M((UInt32)(veto == true ? 1 : 0), DAQ_VETO_sw);
-        }
 
         public void ExtVetoEnable(bool enable)
         {
-            phy.NI_USB3_WriteReg_M((UInt32)(enable == true ? 1 : 0), DAQ_VETO);
+            phy.NI_USB3_WriteReg_M((UInt32)(enable == true ? 1 : 0), SCI_REG_VET_A_EN);
+            phy.NI_USB3_WriteReg_M((UInt32)(enable == true ? 1 : 0), SCI_REG_VET_B_EN);
+            phy.NI_USB3_WriteReg_M((UInt32)(enable == true ? 1 : 0), SCI_REG_VET_C_EN);
+            phy.NI_USB3_WriteReg_M((UInt32)(enable == true ? 1 : 0), SCI_REG_VET_D_EN);
         }
 
 
@@ -689,19 +835,21 @@ namespace DT5550W_P_lib
         {
             int clk_s = (int)(ns / 6.25);
             int retval = 0;
-            retval = phy.NI_USB3_WriteReg_M((UInt32)clk_s, DIGOUT_LEN);
+            /*retval = phy.NI_USB3_WriteReg_M((UInt32)clk_s, DIGOUT_LEN);
             if (retval != 0)
                 return false;
             else
-                return true;
+                return true;*/
+
+            return true;
         }
 
         public void ConfigureSignalGenerator(bool enableA, bool enableB, bool enableC, bool enableD, int frequency)
         {
-            int enable = (enableA ? 1 : 0) + ((enableB ? 1 : 0) << 1) + ((enableC ? 1 : 0) << 2) + ((enableD ? 1 : 0) << 3);
+            
             int period = 160000000 / frequency;
-            phy.NI_USB3_WriteReg_M((UInt32)enable, SIGGEN_ENABLE);
-            phy.NI_USB3_WriteReg_M((UInt32)period, SIGGEN_PERIOD);
+            
+            phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_SW_TRIG_FREQ);
         }
 
 
@@ -712,33 +860,28 @@ namespace DT5550W_P_lib
             int swmode = 0;
             switch (mode)
             {
-                case T0Mode.SOFTWARE_STARTRUN:
-                    source = 0;
-                    break;
                 case T0Mode.SOFTWARE_PERIODIC:
-                    source = 0;
-                    swmode = 1;
+                    source = 1;
                     break;
                 case T0Mode.EXTERNAL:
-                    source = 1;
-                    swmode = 0;
+                    source = 0;
                     break;
 
             }
 
             int period = 160000000 / T0sw_freq;
-            phy.NI_USB3_WriteReg_M((UInt32)source, T0_SOURCE);
-            phy.NI_USB3_WriteReg_M((UInt32)swmode, T0_SWMODE);
-            phy.NI_USB3_WriteReg_M((UInt32)period, T0_FREQ);
-            phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);
+            phy.NI_USB3_WriteReg_M((UInt32)source, SCI_REG_T0_SEL);
+            //phy.NI_USB3_WriteReg_M((UInt32)swmode, T0_SWMODE);
+            phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_T0_SOFT_FREQ);
+            //phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);
         }
 
 
         public void PulseT0()
         {
-            phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);
+            /*phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);
             phy.NI_USB3_WriteReg_M((UInt32)1, T0_SW);
-            phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);
+            phy.NI_USB3_WriteReg_M((UInt32)0, T0_SW);*/
         }
 
 
@@ -751,20 +894,115 @@ namespace DT5550W_P_lib
             return b;
         }
 
-        public int DecodeCitirocRowEvents(ref UInt32[] bufferA, UInt32 valid_wordA, ref Queue<t_CitirocDATA> pC, int ThresholdSoftware)
+        const int PacketSize = 38;
+        Queue<UInt32> InternalBuffer = new Queue<UInt32>();
+        int internalBufferSize = 1000000;
+
+
+        public bool PushRawDataInBuffer(ref UInt32[] bufferA, UInt32 valid_wordA)
         {
-            
-            return 0;
+            if (InternalBuffer.Count + valid_wordA > internalBufferSize) return false;
+
+            for (int i = 0; i < valid_wordA; i++)
+            {
+                InternalBuffer.Enqueue((UInt32)bufferA[i]);
+            }
+
+            return true;
         }
+
+
+
+        public int DecodeCitirocRowEvents(ref Queue<t_DataCITIROC> pC, int ThresholdSoftware)
+        {
+            int DecodedPackets = 0;
+            double Time = 0;
+            double minTime = 0;
+            UInt32 i, j, t, s;
+            UInt32 bword = 0;
+            uint[] datarow = new uint[97];
+
+            t_DataCITIROC DataPETIROCA = null;
+            t = 0;
+            s = 0;
+            while (InternalBuffer.Count > PacketSize)
+            {
+                switch (s)
+                {
+                    case 0:
+                        bword = InternalBuffer.Dequeue();
+                        if (((bword >> 4) & 0xc000000) == 0x8000000)
+                        {
+                            s = 1;
+                            DataPETIROCA = new t_DataCITIROC();
+                            DataPETIROCA.AsicID = (UInt16)(bword & 0xF);
+                            DataPETIROCA.EventTimecode = ((UInt64)InternalBuffer.Dequeue());
+                            DataPETIROCA.RunEventTimecode = (((UInt64)InternalBuffer.Dequeue())) + (((UInt64)InternalBuffer.Dequeue()) << 32);
+                            DataPETIROCA.EventCounter = ((UInt64)InternalBuffer.Dequeue());
+
+                            DataPETIROCA.EventTimecode_ns = DataPETIROCA.EventTimecode * 6.25;
+                            DataPETIROCA.RunEventTimecode_ns = DataPETIROCA.RunEventTimecode * 6.25;
+
+                            t = t + 5;
+                            minTime = 100000000000000;
+                        }
+                        else
+                            t++;
+                        break;
+
+                    case 1:
+                        for (i = 0; i < 32; i++)
+                        {
+                            bword = InternalBuffer.Dequeue();
+                            datarow[i * 3 + 0] = (bword >> 0) & 0x3FFF;
+                            datarow[i * 3 + 1] = (bword >> 14) & 0x3FFF;
+                            datarow[i * 3 + 2] = (bword >> 28) & 0x1;
+                            t++;
+                        }
+                        for (i = 0; i < 32; i++)
+                        {
+                            DataPETIROCA.hit[31-i] = (bool)((datarow[i * 3 + 2] & 0x1) == 1 ? true : false);
+                            int dataHG = (int)datarow[(i * 3) + 0];
+                            int dataLG = (int)datarow[(i * 3) + 1];
+
+
+                            if (dataHG > ThresholdSoftware)//(DataPETIROCA.hit[i])
+                                DataPETIROCA.chargeHG[31-i] = (ushort)dataHG;//(ushort) (data>100 ? (data):0);
+                            else
+                                DataPETIROCA.chargeHG[31-i] = 0;
+
+
+                            if (dataHG > ThresholdSoftware)//(DataPETIROCA.hit[i])
+                                DataPETIROCA.chargeLG[31-i] = (ushort)dataLG;//(ushort) (data>100 ? (data):0);
+                            else
+                                DataPETIROCA.chargeLG[31-i] = 0;
+
+                        }
+                        s = 2;
+                        break;
+
+                    case 2:
+                        if ((InternalBuffer.Dequeue() & 0xc0000000) == 0xc0000000)
+                        {
+                            pC.Enqueue(DataPETIROCA);
+                            DecodedPackets++;
+                        }
+                        t++;
+                        s = 0;
+                        break;
+                }
+            }
+            return DecodedPackets;
+        }
+
         public int GetRawBuffer(UInt32[] data, UInt32 event_count, UInt32 timeout, UInt32 PacketSize, ref UInt32 valid_word)
         {
             int retcode = 0;
             UInt32 transfer_length = PacketSize * event_count;
             UInt32 read_word = 0;
             UInt32 valid_data = 0;
-            UInt32 address = 0;
-            address = 0x80000000;
-            retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, address, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
+ 
+            retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_CitirocFrame0_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
 
             valid_word = valid_data;
             return retcode;
@@ -781,7 +1019,7 @@ namespace DT5550W_P_lib
 
             q = 0;
             chmap = new tChannelMapping[BI.totalAsics * BI.channelsPerAsic];
-            if (BI.AsicType == t_BoardInfo.t_AsicType.PETIROC)
+           //if (BI.AsicType == t_BoardInfo.t_AsicType.PETIROC)
             {
                 int[] xx = { 2, 3, 3, 2, 2, 3, 3, 2, 2, 3, 3, 2, 2, 3, 3, 2, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1 };
                 int[] yy = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0 };
@@ -800,5 +1038,210 @@ namespace DT5550W_P_lib
             }
             return false;
         }
+
+
+        public bool GetMonitor(ref CitirocMonitorData PMD)
+        {
+            uint StatusRegister = 0;
+            //NI_USB3_ReadReg_M(ref StatusRegister, 0x8007FFFF);
+            //if (StatusRegister!=0)
+            // {
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_0_CONFIG_TRIGGER_MODE);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_1_CONFIG_TRIGGER_MODE);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_2_CONFIG_TRIGGER_MODE);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_3_CONFIG_TRIGGER_MODE);
+            int retcode = 0;
+            UInt32 samples = 1024;
+            UInt32 OscWordSize = 1 ;
+            UInt32 transfer_length = OscWordSize * samples * 2;
+            UInt32[] data0 = new UInt32[transfer_length * 2];
+            UInt32[] data1 = new UInt32[transfer_length * 2];
+            UInt32[] data2 = new UInt32[transfer_length * 2];
+            UInt32[] data3 = new UInt32[transfer_length * 2];
+
+            UInt32 read_word = 0;
+            UInt32 valid_data = 0;
+            UInt32 read_pos0 = 0;
+            UInt32 read_pos1 = 0;
+            UInt32 read_pos2 = 0;
+            UInt32 read_pos3 = 0;
+
+            retcode = phy.NI_USB3_ReadData_M(data0, (UInt32)transfer_length, SCI_REG_Oscilloscope_0_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, (UInt32)4000, ref read_word, ref valid_data);
+            retcode = phy.NI_USB3_ReadData_M(data1, (UInt32)transfer_length, SCI_REG_Oscilloscope_1_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, (UInt32)4000, ref read_word, ref valid_data);
+            retcode = phy.NI_USB3_ReadData_M(data2, (UInt32)transfer_length, SCI_REG_Oscilloscope_2_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, (UInt32)4000, ref read_word, ref valid_data);
+            retcode = phy.NI_USB3_ReadData_M(data3, (UInt32)transfer_length, SCI_REG_Oscilloscope_3_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, (UInt32)4000, ref read_word, ref valid_data);
+
+            phy.NI_USB3_ReadReg_M(ref read_pos0, SCI_REG_Oscilloscope_0_READ_POSITION);
+            phy.NI_USB3_ReadReg_M(ref read_pos1, SCI_REG_Oscilloscope_1_READ_POSITION);
+            phy.NI_USB3_ReadReg_M(ref read_pos2, SCI_REG_Oscilloscope_2_READ_POSITION);
+            phy.NI_USB3_ReadReg_M(ref read_pos3, SCI_REG_Oscilloscope_3_READ_POSITION);
+
+
+
+            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_0_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_1_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_2_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_3_CONFIG_DECIMATOR);
+
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_0_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_0_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_0_CONFIG_ARM);
+
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_1_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_1_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_1_CONFIG_ARM);
+
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_2_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_2_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_2_CONFIG_ARM);
+
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_3_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_3_CONFIG_ARM);
+            phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_3_CONFIG_ARM);
+
+
+            int soffset = 0;
+            int q=0;
+
+            for (int i = (int)read_pos0; i < samples-1; i++)
+            {
+                UInt32 t;
+                PMD.A_chargeLG [q] = ((data0[soffset + (i * OscWordSize) + 0] ) & 0xFFFF);
+                PMD.A_chargeHG[q] =  ((data0[soffset + (i * OscWordSize) + samples] ) & 0xFFFF);
+                PMD.A_CLK [q] = ((data0[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.A_SR[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.A_Trig_Ext[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.A_Veto_Ext[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.A_TrigT[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.A_TrigC[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.A_Trig[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.A_HIT[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+            for (int i = 0; i < (int)read_pos0; i++)
+            {
+                UInt32 t;
+                PMD.A_chargeLG[q] = ((data0[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.A_chargeHG[q] = ((data0[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.A_CLK[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.A_SR[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.A_Trig_Ext[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.A_Veto_Ext[q] = ((data0[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.A_TrigT[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.A_TrigC[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.A_Trig[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.A_HIT[q] = ((data0[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+
+                q++;
+            }
+
+
+
+            q = 0;
+
+            for (int i = (int)read_pos1; i < samples - 1; i++)
+            {
+                PMD.B_chargeLG[q] = ((data1[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.B_chargeHG[q] = ((data1[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.B_CLK[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.B_SR[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.B_Trig_Ext[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.B_Veto_Ext[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.B_TrigT[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.B_TrigC[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.B_Trig[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.B_HIT[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+            for (int i = 0; i < (int)read_pos1; i++)
+            {
+                PMD.B_chargeLG[q] = ((data1[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.B_chargeHG[q] = ((data1[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.B_CLK[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.B_SR[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.B_Trig_Ext[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.B_Veto_Ext[q] = ((data1[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.B_TrigT[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.B_TrigC[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.B_Trig[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.B_HIT[q] = ((data1[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+
+            q = 0;
+
+            for (int i = (int)read_pos2; i < samples - 1; i++)
+            {
+                PMD.C_chargeLG[q] = ((data2[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.C_chargeHG[q] = ((data2[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.C_CLK[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.C_SR[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.C_Trig_Ext[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.C_Veto_Ext[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.C_TrigT[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.C_TrigC[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.C_Trig[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.C_HIT[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+            for (int i = 0; i < (int)read_pos2; i++)
+            {
+                PMD.C_chargeLG[q] = ((data2[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.C_chargeHG[q] = ((data2[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.C_CLK[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.C_SR[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.C_Trig_Ext[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.C_Veto_Ext[q] = ((data2[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.C_TrigT[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.C_TrigC[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.C_Trig[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.C_HIT[q] = ((data2[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+
+            q = 0;
+
+            for (int i = (int)read_pos3; i < samples - 1; i++)
+            {
+                PMD.D_chargeLG[q] = ((data3[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.D_chargeHG[q] = ((data3[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.D_CLK[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.D_SR[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.D_Trig_Ext[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.D_Veto_Ext[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.D_TrigT[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.D_TrigC[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.D_Trig[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.D_HIT[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+            for (int i = 0; i < (int)read_pos3; i++)
+            {
+                PMD.D_chargeLG[q] = ((data3[soffset + (i * OscWordSize) + 0]) & 0xFFFF);
+                PMD.D_chargeHG[q] = ((data3[soffset + (i * OscWordSize) + samples]) & 0xFFFF);
+                PMD.D_CLK[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 16) & 0x1);
+                PMD.D_SR[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 17) & 0x1);
+                PMD.D_Trig_Ext[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 18) & 0x1);
+                PMD.D_Veto_Ext[q] = ((data3[soffset + (i * OscWordSize) + 0] >> 19) & 0x1);
+                PMD.D_TrigT[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 16) & 0x1);
+                PMD.D_TrigC[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 17) & 0x1);
+                PMD.D_Trig[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 18) & 0x1);
+                PMD.D_HIT[q] = ((data3[soffset + (i * OscWordSize) + samples] >> 19) & 0x1);
+                q++;
+            }
+
+            return true;
+           
+
+
+        }
+
     }
 }
+
