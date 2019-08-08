@@ -1268,7 +1268,7 @@ Public Class MainForm
                         DURATION.Milliseconds.ToString.PadLeft(3, "0"c)
             'End If
             ProcTime = Now
-
+            DecodedClusters = 0
             If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
 
                 board.GetRawBuffer(Buffer, TransferSize, 4000, BI.DigitalDataPacketSize, ValidWord)
@@ -1288,7 +1288,7 @@ Public Class MainForm
                     DecodedEvents = board.DecodePetirocRowEvents(Buffer, ValidWord, Events, 0, InputPolarity)
 
 
-                    DecodedClusters = 0
+
                     If CurrentProcessMode = ProcessMode.EVENT_DECODE Then
                         While Events.Count > 0
 

@@ -322,7 +322,7 @@ namespace DT5550W_P_lib
             //    return -1;
 
             //System.Threading.Thread.Sleep(5);
-
+            mut.ReleaseMutex();
             return 0;
         }
 
