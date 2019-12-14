@@ -5,8 +5,7 @@ Imports Gigasoft.ProEssentials
 Imports Gigasoft.ProEssentials.Enums
 Imports OxyPlot
 Imports MathNet.Numerics
-
-Public Class pSpectra
+Public Class ScanWindow
     Dim SpectrumLength As UInt32 = 1024
     Dim MaxNumberOfChannel As UInt32 = 32
     Dim logmode As Boolean = False
@@ -34,14 +33,26 @@ Public Class pSpectra
 
     Dim t1 As Thread
     Dim StopT1 As Boolean = False
-    Dim rebin = 8
-    Public Structure ChnData
-        Public X As String
-        Public Y As String
-        Public BOARD As String
-        Public ID As Integer
-        Public MODE As String
+    Dim TotalCps() As Double
+    Dim sumIndex = 0
+
+    Dim ScanXValue As Double = 0
+    Dim oScanXValue As Double = 0
+
+    Dim ScanMode As String = "Time"
+
+    Dim isRunning As Boolean = False
+    Dim discard_next = 0
+
+    Structure tPointRate
+        Dim PointData As DateTime
+        Dim PointIntegralTime As Double
+        Dim YValue As Double
+        Dim XValue As Double
+        Dim ScanValue As Double
     End Structure
+
+    Dim PointHistory() As List(Of tPointRate)
 
     Class ListViewItemComparer
         Implements IComparer
@@ -66,7 +77,7 @@ Public Class pSpectra
         End Function
     End Class
 
-    Public Sub UpdateChannels(lch As List(Of ChnData))
+    Public Sub UpdateChannels(lch As List(Of pSpectra.ChnData))
         ListView1.Items.Clear()
         ListView1.Columns.Clear()
         ListView1.Columns.Add("")
@@ -76,6 +87,7 @@ Public Class pSpectra
         ListView1.Columns.Add("BOARD")
         ListView1.Columns.Add("MODE")
         ListView1.Columns.Add("ORDER")
+        ListView1.Columns.Add("RATE")
         Me.ListView1.ListViewItemSorter = Nothing
         ListView1.Columns.Item(0).Width = 18
         ListView1.Columns.Item(1).Width = 0
@@ -84,11 +96,13 @@ Public Class pSpectra
         ListView1.Columns.Item(4).Width = 50
         ListView1.Columns.Item(5).Width = 0
         ListView1.Columns.Item(6).Width = 0
+        ListView1.Columns.Item(7).Width = 50
         For Each c In lch
             If c.MODE = "sum" Then
-                ListView1.Items.Add("").SubItems.AddRange({c.ID, 0, 0, "SUM (ALL)", c.MODE, 0})
+                ListView1.Items.Add("").SubItems.AddRange({c.ID, 0, 0, "SUM (ALL)", c.MODE, 0, 0})
+                sumIndex = ListView1.Items.Count - 1
             Else
-                ListView1.Items.Add("").SubItems.AddRange({c.ID, c.X, c.Y, c.BOARD, c.MODE, (c.BOARD * 1000000 + c.Y * 1000 + c.X).ToString().PadLeft(10)})
+                ListView1.Items.Add("").SubItems.AddRange({c.ID, c.X, c.Y, c.BOARD, c.MODE, (c.BOARD * 1000000 + c.Y * 1000 + c.X).ToString().PadLeft(10), 0})
             End If
 
             ListView1.Items(ListView1.Items.Count - 1).SubItems(0).Name = "CHECKED"
@@ -97,13 +111,17 @@ Public Class pSpectra
             ListView1.Items(ListView1.Items.Count - 1).SubItems(3).Name = "Y"
             ListView1.Items(ListView1.Items.Count - 1).SubItems(4).Name = "BOARD"
             ListView1.Items(ListView1.Items.Count - 1).SubItems(5).Name = "MODE"
+            ListView1.Items(ListView1.Items.Count - 1).SubItems(7).Name = "RATE"
 
         Next
         Me.ListView1.ListViewItemSorter = New ListViewItemComparer(6)
         ' Call the sort method to manually sort.
         ListView1.Sort()
 
-
+        ReDim PointHistory(ListView1.Items.Count)
+        For i = 0 To PointHistory.Count - 1
+            PointHistory(i) = New List(Of tPointRate)
+        Next
     End Sub
 
     Public Sub UpdateChannels_AllChannels()
@@ -125,7 +143,7 @@ Public Class pSpectra
 
     End Sub
 
-    Public Sub UpdateChannels_ASIC(lch As List(Of ChnData))
+    Public Sub UpdateChannels_ASIC(lch As List(Of pSpectra.ChnData))
         ListView1.Items.Clear()
         ListView1.Columns.Clear()
         ListView1.Columns.Add("")
@@ -136,7 +154,7 @@ Public Class pSpectra
         ListView1.Columns.Item(0).Width = 18
         ListView1.Columns.Item(1).Width = 0
         ListView1.Columns.Item(2).Width = 50
-        ListView1.Columns.Item(3).Width = 50
+        ListView1.Columns.Item(3).Width = 30
         ListView1.Columns.Item(4).Width = 0
         For Each c In lch
             ListView1.Items.Add(0).SubItems.AddRange({c.ID, c.X, c.BOARD, c.MODE})
@@ -161,6 +179,102 @@ Public Class pSpectra
 
     End Sub
 
+    Dim lastUpdate As DateTime = Now()
+
+    Dim totAn As Integer = 0
+    Public Sub UpdatePlot()
+        Dim l = 0
+        Dim checked_ch = ListView1.CheckedItems.Count
+        Pesgo1.PeData.Points = PointHistory(0).Count
+        Pesgo1.PeData.Subsets = checked_ch
+        For z = 0 To ListView1.CheckedItems.Count - 1
+            Dim sid = ListView1.CheckedItems.Item(z).Index
+            For p = 0 To PointHistory(sid).Count - 1
+                Pesgo1.PeData.X(l, p) = PointHistory(sid)(p).XValue
+                If logmode = False Then
+                    Pesgo1.PeData.Y(l, p) = PointHistory(sid)(p).YValue 'spectra(MainForm.acquisition.CHList(s).id - 1, p)
+                Else
+                    Pesgo1.PeData.Y(l, p) = PointHistory(sid)(p).YValue  'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
+                End If
+
+
+
+            Next p
+
+
+            Pesgo1.PeColor.SubsetColors(l) = colorList(sid Mod 30)
+            Pesgo1.PePlot.SubsetLineTypes(l) = LineType.ThinSolid
+            Pesgo1.PeString.SubsetLabels(l) = "" 'MainForm.acquisition.CHList(s).name
+            l = l + 1
+        Next
+
+        totAn=0
+        For p = 0 To PointHistory(0).Count - 1
+            If oScanXValue <> PointHistory(0)(p).ScanValue Then
+                Pesgo1.PeAnnotation.Graph.X(totAn) = PointHistory(0)(p).XValue
+                Pesgo1.PeAnnotation.Graph.Y(totAn) = Math.Round(Pesgo1.PeData.Y(0, p), 3)
+                Pesgo1.PeAnnotation.Graph.Text(totAn) = PointHistory(0)(p).ScanValue
+                Pesgo1.PeAnnotation.Graph.Type(totAn) = GraphAnnotationType.Pointer
+                Pesgo1.PeAnnotation.Graph.Axis(totAn) = 0
+                Pesgo1.PeAnnotation.Graph.Color(totAn) = Color.White
+                Pesgo1.PeAnnotation.Graph.Show = True
+                totAn = totAn + 1
+                oScanXValue = PointHistory(0)(p).ScanValue
+            End If
+
+
+
+
+        Next
+
+        Pesgo1.PeAnnotation.Show = True
+        Pesgo1.Refresh()
+    End Sub
+
+    Dim startTimeHistory As DateTime = Now
+    Sub ResetHistory()
+        For i = 0 To PointHistory.Count - 1
+            PointHistory(i).Clear()
+        Next
+        startTimeHistory = Now
+    End Sub
+
+
+
+    Public Function UpdateCPS(arr() As UInt32)
+        ReDim TotalCps(arr.Length - 1)
+        For i = 0 To arr.Length - 1
+            TotalCps(i) = arr(i)
+        Next
+        Dim sum As UInt64 = 0
+        For i = 0 To ListView1.Items.Count - 2
+            ListView1.Items(i).SubItems(7).Text = TotalCps(i)
+
+            If isRunning And discard_next = 0 Then
+                sum += TotalCps(i)
+                Dim tt As New tPointRate
+                tt.PointData = Now
+                tt.ScanValue = ScanXValue
+                tt.YValue = TotalCps(i)
+                tt.PointIntegralTime = (Now - lastUpdate).TotalSeconds
+
+                ' If ScanMode = "Time" Then
+                tt.XValue = (Now - startTimeHistory).TotalSeconds
+                ' End If
+                PointHistory(i).Add(tt)
+            End If
+            lastUpdate = Now()
+        Next
+        ListView1.Items(sumIndex).SubItems(7).Text = sum
+
+
+        If isRunning And discard_next = 0 Then
+            UpdatePlot()
+        End If
+        If discard_next > 0 Then
+            discard_next = discard_next - 1
+        End If
+    End Function
 
     Private Sub DisegnaGrafico(ByRef grafico As Pesgo, Gtyle As SGraphPlottingMethod)
 
@@ -185,10 +299,10 @@ Public Class pSpectra
 
         '// Pass Data //
         grafico.PeData.Subsets = 1
-        grafico.PeData.Points = 65536
+        grafico.PeData.Points = 10
 
 
-        For p = 0 To 65535
+        For p = 0 To grafico.PeData.Points - 1
             grafico.PeData.X(0, p) = p
             grafico.PeData.Y(0, p) = 0
         Next p
@@ -207,7 +321,7 @@ Public Class pSpectra
         grafico.PeString.MainTitle = ""
         grafico.PeString.SubTitle = ""
         grafico.PeString.YAxisLabel = ""
-        grafico.PeString.XAxisLabel = "(channels)"
+        grafico.PeString.XAxisLabel = "(seconds)"
 
         '// subset labels //
         'loopbackspectrum.PeString.SubsetLabels(0) = "CH 1"
@@ -310,6 +424,19 @@ Public Class pSpectra
         grafico.PeUserInterface.Scrollbar.ScrollingHorzZoom = True
         grafico.PePlot.ZoomWindow.Show = True
         grafico.PeData.NullDataValue = -10000000000
+
+
+        grafico.PeAnnotation.Graph.TextLocation(0) = 270
+
+
+        grafico.PeFont.GraphAnnotationTextSize = 85
+        grafico.PeUserInterface.Menu.AnnotationControl = True
+
+        grafico.PeAnnotation.Show = True
+        grafico.PeUserInterface.HotSpot.GraphAnnotation = AnnotationHotSpot.GraphOnly
+        grafico.PeAnnotation.Graph.Moveable = Convert.ToBoolean(GraphAnnotMoveable.Pointer)
+
+
         grafico.Refresh()
         '// Generally call ReinitializeResetImage at end **'
         grafico.PeFunction.ReinitializeResetImage()
@@ -324,13 +451,24 @@ Public Class pSpectra
 
 
         DisegnaGrafico(Pesgo1, SGraphPlottingMethod.Step)
-        Pesgo1.PeString.MainTitle = "Real Time Spectra"
+        Pesgo1.PeString.MainTitle = "Counting Scan"
 
         addressData = MainForm.CurrentMCA.Address
         nchannels = MainForm.CurrentMCA.Channels
 
         reload()
 
+        sMode.Items.Add("Time")
+        sMode.Items.Add("Time Trigger")
+        sMode.Items.Add("HV")
+        sMode.Items.Add("Gain LG")
+        sMode.Items.Add("Gain HG")
+        sMode.Items.Add("Input DAC")
+        sMode.Items.Add("Time Threshold Correction")
+        sMode.Items.Add("Sample/Hold Delay")
+        sMode.Items.Add("External Trigger Delay")
+
+        sMode.SelectedIndex = 0
     End Sub
 
     Public Sub reload()
@@ -424,181 +562,6 @@ Public Class pSpectra
         SpectrumLength = _spectrumLength
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Dim rebinned_spectum(SpectrumLength / rebin - 1) As UInt64
-
-        Dim checked_ch = ListView1.CheckedItems.Count
-        If MainForm.fit_enabled = False Then
-            Dim l = 0
-
-            Pesgo1.PeData.Points = SpectrumLength / rebin
-            Pesgo1.PeData.Subsets = checked_ch
-            For z = 0 To ListView1.CheckedItems.Count - 1
-                Dim sid = ListView1.CheckedItems.Item(z).SubItems("ID").Text
-                Dim rrr As UInt64
-                For p = 0 To SpectrumLength / rebin - 1
-                    rrr = 0
-                    For rb = 0 To rebin - 1
-                        rrr += spectra(sid, p * rebin + rb)
-                    Next
-                    rebinned_spectum(p) = rrr
-                Next
-                For p = 0 To SpectrumLength / rebin - 1
-                    Pesgo1.PeData.X(l, p) = p
-                    If logmode = False Then
-                        Pesgo1.PeData.Y(l, p) = rebinned_spectum(p) 'spectra(MainForm.acquisition.CHList(s).id - 1, p)
-                    Else
-                        Pesgo1.PeData.Y(l, p) = Math.Log10(rebinned_spectum(p) + 1) 'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
-                    End If
-
-                Next p
-                Pesgo1.PeColor.SubsetColors(l) = colorList(sid Mod 30)
-                Pesgo1.PePlot.SubsetLineTypes(l) = LineType.ThinSolid
-                Pesgo1.PeString.SubsetLabels(l) = "" 'MainForm.acquisition.CHList(s).name
-                l = l + 1
-            Next
-            Pesgo1.Refresh()
-        Else
-            'Dim l = 0
-            'Dim n_spettri = checked_ch + MainForm.fit.DataGridView1.Rows.Count
-            'Pesgo1.PeData.Points = SpectrumLength
-            'Pesgo1.PeData.Subsets = n_spettri
-            'Dim graficisullospettro((n_spettri) * SpectrumLength) As Single
-            'Dim graficisullospettro_x((n_spettri) * SpectrumLength) As Single
-
-            'For Each s In CheckedListBox1.CheckedIndices
-            '    For p = 0 To SpectrumLength - 1
-            '        If logmode = False Then
-            '            graficisullospettro(p * (s + 1)) = spectra(MainForm.acquisition.CHList(s).id - 1, p)
-            '        Else
-            '            graficisullospettro(p * (s + 1)) = Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p))
-            '        End If
-            '        graficisullospettro_x(p * (s + 1)) = p
-            '    Next
-            'Next
-
-            'For k = 0 To MainForm.fit.DataGridView1.Rows.Count - 1
-            '    Dim sx, ex As Integer
-
-            '    Try
-            '        sx = CInt(MainForm.fit.DataGridView1.Rows(k).Cells("Cursor 1").Value)
-            '        ex = CInt(MainForm.fit.DataGridView1.Rows(k).Cells("Cursor 2").Value)
-
-            '        Dim dataproc_y(ex - sx) As Double
-            '        Dim dataproc_x(ex - sx) As Double
-            '        Dim mean As Double = 0
-            '        Dim q = 0
-            '        Dim std_dev As Double = 0
-            '        Dim max As Integer = 0
-            '        Dim idx = 0
-            '        Dim mu1, sg1, A1 As Double
-            '        Dim areaUpeak As Double = 0
-            '        Dim areaFit As Double = 0
-            '        Dim dataCorretto As Double
-            '        Dim selected_ch = CInt(MainForm.fit.DataGridView1.Rows(k).Cells("Channel").ToString.Replace("CHANNEL ", ""))
-
-            '        For i = sx To ex
-            '            dataCorretto = spectra(MainForm.acquisition.CHList(selected_ch).id - 1, i)
-
-            '            mean = mean + dataCorretto * i
-            '            q = q + dataCorretto
-            '            If dataCorretto > max Then
-            '                max = dataCorretto
-            '            End If
-            '            dataproc_y(idx) = Math.Log(dataCorretto + 1)
-            '            If Double.IsNaN(dataproc_y(idx)) Then
-            '                If idx > 0 Then
-            '                    dataproc_y(idx) = dataproc_y(idx - 1)
-            '                Else
-            '                    dataproc_y(idx) = 0
-            '                End If
-            '            Else
-            '                If Double.IsNegativeInfinity(dataproc_y(idx)) Then
-            '                    If idx > 0 Then
-            '                        dataproc_y(idx) = dataproc_y(idx - 1)
-            '                    Else
-            '                        dataproc_y(idx) = 0
-            '                    End If
-            '                End If
-            '            End If
-
-            '            dataproc_x(idx) = i
-            '            idx = idx + 1
-            '        Next
-            '        mean = mean / q
-
-            '        q = 0
-            '        For i = sx To ex
-            '            dataCorretto = spectra(MainForm.acquisition.CHList(selected_ch).id - 1, i)
-            '            std_dev = std_dev + dataCorretto * Math.Pow(i - mean, 2)
-            '            q = q + dataCorretto
-            '        Next
-            '        std_dev = std_dev / q
-            '        std_dev = Math.Sqrt(std_dev)
-
-            '        Dim fitres As Double() = Fit.Polynomial(dataproc_x, dataproc_y, 2)
-            '        mu1 = -1 * fitres(1) / (2 * fitres(2))
-            '        sg1 = Math.Sqrt(-1 / (2 * fitres(2)))
-            '        A1 = Math.Exp(fitres(0) - (Math.Pow(fitres(1), 2) / (4 * fitres(2))))
-            '        For i = sx To ex
-            '            areaFit += A1 * Math.Exp(-Math.Pow((i - mu1), 2) / (2 * sg1 * sg1))
-            '        Next
-            '        If Double.IsNaN(mu1) Then
-            '            sg1 = sg1
-            '        End If
-
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("fitmu").Value = Math.Round(mu1, 2)
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("fitsigma").Value = Math.Round(2.35 * sg1, 3) & " (" & Math.Round(2.35 * sg1 / mu1 * 100, 2) & "%)"
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("mean").Value = Math.Round(mean, 2)
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("sigma").Value = Math.Round(2.35 * std_dev, 2) & " (" & Math.Round(2.35 * std_dev * 100 / mean, 2) & "%)"
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("areaUpeak").Value = areaUpeak
-            '        MainForm.fit.DataGridView1.Rows(k).Cells("areaFit").Value = Math.Round(areaFit)
-
-            '        Dim point As Double
-            '        Dim startx = sx - 15
-            '        Dim endx = ex + 15
-            '        If startx < 0 Then
-            '            startx = 0
-            '        End If
-            '        If endx > SpectrumLength - 1 Then
-            '            endx = SpectrumLength - 1
-            '        End If
-            '        Dim g = 0
-            '        For g = 1 To SpectrumLength
-            '            If logmode Then
-            '                graficisullospettro((k + checked_ch) * SpectrumLength + g) = 1
-            '            Else
-            '                graficisullospettro((k + checked_ch) * SpectrumLength + g) = 0
-            '            End If
-            '            graficisullospettro_x((k + checked_ch) * SpectrumLength + g) = g
-            '        Next
-            '        For i = sx To ex
-            '            point = A1 * Math.Exp(-1 * Math.Pow(i - mu1, 2) / (2 * Math.Pow(sg1, 2))) '+ meanBG' fitrect(0) + fitrect(1) * i
-            '            If logmode = False Then
-            '                graficisullospettro((k + checked_ch) * SpectrumLength + i) = point
-            '            Else
-            '                graficisullospettro((k + checked_ch) * SpectrumLength + i) = point
-            '            End If
-            '            ' graficisullospettro_x((k + checked_ch) * SpectrumLength + i) = i
-            '        Next
-            '    Catch
-            '    End Try
-
-            '    Pesgo1.PeAnnotation.Line.XAxis(k) = sx
-            '    Pesgo1.PeAnnotation.Line.XAxisType(k) = LineAnnotationType.ThinSolid
-            '    Pesgo1.PeAnnotation.Line.XAxisColor(k) = Color.Red
-            '    Pesgo1.PeAnnotation.Line.XAxisText(k) = k + 1
-
-            '    Pesgo1.PeAnnotation.Line.XAxis(k + 1) = ex
-            '    Pesgo1.PeAnnotation.Line.XAxisType(k + 1) = LineAnnotationType.ThinSolid
-            '    Pesgo1.PeAnnotation.Line.XAxisColor(k + 1) = Color.Red
-            '    Pesgo1.PeAnnotation.Line.XAxisText(k + 1) = k + 1
-
-            '            Next
-        End If
-
-
-    End Sub
 
 
     Private Sub Pesgo1_Click(sender As Object, e As EventArgs) Handles Pesgo1.Click
@@ -662,8 +625,111 @@ Public Class pSpectra
     Private Sub ListView1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView1.SelectedIndexChanged
 
     End Sub
+    Private Sub StopScan()
+        isRunning = False
+        Timer1.Enabled = False
+        Button1.Text = "Start"
+    End Sub
 
-    Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint
+    Private Sub StartScan()
+
+        If Not IsNumeric(sStep.Text) Or Not IsNumeric(sMax.Text) Or Not IsNumeric(sMin.Text) Or Not IsNumeric(sTime.Text) Then
+            MsgBox("Scan value must be NUMERIC only", vbCritical + vbOKOnly)
+            Exit Sub
+        End If
+
+
+        Timer1.Interval = sTime.Text * 1000
+        Timer1.Enabled = True
+        Button1.Text = "Stop"
+        ScanXValue = Double.Parse(sMin.Text)
+
+        Select Case ScanMode
+            Case "Time"
+                Pesgo1.PeString.MainTitle = "No Scan - Time Acquisition"
+            Case "Time Trigger"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanTimeThreshold, ScanXValue)
+                Pesgo1.PeString.MainTitle = "Time Trigger Scan"
+            Case "HV"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanHV, ScanXValue)
+                Pesgo1.PeString.MainTitle = "HV Scan"
+            Case "Gain LG"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanGain_LG, ScanXValue)
+                Pesgo1.PeString.MainTitle = "Gain (LG) Scan"
+            Case "Gain HG"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanGain_HG, ScanXValue)
+                Pesgo1.PeString.MainTitle = "Gain (hG) Scan"
+            Case "Input DAC"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanInputDAC, ScanXValue)
+                Pesgo1.PeString.MainTitle = "Input DAC Scan"
+            Case "Time Threshold Correction"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanCorrThreshold, ScanXValue)
+                Pesgo1.PeString.MainTitle = "Time Threshold Correction Scan"
+            Case "Sample/Hold Delay"
+                Pesgo1.PeString.MainTitle = "Sample/Hold delay Scan"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanHoldDelay, ScanXValue)
+            Case "External Trigger Delay"
+                Pesgo1.PeString.MainTitle = "External Trigger Delay Scan"
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay, ScanXValue)
+        End Select
+        System.Threading.Thread.Sleep(2000)
+        ResetHistory()
+        isRunning = True
+    End Sub
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        discard_next = 1
+        If Not IsNumeric(sStep.Text) Or Not IsNumeric(sMax.Text) Or Not IsNumeric(sMin.Text) Or Not IsNumeric(sTime.Text) Then
+            Exit Sub
+        End If
+
+
+        If ScanXValue + Double.Parse(sStep.Text) > Double.Parse(sMax.Text) Then
+            StopScan()
+        End If
+
+        Select Case ScanMode
+            Case "Time"
+                ScanXValue = 0
+            Case "Time Trigger"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanTimeThreshold, ScanXValue)
+            Case "HV"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanHV, ScanXValue)
+            Case "Gain LG"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanGain_LG, ScanXValue)
+            Case "Gain HG"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanGain_HG, ScanXValue)
+            Case "Input DAC"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanInputDAC, ScanXValue)
+            Case "Time Threshold Correction"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanCorrThreshold, ScanXValue)
+            Case "Sample/Hold Delay"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanHoldDelay, ScanXValue)
+            Case "External Trigger Delay"
+                ScanXValue += Double.Parse(sStep.Text)
+                MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay, ScanXValue)
+        End Select
+
+
+
+    End Sub
+
+    Private Sub sMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles sMode.SelectedIndexChanged
+        ScanMode = sMode.Text
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        If Button1.Text = "Start" Then
+            StartScan()
+        Else
+            StopScan()
+        End If
 
     End Sub
 End Class

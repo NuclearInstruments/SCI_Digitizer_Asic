@@ -194,6 +194,12 @@
     <Compile Include="RunStart.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ScanWindow.Designer.vb">
+      <DependentUpon>ScanWindow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ScanWindow.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="SciCompilerExportClass.vb" />
     <Compile Include="Settings.Designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
@@ -265,6 +271,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RunStart.resx">
       <DependentUpon>RunStart.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScanWindow.resx">
+      <DependentUpon>ScanWindow.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>

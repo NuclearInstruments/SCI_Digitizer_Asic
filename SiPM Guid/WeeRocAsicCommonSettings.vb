@@ -2,7 +2,7 @@
     Public Class SingleAsicCFG
         Public SerialNumerbOfTheBoard As String
         Public AsicId As Integer
-        Public Class SignleChannelCFG
+        Public Class SingleChannelCFG
             Public BiasCompEnable As Boolean
             Public BiasComp As Integer
             Public ChargeMask As Boolean
@@ -18,7 +18,7 @@
             Public Offset As Double
         End Class
 
-        Public sC() As SignleChannelCFG
+        Public sC() As SingleChannelCFG
     End Class
 
     Public Class chMap
@@ -67,8 +67,23 @@
     Public TriggerLatch As Boolean
     Public MonitorMuxDigital As String
     Public ChannelDigital As Integer
+    Public HoldDelay As Integer
 
     Public sA() As SingleAsicCFG
 
+    Public ExternalStartDelay As Double
+
     Public sMap() As chMap
+
+
+    Public Enum ScanMode
+        ScanTimeThreshold
+        ScanHV
+        ScanGain_LG
+        ScanGain_HG
+        ScanInputDAC
+        ScanCorrThreshold
+        ScanHoldDelay
+        ScanExternalDelay
+    End Enum
 End Class

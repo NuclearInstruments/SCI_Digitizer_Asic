@@ -23,6 +23,7 @@ namespace DT5550W_P_lib
         const UInt32 SCI_REG_TRIG_GBL_SEL = 0x0000000C;
         const UInt32 SCI_REG_EXT_DELAY = 0x0000000D;
         const UInt32 SCI_REG_SW_TRIG_FREQ = 0x0000000E;
+        const UInt32 SCI_REG_HOLD_WIN = 0x0000000F;
         const UInt32 SCI_REG_A_RATE = 0x00020007;
         const UInt32 SCI_REG_B_RATE = 0x00020008;
         const UInt32 SCI_REG_C_RATE = 0x00020009;
@@ -853,6 +854,11 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         }
 
 
+        public void SetHoldWindowsWidth(double hwidth)
+        {
+            phy.NI_USB3_WriteReg_M((UInt32)hwidth, SCI_REG_HOLD_WIN);
+        }
+
 
         public void ConfigureT0(T0Mode mode, int T0sw_freq)
         {
@@ -967,7 +973,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
 
                             if (dataHG > ThresholdSoftware)//(DataPETIROCA.hit[i])
-                                DataPETIROCA.chargeHG[31-i] = (ushort)dataHG;//(ushort) (data>100 ? (data):0);
+                                DataPETIROCA.chargeHG[31-i] = (ushort)(dataHG);//(ushort) (data>100 ? (data):0);
                             else
                                 DataPETIROCA.chargeHG[31-i] = 0;
 
@@ -1077,6 +1083,14 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             phy.NI_USB3_ReadReg_M(ref read_pos3, SCI_REG_Oscilloscope_3_READ_POSITION);
 
 
+            if (read_pos0 > transfer_length * 2)
+                return false;
+            if (read_pos1 > transfer_length * 2)
+                return false;
+            if (read_pos2 > transfer_length * 2)
+                return false;
+            if (read_pos3 > transfer_length * 2)
+                return false;
 
             phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_0_CONFIG_DECIMATOR);
             phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_1_CONFIG_DECIMATOR);

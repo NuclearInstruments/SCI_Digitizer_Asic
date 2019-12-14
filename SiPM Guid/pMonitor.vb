@@ -161,7 +161,7 @@ Public Class pMonitor
         Pesgo1.PeFunction.Force3dxVerticeRebuild = True
         Pesgo1.PeFunction.Force3dxNewColors = True
         Pesgo1.PeFunction.ReinitializeResetImage()
-
+        Pesgo1.PeUserInterface.Allow.Zooming = AllowZooming.HorzAndVert
 
 
 

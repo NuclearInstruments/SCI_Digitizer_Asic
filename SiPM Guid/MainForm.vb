@@ -63,6 +63,8 @@ Public Class MainForm
     Public pRT6 As New pSpectra
     Public pRT7 As New pSpectra
     Public pRT8 As New pMonitor
+
+    Public pRT9 As New ScanWindow
     '  Public stat As New Statistics
     Public map As New Mapping
     Public sets_petiroc As New Settings
@@ -304,6 +306,14 @@ Public Class MainForm
         list_dockPanel.Add(content1h)
         AppendToLog(LogMode.mINFO, "Creating panel ASIC Monitor")
 
+        Dim content5 As DockContent = GetDockContentForm("Scan", DockState.Document, Color.White)
+        content5.Show(dockPanel)
+        content5.CloseButtonVisible = False
+        content5.Controls.Add(pRT9)
+        pRT9.Dock = DockStyle.Fill
+        list_dockPanel.Add(content5)
+        AppendToLog(LogMode.mINFO, "Creating panel Rate & Scan")
+
         Select Case GBL_ASIC_MODEL
             Case t_AsicModels.PETIROC
                 pRT8.CreatePlotTopPetiroc()
@@ -354,10 +364,12 @@ Public Class MainForm
         AppendToLog(LogMode.mINFO, "Creating panel Energy (Cumulative)")
 
 
+
+
+
     End Sub
 
-
-    Private Sub OpenFile(ByVal sender As Object, ByVal e As EventArgs) Handles OpenToolStripMenuItem.Click, OpenToolStripButton.Click
+    Public Function OpenConfiguration()
 
 
 
@@ -370,10 +382,18 @@ Public Class MainForm
             If oDialog.ShowDialog() = DialogResult.OK Then
 
                 Using sReader As New StreamReader(oDialog.FileName)
-                    Dim sc As New Settings.ClassSettings
+                    Dim sc As New WeeRocAsicCommonSettings
                     Dim x As New Xml.Serialization.XmlSerializer(sc.GetType)
                     sc = x.Deserialize(sReader)
-                    sets_petiroc.SetSettingsFromClass(sc)
+
+
+                    If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
+                        sets_petiroc.SetSettingsFromClass(sc)
+                    Else
+                        If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
+                            sets_citiroc.SetSettingsFromClass(sc)
+                        End If
+                    End If
 
                     Dim asicCount = 0
                     Dim ChannelCount = 0
@@ -408,29 +428,7 @@ Public Class MainForm
                         End If
                     Next
                     map.DefaultLayout()
-                    'While sReader.Peek() > 0
 
-                    '    Dim input = sReader.ReadLine()
-
-                    '    ' Split comma delimited data ( SettingName,SettingValue )  
-                    '    Dim dataSplit = input.Split(CChar(","))
-
-                    '    '           Setting         Value 
-
-                    '    If TypeOf My.Settings.Item(dataSplit(0)) Is Integer Then
-                    '        My.Settings.Item(dataSplit(0)) = CType(dataSplit(1), Integer)
-                    '    End If
-
-
-                    '    If TypeOf My.Settings.Item(dataSplit(0)) Is Double Then
-                    '        My.Settings.Item(dataSplit(0)) = CType(dataSplit(1), Double)
-                    '    End If
-
-
-                    '    If TypeOf My.Settings.Item(dataSplit(0)) Is String Then
-                    '        My.Settings.Item(dataSplit(0)) = CType(dataSplit(1), String)
-                    '    End If
-                    'End While
 
                 End Using
 
@@ -444,6 +442,9 @@ Public Class MainForm
             AppendToLog(LogMode.mERROR, "Error loading file: " & oDialog.SafeFileName & " - " & ex.Message)
         End Try
 
+    End Function
+    Private Sub OpenFile(ByVal sender As Object, ByVal e As EventArgs) Handles OpenToolStripMenuItem.Click, OpenToolStripButton.Click
+        OpenConfiguration()
     End Sub
 
     Private Sub SaveAsToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveAsToolStripMenuItem.Click
@@ -677,6 +678,9 @@ Public Class MainForm
         CHL.Add(CHnL)
         pRT4.UpdateChannels(CHL)
         pRT4_HG.UpdateChannels(CHL)
+
+        pRT9.UpdateChannels(CHL)
+
         'pRT5.UpdateChannels(CHL)
         pRT.pImmediate_ReLoad(EY + 1, EX + 1)
         pRT2.pImmediate_ReLoad(EY + 1, EX + 1)
@@ -1775,91 +1779,93 @@ Public Class MainForm
                         End Try
 
                         Dim view_event = Clusters_Citiroc.Count / 2
-                        For Each e In Clusters_Citiroc(view_event).Events
-                            Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
+                        If (view_event > 0) Then
+                            For Each e In Clusters_Citiroc(view_event).Events
+                                Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
 
-                            For j = 0 To BI.channelsPerAsic - 1
-                                Dim c = SpXIndx + j
-                                If c < RawESpectrum.GetUpperBound(0) Then
-                                    MatrixInst(c) = e.chargeLG(j)
-                                End If
-                            Next
-                        Next
-                        'For i = ClustersBefore To ClustersBefore + DecodedClusters - 1
-                        For i = 0 To Clusters_Citiroc.Count - 1
-                            Try
-
-                                'For t = 0 To MatrixInst.GetUpperBound(0)
-                                'MatrixInst(t) = 0
-                                'Next
-                                Dim EnergySum As Double = 0
-                                Dim EnergySum_HG As Double = 0
-                                For Each e In Clusters_Citiroc(i).Events
-
-                                    Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
-
-                                    For j = 0 To BI.channelsPerAsic - 1
-                                        Dim c = SpXIndx + j
-                                        If c < RawESpectrum.GetUpperBound(0) Then
-                                            If e.chargeLG(j) > 0 Then
-                                                RawESpectrum(c, e.chargeLG(j)) += 1
-                                                EnergySum += e.chargeLG(j)
-                                            End If
-
-                                            If e.chargeHG(j) > 0 Then
-                                                RawE_HG_Spectrum(c, e.chargeHG(j)) += 1
-                                                EnergySum_HG += e.chargeHG(j)
-                                            End If
-
-                                            MatrixCumulative(c) += e.chargeLG(j) ' quest due righe erano dentro hit
-                                            MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
-                                            MatrixCumulativePerAsicCount(e.AsicID, j) += 1
-                                            'MatrixInst(c) = e.chargeLG(j)
-                                            If e.hit(j) = True Then
-
-
-                                                RawHitCounter(0, c) += 1
-                                            End If
-                                        End If
-                                    Next
-
-
-
-                                Next
-
-                                Dim spesum_bin
-                                spesum_bin = Math.Round(Math.Min(EnergySum * SumSpectrumGain, 1023))
-                                If spesum_bin > 0 Then
-                                    RawESpectrum(SperctrumSumIndex, spesum_bin) += 1
-                                End If
-
-                                Dim spesum_bin_HG
-                                spesum_bin_HG = Math.Round(Math.Min(EnergySum_HG * SumSpectrumGain, 1023))
-                                If spesum_bin_HG > 0 Then
-                                    RawE_HG_Spectrum(SperctrumSumIndex, spesum_bin_HG) += 1
-                                End If
-                            Catch ex As Exception
-                                MsgBox(ex.Message)
-                                AppendToLog(LogMode.mPROCESS, "Process ERROR: " & ex.Message, BI.SerialNumber)
-                            End Try
-                        Next
-                        TotalClusters += DecodedClusters
-                        TotalEvents += DecodedEvents
-                        pRT4.PostData(RawESpectrum, RawESpectrum.GetUpperBound(1))
-                        pRT4_HG.PostData(RawE_HG_Spectrum, RawE_HG_Spectrum.GetUpperBound(1))
-                        pRT5.PostData(RawTSpectrum, RawTSpectrum.GetUpperBound(1))
-                        pRT6.PostData(RawHitCounter, RawHitCounter.GetUpperBound(1))
-                        If Clusters_Citiroc.Count > 0 Then
-                            For Each e In Clusters_Citiroc.Last.Events
-                                For j = 0 To e.chargeLG.GetUpperBound(0) - 1
-                                    AnalogMonitor(e.AsicID, j) = e.chargeLG(j)
+                                For j = 0 To BI.channelsPerAsic - 1
+                                    Dim c = SpXIndx + j
+                                    If c < RawESpectrum.GetUpperBound(0) Then
+                                        MatrixInst(c) = e.chargeLG(j)
+                                    End If
                                 Next
                             Next
                         End If
-                        pRT7.PostData(AnalogMonitor, AnalogMonitor.GetUpperBound(1))
-                    End If 'if CLUSTER_DECODE
+                        'For i = ClustersBefore To ClustersBefore + DecodedClusters - 1
+                        For i = 0 To Clusters_Citiroc.Count - 1
+                                Try
 
-                End If
+                                    'For t = 0 To MatrixInst.GetUpperBound(0)
+                                    'MatrixInst(t) = 0
+                                    'Next
+                                    Dim EnergySum As Double = 0
+                                    Dim EnergySum_HG As Double = 0
+                                    For Each e In Clusters_Citiroc(i).Events
+
+                                        Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
+
+                                        For j = 0 To BI.channelsPerAsic - 1
+                                            Dim c = SpXIndx + j
+                                            If c < RawESpectrum.GetUpperBound(0) Then
+                                                If e.chargeLG(j) > 0 Then
+                                                    RawESpectrum(c, e.chargeLG(j)) += 1
+                                                    EnergySum += e.chargeLG(j)
+                                                End If
+
+                                                If e.chargeHG(j) > 0 Then
+                                                    RawE_HG_Spectrum(c, e.chargeHG(j)) += 1
+                                                    EnergySum_HG += e.chargeHG(j)
+                                                End If
+
+                                                MatrixCumulative(c) += e.chargeLG(j) ' quest due righe erano dentro hit
+                                                MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
+                                                MatrixCumulativePerAsicCount(e.AsicID, j) += 1
+                                                'MatrixInst(c) = e.chargeLG(j)
+                                                If e.hit(j) = True Then
+
+
+                                                    RawHitCounter(0, c) += 1
+                                                End If
+                                            End If
+                                        Next
+
+
+
+                                    Next
+
+                                    Dim spesum_bin
+                                    spesum_bin = Math.Round(Math.Min(EnergySum * SumSpectrumGain, 1023))
+                                    If spesum_bin > 0 Then
+                                        RawESpectrum(SperctrumSumIndex, spesum_bin) += 1
+                                    End If
+
+                                    Dim spesum_bin_HG
+                                    spesum_bin_HG = Math.Round(Math.Min(EnergySum_HG * SumSpectrumGain, 1023))
+                                    If spesum_bin_HG > 0 Then
+                                        RawE_HG_Spectrum(SperctrumSumIndex, spesum_bin_HG) += 1
+                                    End If
+                                Catch ex As Exception
+                                    MsgBox(ex.Message)
+                                    AppendToLog(LogMode.mPROCESS, "Process ERROR: " & ex.Message, BI.SerialNumber)
+                                End Try
+                            Next
+                            TotalClusters += DecodedClusters
+                            TotalEvents += DecodedEvents
+                            pRT4.PostData(RawESpectrum, RawESpectrum.GetUpperBound(1))
+                            pRT4_HG.PostData(RawE_HG_Spectrum, RawE_HG_Spectrum.GetUpperBound(1))
+                            pRT5.PostData(RawTSpectrum, RawTSpectrum.GetUpperBound(1))
+                            pRT6.PostData(RawHitCounter, RawHitCounter.GetUpperBound(1))
+                            If Clusters_Citiroc.Count > 0 Then
+                                For Each e In Clusters_Citiroc.Last.Events
+                                    For j = 0 To e.chargeLG.GetUpperBound(0) - 1
+                                        AnalogMonitor(e.AsicID, j) = e.chargeLG(j)
+                                    Next
+                                Next
+                            End If
+                            pRT7.PostData(AnalogMonitor, AnalogMonitor.GetUpperBound(1))
+                        End If 'if CLUSTER_DECODE
+
+                    End If
             End If
 
             tProcTime = Now - ProcTime
@@ -2096,49 +2102,43 @@ Public Class MainForm
 
     End Sub
 
-    Private Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
-        'Dim g As New SaveFileDialog
-        'g.Filter = "Nuclear Instruments Config File (*.nic)|*.nic"
-        'If g.ShowDialog = DialogResult.OK Then
-        '    Try
-        '        My.Settings.Save()
-        '        File.Copy(Path.GetDirectoryName(Application.ExecutablePath) & "\SiPM Guid.exe.config", g.FileName, True)
-        '    Catch ex As Exception
-        '        MsgBox("Error: " & ex.Message)
-        '    End Try
-
-        'End If
+    Public Function SaveConfiguration()
         Dim sDialog As New SaveFileDialog()
         sDialog.DefaultExt = ".nias"
         sDialog.Filter = "Nuclear Instruments Application Settings (*.nias)|*.nias"
 
         Try
-            Dim sc As Settings.ClassSettings = sets_petiroc.GetSettingsClass()
-            ReDim sc.sMap(GC.Count - 1)
-            For i = 0 To GC.Count - 1
-                sc.sMap(i) = New Settings.ClassSettings.chMap
-                sc.sMap(i).Asic = GC(i).Asic
-                sc.sMap(i).Board = GC(i).Board
-                sc.sMap(i).Channel = GC(i).Channel
-                sc.sMap(i).ValidLocation = GC(i).ValidLocation
-                sc.sMap(i).Veto = GC(i).Veto
-                sc.sMap(i).X = GC(i).X
-                sc.sMap(i).Y = GC(i).Y
-            Next
+
 
 
 
             If sDialog.ShowDialog() = DialogResult.OK Then
 
                 Using sWriter As New StreamWriter(sDialog.FileName)
+                    Dim sc As WeeRocAsicCommonSettings
 
+                    If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
+                        sc = sets_petiroc.GetSettingsClass()
+                    Else
+                        If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
+                            sc = sets_citiroc.GetSettingsClass
+                        End If
+                    End If
+
+                    ReDim sc.sMap(GC.Count - 1)
+                    For i = 0 To GC.Count - 1
+                        sc.sMap(i) = New WeeRocAsicCommonSettings.chMap
+                        sc.sMap(i).Asic = GC(i).Asic
+                        sc.sMap(i).Board = GC(i).Board
+                        sc.sMap(i).Channel = GC(i).Channel
+                        sc.sMap(i).ValidLocation = GC(i).ValidLocation
+                        sc.sMap(i).Veto = GC(i).Veto
+                        sc.sMap(i).X = GC(i).X
+                        sc.sMap(i).Y = GC(i).Y
+                    Next
                     Dim x As New Xml.Serialization.XmlSerializer(sc.GetType)
                     x.Serialize(sWriter, sc)
-                    'For Each setting As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
 
-                    '    sWriter.WriteLine(setting.Name & "," & setting.PropertyValue.ToString())
-
-                    'Next
 
                 End Using
 
@@ -2150,6 +2150,10 @@ Public Class MainForm
         Catch ex As Exception
             MsgBox("Error: " & ex.Message)
         End Try
+    End Function
+    Private Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
+        SaveConfiguration()
+
 
 
     End Sub
@@ -2477,14 +2481,18 @@ Public Class MainForm
             ' CPSMonitor.cps.Rows.Clear()
             For Each dt In DTList
                 dt.GetCountRate(cps)
-                For i = 0 To dt.GetBoardInfo.totalAsics - 1
-                    For j = 0 To dt.GetBoardInfo.channelsPerAsic
-                        If j < CPSMonitor.cps.Rows.Count - 1 Then
-                            CPSMonitor.cps.Rows(j).Cells(1).Value = cps(j + dt.GetBoardInfo.channelsPerAsic * i)
-                        End If
-
-                    Next
+                For i = 0 To CPSMonitor.cps.Rows.Count - 1
+                    CPSMonitor.cps.Rows(i).Cells(1).Value = cps(i)
                 Next
+                pRT9.UpdateCPS(cps)
+                'For i = 0 To dt.GetBoardInfo.totalAsics - 1
+                '    For j = 0 To dt.GetBoardInfo.channelsPerAsic
+                '        If j < CPSMonitor.cps.Rows.Count - 1 Then
+                '            CPSMonitor.cps.Rows(j).Cells(1).Value = 15'cps(j + dt.GetBoardInfo.channelsPerAsic * i)
+                '        End If
+
+                '    Next
+                'Next
 
             Next
 
@@ -2493,10 +2501,34 @@ Public Class MainForm
     End Sub
 
     Private Sub DefaultConfigurationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultConfigurationToolStripMenuItem.Click
-
+        GenerateEmptyConfigration()
     End Sub
 
     Private Sub MenuStrip1_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles MenuStrip1.ItemClicked
 
+    End Sub
+
+    Private Sub LoadConfigurationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadConfigurationToolStripMenuItem.Click
+        OpenConfiguration()
+    End Sub
+
+    Private Sub SaveConfigurationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveConfigurationToolStripMenuItem.Click
+        SaveConfiguration()
+
+    End Sub
+    Public Sub GenerateEmptyConfigration()
+        Dim sc As WeeRocAsicCommonSettings
+        If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
+            sc = sets_petiroc.GetDefaultSettingsClass()
+            sets_petiroc.SetSettingsFromClass(sc)
+        Else
+            If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
+                sc = sets_citiroc.GetDefaultSettingsClass
+                sets_citiroc.SetSettingsFromClass(sc)
+            End If
+        End If
+    End Sub
+    Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
+        GenerateEmptyConfigration()
     End Sub
 End Class

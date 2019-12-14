@@ -39,6 +39,10 @@ Partial Class Settings
         Me.A_ShaperCI = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.ExtTrigDelay = New System.Windows.Forms.NumericUpDown()
+        Me.TriggerMode = New System.Windows.Forms.ComboBox()
         Me.EnableGlobalTrigger = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.EnableExternalVeto = New System.Windows.Forms.CheckBox()
@@ -106,10 +110,6 @@ Partial Class Settings
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.TriggerMode = New System.Windows.Forms.ComboBox()
-        Me.ExtTrigDelay = New System.Windows.Forms.NumericUpDown()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Label27 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -119,6 +119,7 @@ Partial Class Settings
         Me.TabPage3.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage4.SuspendLayout()
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -139,7 +140,6 @@ Partial Class Settings
         CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
-        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -342,6 +342,41 @@ Partial Class Settings
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'Label27
+        '
+        Me.Label27.Location = New System.Drawing.Point(279, 55)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(132, 18)
+        Me.Label27.TabIndex = 81
+        Me.Label27.Text = "External Trigger Delay (ns)"
+        '
+        'Label26
+        '
+        Me.Label26.Location = New System.Drawing.Point(11, 24)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(70, 13)
+        Me.Label26.TabIndex = 80
+        Me.Label26.Text = "Trigger Mode"
+        '
+        'ExtTrigDelay
+        '
+        Me.ExtTrigDelay.BackColor = System.Drawing.Color.White
+        Me.ExtTrigDelay.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.ExtTrigDelay.Location = New System.Drawing.Point(417, 53)
+        Me.ExtTrigDelay.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.ExtTrigDelay.Name = "ExtTrigDelay"
+        Me.ExtTrigDelay.Size = New System.Drawing.Size(102, 20)
+        Me.ExtTrigDelay.TabIndex = 79
+        '
+        'TriggerMode
+        '
+        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TriggerMode.FormattingEnabled = True
+        Me.TriggerMode.Location = New System.Drawing.Point(142, 21)
+        Me.TriggerMode.Name = "TriggerMode"
+        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
+        Me.TriggerMode.TabIndex = 78
         '
         'EnableGlobalTrigger
         '
@@ -1030,41 +1065,6 @@ Partial Class Settings
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'TriggerMode
-        '
-        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TriggerMode.FormattingEnabled = True
-        Me.TriggerMode.Location = New System.Drawing.Point(142, 21)
-        Me.TriggerMode.Name = "TriggerMode"
-        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
-        Me.TriggerMode.TabIndex = 78
-        '
-        'ExtTrigDelay
-        '
-        Me.ExtTrigDelay.BackColor = System.Drawing.Color.White
-        Me.ExtTrigDelay.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.ExtTrigDelay.Location = New System.Drawing.Point(417, 53)
-        Me.ExtTrigDelay.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
-        Me.ExtTrigDelay.Name = "ExtTrigDelay"
-        Me.ExtTrigDelay.Size = New System.Drawing.Size(102, 20)
-        Me.ExtTrigDelay.TabIndex = 79
-        '
-        'Label26
-        '
-        Me.Label26.Location = New System.Drawing.Point(11, 24)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(70, 13)
-        Me.Label26.TabIndex = 80
-        Me.Label26.Text = "Trigger Mode"
-        '
-        'Label27
-        '
-        Me.Label27.Location = New System.Drawing.Point(279, 55)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(132, 18)
-        Me.Label27.TabIndex = 81
-        Me.Label27.Text = "External Trigger Delay (ns)"
-        '
         'Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1084,6 +1084,7 @@ Partial Class Settings
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage4.ResumeLayout(False)
         Me.TabPage4.PerformLayout()
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1108,7 +1109,6 @@ Partial Class Settings
         CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
-        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

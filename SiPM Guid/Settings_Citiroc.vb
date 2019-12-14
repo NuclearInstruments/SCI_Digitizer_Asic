@@ -57,6 +57,7 @@ Public Class Settings_Citiroc
 
         cfg.TriggerMode = TriggerMode.Text
         cfg.TriggerLatch = LatchTrigger.Checked
+        cfg.HoldDelay = HoldDelay.Value
 
         ReDim cfg.sA(asicCount)
 
@@ -64,7 +65,7 @@ Public Class Settings_Citiroc
             cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
             ReDim cfg.sA(q).sC(31)
             For z = 0 To 31
-                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SignleChannelCFG
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
                 cfg.sA(q).sC(z).BiasCompEnable = IIf(gridList(q).Rows(z).Cells("Enableb").Value = 0, False, True)
                 cfg.sA(q).sC(z).BiasComp = gridList(q).Rows(z).Cells("DACb").Value
                 cfg.sA(q).sC(z).TimeMask = IIf(gridList(q).Rows(z).Cells("TriggerMask").Value = 0, False, True)
@@ -83,6 +84,78 @@ Public Class Settings_Citiroc
         Return cfg
 
     End Function
+
+
+    Public Function GetDefaultSettingsClass() As WeeRocAsicCommonSettings
+        Dim cfg As New WeeRocAsicCommonSettings
+        Dim asicCount As Integer = 0
+
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            asicCount += BI.totalAsics
+        Next
+        cfg.AsicModel = "CITIROC 1A"
+        cfg.AsicCount = asicCount
+        cfg.Timestamp = Now
+        cfg.AppVersion = Application.ProductVersion.ToString
+        cfg.ChargeThreshold = 300
+        cfg.TimeThreshold = 300
+
+        cfg.TransferSize = "100 Events"
+        cfg.T0Mode = "EXTERNAL - LEMO 1"
+        cfg.HvOutputOn = False
+        cfg.HVVoltage = 56
+        cfg.T0Freq = 10
+
+        cfg.SelfTRiggerFreq = 1000
+        cfg.MonitorMux = "None"
+        cfg.Channel = 0
+        cfg.MonitorMuxDigital = "None"
+        cfg.ChannelDigital = 0
+
+        cfg.ProcessMode = "FULL"
+        cfg.FileFormat = "CSV"
+        cfg.ClusterTimens = 1000
+
+        cfg.EnergyModeHG = "Peak Sense"
+        cfg.EnergyModeLG = "Peak Sense"
+        cfg.ShapingTimeLG = 87.5
+        cfg.ShapingTimeHG = 87.5
+        cfg.FastShaperSource = "Low Gain"
+        cfg.SCABias = "Normal"
+        cfg.InputDacReference = "4.5V"
+        cfg.PreampBias = "Normal"
+
+        cfg.TriggerMode = "Time"
+        cfg.TriggerLatch = True
+        cfg.HoldDelay = 10
+
+        ReDim cfg.sA(asicCount)
+
+        For q = 0 To asicCount - 1
+            cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
+            ReDim cfg.sA(q).sC(31)
+            For z = 0 To 31
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
+                cfg.sA(q).sC(z).BiasCompEnable = True
+                cfg.sA(q).sC(z).BiasComp = 128
+                cfg.sA(q).sC(z).TimeMask = False
+                cfg.sA(q).sC(z).TestHG = False
+                cfg.sA(q).sC(z).TestLG = False
+                cfg.sA(q).sC(z).GainHG = 0
+                cfg.sA(q).sC(z).GainLG = 4
+                cfg.sA(q).sC(z).THcompTime = 7
+                cfg.sA(q).sC(z).THcompCharge = 7
+                cfg.sA(q).sC(z).Gain = 1
+                cfg.sA(q).sC(z).Offset = 0
+            Next
+
+        Next
+
+        Return cfg
+
+    End Function
+
 
 
     Public Function SetSettingsFromClass(ByRef cfg As WeeRocAsicCommonSettings) As Boolean
@@ -142,7 +215,7 @@ Public Class Settings_Citiroc
 
             TriggerMode.Text = cfg.TriggerMode
             LatchTrigger.Checked = cfg.TriggerLatch
-
+            HoldDelay.Value = cfg.HoldDelay
 
             Dim asC As Integer = IIf(cfg.AsicCount >= asicCount, asicCount, cfg.AsicCount)
 
@@ -371,6 +444,23 @@ Public Class Settings_Citiroc
 
     Public Sub UpdateSettings()
         MainForm.Timer3.Enabled = False
+        Dim TriggerExtMode = 0
+        Select Case TriggerMode.Text
+            Case "Time"
+                TriggerExtMode = 0
+            Case "Charge"
+                TriggerExtMode = 0
+            Case "External"
+                TriggerExtMode = 1
+            Case "Common (Time)"
+                TriggerExtMode = 1
+            Case "Common (Charge)"
+                TriggerExtMode = 1
+            Case "Self Trigger"
+                TriggerExtMode = 1
+        End Select
+
+
         For i = 0 To MainForm.DTList.Count - 1
             MainForm.DTList(i).CitirocClass.pCFG.Clear()
             Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
@@ -399,7 +489,7 @@ Public Class Settings_Citiroc
                 pC.sc_scaOrPdHg = IIf(EnergyModeHG.Text = "Peak Sense", 0, 1)  ' peak detector on HG
                 pC.sc_scaOrPdLg = IIf(EnergyModeLG.Text = "Peak Sense", 0, 1)  ' peak detector on LG
                 pC.sc_bypassPd = 0 ' Bypass Peak Sensing
-                pC.sc_selTrigExtPd = 0 'Select peak sensing cell trigger [0 : internal trigger – 1 : external trigger] 
+                pC.sc_selTrigExtPd = TriggerExtMode 'Select peak sensing cell trigger [0 : internal trigger – 1 : external trigger] 
                 pC.sc_shapingTimeLg = ShapingTimeLG.SelectedIndex
                 pC.sc_shapingTimeHg = ShapingTimeHG.SelectedIndex
                 pC.sc_latchDiscri = IIf(LatchTrigger.Checked, 1, 0)  'Select latched (RS : 1) or direct output (trigger : 0) on charge discriminator
@@ -537,7 +627,10 @@ Public Class Settings_Citiroc
             End Select
 
 
+            MainForm.DTList(i).CITIROC_SetHoldDelay(HoldDelay.Value)
+
         Next
+
 
 
 
@@ -712,7 +805,62 @@ Public Class Settings_Citiroc
         Next
     End Sub
 
+
+    Public Sub SCAN_PARAMETER(sm As WeeRocAsicCommonSettings.ScanMode, val As Double)
+        Dim AsicCount
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            AsicCount += BI.totalAsics
+        Next
+        Select Case sm
+            Case WeeRocAsicCommonSettings.ScanMode.ScanTimeThreshold
+                A_TimeTHR.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHV
+                Voltage.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanInputDAC
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("DACb").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanGain_HG
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("gainHG").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanGain_LG
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("gainLG").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanCorrThreshold
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("THcompTime").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHoldDelay
+                HoldDelay.Value = val
+                UpdateSettings()
+
+            Case WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay
+
+        End Select
+    End Sub
+
     Private Sub Label16_Click(sender As Object, e As EventArgs) Handles Label16.Click
+
+    End Sub
+
+    Private Sub Panel3_Paint(sender As Object, e As PaintEventArgs) Handles Panel3.Paint
 
     End Sub
 End Class

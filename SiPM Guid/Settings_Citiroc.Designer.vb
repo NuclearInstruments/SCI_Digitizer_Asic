@@ -46,6 +46,8 @@ Partial Class Settings_Citiroc
         Me.ScaBias = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.HoldDelay = New System.Windows.Forms.NumericUpDown()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.TriggerMode = New System.Windows.Forms.ComboBox()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -118,6 +120,7 @@ Partial Class Settings_Citiroc
         Me.TabControl2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         Me.TabPage4.SuspendLayout()
+        CType(Me.HoldDelay, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -233,7 +236,7 @@ Partial Class Settings_Citiroc
         Me.TabPage3.Controls.Add(Me.Label1)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage3.Size = New System.Drawing.Size(803, 248)
         Me.TabPage3.TabIndex = 0
         Me.TabPage3.Text = "Asic General"
@@ -385,6 +388,8 @@ Partial Class Settings_Citiroc
         '
         'TabPage4
         '
+        Me.TabPage4.Controls.Add(Me.HoldDelay)
+        Me.TabPage4.Controls.Add(Me.Label31)
         Me.TabPage4.Controls.Add(Me.Label18)
         Me.TabPage4.Controls.Add(Me.TriggerMode)
         Me.TabPage4.Controls.Add(Me.Label27)
@@ -400,15 +405,35 @@ Partial Class Settings_Citiroc
         Me.TabPage4.Controls.Add(Me.Label19)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage4.Size = New System.Drawing.Size(803, 248)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
         '
+        'HoldDelay
+        '
+        Me.HoldDelay.BackColor = System.Drawing.Color.White
+        Me.HoldDelay.Increment = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.HoldDelay.Location = New System.Drawing.Point(422, 42)
+        Me.HoldDelay.Maximum = New Decimal(New Integer() {30000, 0, 0, 0})
+        Me.HoldDelay.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.HoldDelay.Name = "HoldDelay"
+        Me.HoldDelay.Size = New System.Drawing.Size(80, 20)
+        Me.HoldDelay.TabIndex = 82
+        Me.HoldDelay.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'Label31
+        '
+        Me.Label31.Location = New System.Drawing.Point(303, 44)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(99, 18)
+        Me.Label31.TabIndex = 81
+        Me.Label31.Text = "Hold Delay"
+        '
         'Label18
         '
-        Me.Label18.Location = New System.Drawing.Point(303, 49)
+        Me.Label18.Location = New System.Drawing.Point(303, 105)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(99, 18)
         Me.Label18.TabIndex = 80
@@ -550,7 +575,7 @@ Partial Class Settings_Citiroc
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(517, 49)
+        Me.Label17.Location = New System.Drawing.Point(517, 105)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(20, 13)
         Me.Label17.TabIndex = 69
@@ -560,7 +585,7 @@ Partial Class Settings_Citiroc
         '
         Me.SelfFreq.BackColor = System.Drawing.Color.White
         Me.SelfFreq.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.SelfFreq.Location = New System.Drawing.Point(422, 47)
+        Me.SelfFreq.Location = New System.Drawing.Point(422, 103)
         Me.SelfFreq.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
         Me.SelfFreq.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
         Me.SelfFreq.Name = "SelfFreq"
@@ -594,7 +619,7 @@ Partial Class Settings_Citiroc
         Me.TabPage5.Controls.Add(Me.Label9)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
         Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage5.Size = New System.Drawing.Size(803, 248)
         Me.TabPage5.TabIndex = 2
         Me.TabPage5.Text = "Timestamp"
@@ -651,7 +676,7 @@ Partial Class Settings_Citiroc
         Me.TabPage6.Controls.Add(Me.HVon)
         Me.TabPage6.Location = New System.Drawing.Point(4, 22)
         Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage6.Size = New System.Drawing.Size(803, 248)
         Me.TabPage6.TabIndex = 3
         Me.TabPage6.Text = "HV"
@@ -784,7 +809,7 @@ Partial Class Settings_Citiroc
         Me.TabPage7.Controls.Add(Me.Label13)
         Me.TabPage7.Location = New System.Drawing.Point(4, 22)
         Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage7.Size = New System.Drawing.Size(803, 248)
         Me.TabPage7.TabIndex = 4
         Me.TabPage7.Text = "Data Processing"
@@ -912,8 +937,8 @@ Partial Class Settings_Citiroc
         Me.TabPage8.Controls.Add(Me.Label11)
         Me.TabPage8.Location = New System.Drawing.Point(4, 22)
         Me.TabPage8.Name = "TabPage8"
-        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage8.Size = New System.Drawing.Size(804, 252)
         Me.TabPage8.TabIndex = 5
         Me.TabPage8.Text = "Monitor"
         Me.TabPage8.UseVisualStyleBackColor = True
@@ -1037,7 +1062,7 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage1.Size = New System.Drawing.Size(809, 320)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
@@ -1047,7 +1072,7 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.TabPage2.Size = New System.Drawing.Size(809, 320)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
@@ -1070,6 +1095,7 @@ Partial Class Settings_Citiroc
         Me.TabPage3.PerformLayout()
         Me.TabPage4.ResumeLayout(False)
         Me.TabPage4.PerformLayout()
+        CType(Me.HoldDelay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1183,4 +1209,6 @@ Partial Class Settings_Citiroc
     Friend WithEvents Label28 As Label
     Friend WithEvents Label18 As Label
     Friend WithEvents Label30 As Label
+    Friend WithEvents HoldDelay As NumericUpDown
+    Friend WithEvents Label31 As Label
 End Class

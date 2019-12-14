@@ -73,8 +73,8 @@ Public Class Settings
 
         Public sMap() As chMap
     End Class
-    Public Function GetSettingsClass() As ClassSettings
-        Dim cfg As New ClassSettings
+    Public Function GetSettingsClass() As WeeRocAsicCommonSettings
+        Dim cfg As New WeeRocAsicCommonSettings
         Dim asicCount As Integer = 0
 
         For i = 0 To MainForm.DTList.Count - 1
@@ -110,10 +110,10 @@ Public Class Settings
         ReDim cfg.sA(asicCount)
 
         For q = 0 To asicCount - 1
-            cfg.sA(q) = New ClassSettings.SingleAsicCFG()
+            cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
             ReDim cfg.sA(q).sC(31)
             For z = 0 To 31
-                cfg.sA(q).sC(z) = New ClassSettings.SingleAsicCFG.SignleChannelCFG
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
                 cfg.sA(q).sC(z).BiasCompEnable = IIf(gridList(q).Rows(z).Cells("Enableb").Value = 0, False, True)
                 cfg.sA(q).sC(z).BiasComp = gridList(q).Rows(z).Cells("DACb").Value
                 cfg.sA(q).sC(z).ChargeMask = IIf(gridList(q).Rows(z).Cells("DiscrQ").Value = 0, False, True)
@@ -129,8 +129,62 @@ Public Class Settings
 
     End Function
 
+    Public Function GetDefaultSettingsClass() As WeeRocAsicCommonSettings
+        Dim cfg As New WeeRocAsicCommonSettings
+        Dim asicCount As Integer = 0
 
-    Public Function SetSettingsFromClass(ByRef cfg As ClassSettings) As Boolean
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            asicCount += BI.totalAsics
+        Next
+        cfg.AsicModel = "PETIROC 2A"
+        cfg.AsicCount = asicCount
+        cfg.Timestamp = Now
+        cfg.AppVersion = Application.ProductVersion.ToString
+        cfg.SignalPolarity = "Positive"
+        cfg.ChargeThreshold = 1000
+        cfg.TimeThreshold = 1000
+        cfg.DelayTrigger = 0
+        cfg.ShaperCF = "100fF"
+        cfg.ShaperCI = "5pF"
+        cfg.TransferSize = "10 Events"
+        cfg.T0Mode = "FIRST PHOTON"
+        cfg.psbin = 50
+        cfg.HvOutputOn = False
+        cfg.HVVoltage = 56
+        cfg.T0Freq = 1
+        cfg.SelfTriggerEnable = False
+        cfg.SelfTRiggerFreq = 1000
+        cfg.MonitorMux = "None"
+        cfg.Channel = 0
+        cfg.AnalogReadout = False
+        cfg.ProcessMode = "FULL"
+        cfg.FileFormat = "CSV"
+        cfg.ClusterTimens = 1000
+        cfg.TriggerMode = "Internal Trigger"
+        cfg.ExternalStartDelay = 0
+        ReDim cfg.sA(asicCount)
+
+        For q = 0 To asicCount - 1
+            cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
+            ReDim cfg.sA(q).sC(31)
+            For z = 0 To 31
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
+                cfg.sA(q).sC(z).BiasCompEnable = True
+                cfg.sA(q).sC(z).BiasComp = 128
+                cfg.sA(q).sC(z).ChargeMask = False
+                cfg.sA(q).sC(z).TimeMask = False
+                cfg.sA(q).sC(z).ThCompensation = 32
+                cfg.sA(q).sC(z).Gain = 1
+                cfg.sA(q).sC(z).Offset = 0
+            Next
+
+        Next
+
+        Return cfg
+    End Function
+
+    Public Function SetSettingsFromClass(ByRef cfg As WeeRocAsicCommonSettings) As Boolean
 
         Dim asicCount As Integer = 0
 
@@ -723,6 +777,52 @@ Public Class Settings
     End Sub
 
     Private Sub SumSpectrumGain_ValueChanged(sender As Object, e As EventArgs) Handles SumSpectrumGain.ValueChanged
+
+    End Sub
+
+
+    Public Sub SCAN_PARAMETER(sm As WeeRocAsicCommonSettings.ScanMode, val As Double)
+        Dim AsicCount
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            AsicCount += BI.totalAsics
+        Next
+        Select Case sm
+            Case WeeRocAsicCommonSettings.ScanMode.ScanTimeThreshold
+                A_TimeTHR.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHV
+                Voltage.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanInputDAC
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("DACb").Value = val
+                    Next
+                Next
+                UpdateSettings()
+
+            Case WeeRocAsicCommonSettings.ScanMode.ScanCorrThreshold
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("THcomp").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHoldDelay
+                A_DelayBox.Value = val
+                UpdateSettings()
+
+            Case WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay
+                ExtTrigDelay.Value = val
+                UpdateSettings()
+
+        End Select
+    End Sub
+
+
+
+    Private Sub TabPage3_Click(sender As Object, e As EventArgs) Handles TabPage3.Click
 
     End Sub
 End Class

@@ -466,5 +466,13 @@ namespace DT5550W_P_lib
                 CitirocClass.SelectTriggerMode(TM);
         }
 
+        public void CITIROC_SetHoldDelay(double hd)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                ;
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                CitirocClass.SetHoldWindowsWidth(hd);
+        }
+
     }
 }

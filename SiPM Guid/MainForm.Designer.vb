@@ -313,7 +313,6 @@ Partial Class MainForm
         Me.NewToolStripButton.Name = "NewToolStripButton"
         Me.NewToolStripButton.Size = New System.Drawing.Size(24, 24)
         Me.NewToolStripButton.Text = "Nuovo"
-        Me.NewToolStripButton.Visible = False
         '
         'SaveToolStripButton
         '
