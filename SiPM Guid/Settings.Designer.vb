@@ -110,6 +110,8 @@ Partial Class Settings
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.multiboard = New System.Windows.Forms.ComboBox()
+        Me.Label28 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -793,6 +795,8 @@ Partial Class Settings
         '
         'TabPage7
         '
+        Me.TabPage7.Controls.Add(Me.multiboard)
+        Me.TabPage7.Controls.Add(Me.Label28)
         Me.TabPage7.Controls.Add(Me.SumSpectrumGain)
         Me.TabPage7.Controls.Add(Me.Label25)
         Me.TabPage7.Controls.Add(Me.Button2)
@@ -1065,6 +1069,23 @@ Partial Class Settings
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
+        'multiboard
+        '
+        Me.multiboard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.multiboard.FormattingEnabled = True
+        Me.multiboard.Location = New System.Drawing.Point(397, 94)
+        Me.multiboard.Name = "multiboard"
+        Me.multiboard.Size = New System.Drawing.Size(102, 21)
+        Me.multiboard.TabIndex = 74
+        '
+        'Label28
+        '
+        Me.Label28.Location = New System.Drawing.Point(272, 97)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(70, 13)
+        Me.Label28.TabIndex = 73
+        Me.Label28.Text = "Multiboard Mode"
+        '
         'Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1201,4 +1222,6 @@ Partial Class Settings
     Friend WithEvents ExtTrigDelay As NumericUpDown
     Friend WithEvents Label27 As Label
     Friend WithEvents Label26 As Label
+    Friend WithEvents multiboard As ComboBox
+    Friend WithEvents Label28 As Label
 End Class

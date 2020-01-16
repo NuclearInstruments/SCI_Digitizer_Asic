@@ -12,7 +12,7 @@ namespace DT5550W_P_lib
         const UInt32 RFA_IIC_CONTROL = 0x80050008;
         const UInt32 RFA_IIC_STATUS = 0x80050009;
         public string SerialNumber;
-
+        public bool isMaster = true;
         private PHY_LINK phy = new PHY_LINK();
         public DT5550W_PETIROC PetirocClass;
         public DT5550W_CITIROC CitirocClass;
@@ -448,6 +448,22 @@ namespace DT5550W_P_lib
                 CitirocClass.FlushFIFO();        
         }
 
+        public void RUNControl(bool run)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                PetirocClass.RUNControl(run);
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                ;
+        }
+
+        public void ExtRunEnable(bool run_ext)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                PetirocClass.ExtRunEnable(run_ext);
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                ;
+        }
+
 
         public void ConfigureExtHold(float delay, bool ext_hold_enable)
         {
@@ -473,6 +489,8 @@ namespace DT5550W_P_lib
             if (ConnectedAsic == t_AsicModels.CITIROC)
                 CitirocClass.SetHoldWindowsWidth(hd);
         }
+
+      
 
     }
 }

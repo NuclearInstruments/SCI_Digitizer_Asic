@@ -48,6 +48,7 @@ namespace DT5550W_P_lib
         const UInt32 DAQ_VETO_sw = 0xFFFFF90B;
         const UInt32 DAQ_ANALOG_MONITOR = 0xFFFFF916;
         const UInt32 DAQ_FLUSH_FIFO = 0xFFFFF908;
+        const UInt32 DAQ_EXT_RUN = 0xFFFFF91E;
         const UInt32 DIGOUT_LEN = 0xFFFFF90C;
 
         const UInt32 SIGGEN_PERIOD = 0xFFFFF90E;
@@ -636,6 +637,23 @@ namespace DT5550W_P_lib
                 }
             }
 
+            public void ConvertStringToUint32Config(String CFG, UInt32[] datavector)
+            {
+                int i, j;
+                bool[] bitarray = new bool[641];
+                GenerateBitConfig(bitarray);
+
+                ConvertStringToDatavector(CFG, bitarray);
+                for (i = 0; i < 20; i++)
+                {
+                    datavector[i] = 0;
+                    for (j = 0; j < 32; j++)
+                    {
+                        datavector[i] += ((UInt32)(bitarray[(i * 32) + j] == true ? 1 : 0)) << j;
+                    }
+                }
+            }
+
             public string GenerateStringMonitor()
             {
                 string bitstream = "";
@@ -1087,6 +1105,20 @@ namespace DT5550W_P_lib
             phy.NI_USB3_WriteReg_M(1, DAQ_FLUSH_FIFO);
             System.Threading.Thread.Sleep(1);
             phy.NI_USB3_WriteReg_M(0, DAQ_FLUSH_FIFO);
+        }
+
+
+        public void RUNControl(bool run)
+        {
+            phy.NI_USB3_WriteReg_M((uint)(run ? 0:1), DAQ_FLUSH_FIFO);
+            
+        }
+
+
+        public void ExtRunEnable(bool ext_run)
+        {
+            phy.NI_USB3_WriteReg_M((uint)(ext_run ? 1 : 0), DAQ_EXT_RUN);
+
         }
 
 

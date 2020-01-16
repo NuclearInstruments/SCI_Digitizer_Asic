@@ -68,6 +68,7 @@ Public Class Settings
         Public ProcessMode As String
         Public FileFormat As String
         Public ClusterTimens As Integer
+        Public multiboard As Integer
 
         Public sA() As SingleAsicCFG
 
@@ -416,6 +417,11 @@ Public Class Settings
         TriggerMode.Items.Add("INT/EXT Trigger")
         TriggerMode.Items.Add("External")
         TriggerMode.SelectedIndex = 0
+
+        multiboard.Items.Add("Master")
+        multiboard.Items.Add("Slave")
+        multiboard.SelectedIndex = 0
+
     End Sub
 
     Public Sub UpdateSettings()
@@ -562,6 +568,16 @@ Public Class Settings
 
             MainForm.DTList(i).EnableExternalVeto(EnableExternalVeto.Checked)
             MainForm.DTList(i).EnableResetTDCOnT0(ResetTDConT0.Checked)
+
+
+            If multiboard.SelectedIndex = 0 Then
+                MainForm.DTList(i).ExtRunEnable(False)
+                MainForm.DTList(i).RUNControl(False)
+            Else
+                MainForm.DTList(i).ExtRunEnable(True)
+                MainForm.DTList(i).RUNControl(False)
+            End If
+
         Next
 
         MainForm.hvon.Enabled = Not HVon.Checked
@@ -579,6 +595,9 @@ Public Class Settings
         MainForm.SumSpectrumGain = SumSpectrumGain.Value
 
         MainForm.Timer3.Enabled = True
+
+
+
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonSetCfg.Click
@@ -823,6 +842,10 @@ Public Class Settings
 
 
     Private Sub TabPage3_Click(sender As Object, e As EventArgs) Handles TabPage3.Click
+
+    End Sub
+
+    Private Sub TabPage7_Click(sender As Object, e As EventArgs) Handles TabPage7.Click
 
     End Sub
 End Class

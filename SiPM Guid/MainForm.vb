@@ -1066,6 +1066,8 @@ Public Class MainForm
         Dim Buffer(BI.DigitalDataPacketSize * TransferSize * 2) As UInt32
         Dim ValidWord As UInt32 = 0
         board.FlushFIFO()
+
+        board.RUNControl(False)
         Dim Events As New Queue(Of DT5550W_PETIROC.t_DataPETIROC)
         Dim Clusters As New List(Of Cluster)
         Dim DataDecodedCitiroc As New Queue(Of DT5550W_P_lib.t_DataCITIROC)
@@ -1220,6 +1222,8 @@ Public Class MainForm
         Dim TempTime = Now
         sByteCounter = 0
         StartTime = Now
+
+        board.RUNControl(True)
         While running
             DwnTime = Now
             If DisableTempReadingAcq = False Then
@@ -1924,6 +1928,8 @@ Public Class MainForm
             AppendToLog(LogMode.mACQUISITION, "File is closed", BI.SerialNumber)
         End If
 
+
+        board.RUNControl(False)
     End Sub
 
     Public Sub StartRun()
