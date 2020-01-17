@@ -79,7 +79,7 @@ namespace DT5550W_P_lib
     public class PHY_LINK
     {
 
-        private static Mutex mut = new Mutex();
+        private Mutex mut = new Mutex();
 
         public enum USB_BUS_MODE
         {

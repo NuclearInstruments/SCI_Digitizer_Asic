@@ -6,7 +6,8 @@ Imports Newtonsoft.Json
 Module MainModule
     Public DTList As New List(Of DT5550W_HAL)
     Dim running As Boolean = False
-
+    Dim ATT As New List(Of AcqThreads)
+    Dim cCfg As ConfigClass
     Sub Main()
 
         Dim configurationFile = "config.json"
@@ -28,7 +29,7 @@ Module MainModule
             End
         End Try
 
-        Dim cCfg As ConfigClass = JsonConvert.DeserializeObject(Of ConfigClass)(CfgTXT)
+        cCfg = JsonConvert.DeserializeObject(Of ConfigClass)(CfgTXT)
 
         If cCfg.ListOfDevices.Count = 0 Then
             Console.ForegroundColor = ConsoleColor.Red
@@ -107,22 +108,131 @@ Module MainModule
             For j = 0 To DTList.Count - 1
                 If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
                     Console.WriteLine($"Configuring BOARD {i}...")
-                    For a = 0 To cCfg.BoardsSettings(i).bitstreams.Count - 1
-                        Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
-                        DTList(j).PetirocClass.PetirocCfg.ConvertStringToUint32Config(cCfg.BoardsSettings(i).bitstreams(a), ProgramWord)
 
-                        Select Case a
-                            Case 0
-                                DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
-                            Case 1
-                                DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
-                            Case 2
-                                DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
-                            Case 3
-                                DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
-                        End Select
-                        Console.WriteLine($"    Configuring ASIC {a} OK")
-                    Next
+
+                    If cCfg.BoardsSettings(j).configuration_mode.ToUpper = "ASIC_CONFIGURATION" Then
+                        Dim model As String = "AAAAAAAAAAAAAAAAAAAAAAAAA"
+                        Dim asic_count As Integer
+                        Dim SN As Integer
+                        DTList(j).GetDGCardModel(model, asic_count, SN)
+
+                        For asic = 0 To asic_count - 1
+                            Console.WriteLine($"    Generating bitstream ASIC {asic} OK")
+                            Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
+                            Dim pC As New DT5550W_PETIROC.PetirocConfig
+
+                            Dim aset As New AsicSetting
+                            If cCfg.BoardsSettings(j).asic_configuration.asic_settings.Count <= asic Then
+                                aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings.Last
+                            Else
+                                aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings(asic)
+                            End If
+                            For z = 0 To 31
+                                Dim cset As New ChannelSpecific
+                                If aset.channel_specific.Count <= z Then
+                                    cset = aset.channel_specific.Last
+                                Else
+                                    cset = aset.channel_specific(z)
+                                End If
+
+
+                                pC.inputDAC(z).enable = cset.BIAS
+                                pC.inputDAC(z).value = cset.BIAS_OFFSET
+                                pC.InputDiscriminator(z).maskDiscriminatorQ = cset.MASK_CHARGE
+                                pC.InputDiscriminator(z).maskDiscriminatorT = cset.MASK_TIME
+                                pC.InputDiscriminator(z).DACValue = cset.THRESHOLD_ADJ
+                            Next
+
+                            pC.InputPolarity = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
+                            pC.DAC_Q_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER)
+                            pC.DAC_T_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER)
+                            pC.DelayTrigger = cCfg.BoardsSettings(j).asic_configuration.global_settings.INTERNAL_TRIGGER_DELAY
+                            If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "1.25PF" Then
+                                pC.SlowInputC = 0
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "2.5PF" Then
+                                pC.SlowInputC = 1
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "3.75PF" Then
+                                pC.SlowInputC = 2
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "5PF" Then
+                                pC.SlowInputC = 3
+                            End If
+
+                            If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "100PF" Then
+                                pC.SlowFeedbackC = 0
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "200PF" Then
+                                pC.SlowFeedbackC = 1
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "300PF" Then
+                                pC.SlowFeedbackC = 2
+                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "400PF" Then
+                                pC.SlowFeedbackC = 3
+                            End If
+
+                            If cCfg.BoardsSettings(j).UseChangeTrigger = True Then
+                                pC.TriggerOut = False
+                            Else
+                                pC.TriggerOut = True
+                            End If
+
+
+                            'disable T disciminator if external trigger is selected
+                            If cCfg.BoardsSettings(i).TriggerSource = "EXTERNAL" Then
+                                pC.PowerControl.DiscrT = False
+                                pC.PowerControl.Delay_Discr = False
+                                pC.PowerControl.Delay_Ramp = False
+                                pC.PowerControl.TDC_ramp = False
+                                pC.PulseMode.DiscrT = False
+                                pC.PulseMode.Delay_Discr = False
+                                pC.PulseMode.Delay_Ramp = False
+                                pC.PulseMode.TDC_ramp = False
+                                For z = 0 To 31
+                                    pC.InputDiscriminator(z).maskDiscriminatorQ = True
+                                    pC.InputDiscriminator(z).maskDiscriminatorT = True
+                                Next
+                            Else
+                                pC.PowerControl.DiscrT = True
+                                pC.PowerControl.Delay_Discr = True
+                                pC.PowerControl.Delay_Ramp = True
+                                pC.PowerControl.TDC_ramp = True
+                                pC.PulseMode.DiscrT = True
+                                pC.PulseMode.Delay_Discr = True
+                                pC.PulseMode.Delay_Ramp = True
+                                pC.PulseMode.TDC_ramp = True
+                            End If
+
+
+                            pC.GenerateUint32Config(ProgramWord)
+                            Select Case asic
+                                Case 0
+                                    DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
+                                Case 1
+                                    DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
+                                Case 2
+                                    DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
+                                Case 3
+                                    DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
+                            End Select
+                            Console.WriteLine($"    Configuring ASIC {asic} OK")
+                        Next
+
+                    Else
+                        For a = 0 To cCfg.BoardsSettings(i).bitstreams.Count - 1
+                            Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
+                            DTList(j).PetirocClass.PetirocCfg.ConvertStringToUint32Config(cCfg.BoardsSettings(i).bitstreams(a), ProgramWord)
+                            Select Case a
+                                Case 0
+                                    DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
+                                Case 1
+                                    DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
+                                Case 2
+                                    DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
+                                Case 3
+                                    DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
+                            End Select
+                            Console.WriteLine($"    Configuring ASIC {a} OK")
+                        Next
+                    End If
+
+
 
 
 
@@ -179,7 +289,7 @@ Module MainModule
 
 
                     found = True
-                End If
+                    End If
             Next
 
             If found = False Then
@@ -205,55 +315,109 @@ Module MainModule
         RUN_TARGET_MODE = TargetMode.Time_ns
         RUN_TARGET_VALUE = 10000000000
 
-        Dim ATT As New List(Of AcqThreads)
 
+        Dim RunId As Integer
+        RunId = (DateTime.UtcNow - New DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds
 
 
         'Starting slaves
         For j = 0 To DTList.Count - 1
             If DTList(j).isMaster = False Then
-                DTList(j).RUNControl(True)
+                'DTList(j).RUNControl(True)
+                LaunchThread(j, RunId)
             End If
         Next
 
         'Starting master as last
         For j = 0 To DTList.Count - 1
             If DTList(j).isMaster = True Then
-                DTList(j).RUNControl(True)
-                Dim ATS As New AcqThreadSettings
-                Dim ATQ As New AcqThreadStatus
-
-                Dim ATN As New AcqThreads
-                ATN.id = j
-                ATN.SN = DTList(j).SerialNumber
-                ATN.master = True
-                ATN.ATS = ATS
-                ATN.ATQ = ATQ
-
-                ATN.th = New Thread(Sub()
-                                        AcquisitionThread(DTList(ATN.id), ATS, ATN.ATQ)
-                                    End Sub)
-                ATN.th.Start()
-                ATT.Add(ATN)
+                LaunchThread(j, RunId)
             End If
         Next
 
-        While True
+        Console.Clear()
+        Console.CursorVisible = False
+        Console.WriteLine("-------------------------------------------------------------------------------------------------")
+        Console.WriteLine("| ID |     SN     |       TIME      |      PACKETS    |    TIME CODE    | RUNNING | TEMP |  HV  |")
+        Console.WriteLine("|----|------------|-----------------|-----------------|-----------------|---------|------|------|")
+        For i = 0 To ATT.Count - 1
+            Console.WriteLine("|    |            |                 |                 |                 |         |      |      |")
+        Next
+        Console.WriteLine("-------------------------------------------------------------------------------------------------")
+        Console.SetCursorPosition(1, 16)
+        Console.ForegroundColor = ConsoleColor.Cyan
+        If RUN_TARGET_MODE = TargetMode.FreeRunning Then
+            Console.WriteLine($"RUN MODE: FREE RUN")
+        ElseIf RUN_TARGET_MODE = TargetMode.Time_ns Then
+            Console.WriteLine($"RUN MODE: TIME TARGET   RUN TARGET: {RUN_TARGET_VALUE}ns")
+        ElseIf RUN_TARGET_MODE = TargetMode.Events Then
+            Console.WriteLine($"RUN MODE: ENEVTS        RUN TARGET: {RUN_TARGET_VALUE} events.")
+        End If
+        Console.SetCursorPosition(1, 17)
+        Console.ForegroundColor = ConsoleColor.Magenta
+        Console.WriteLine($"RUNNING... Storing data on: {cCfg.DataStorageFolder & "\" & cCfg.FileName}   RUN ID:{RunId}")
+        Console.ForegroundColor = ConsoleColor.White
+        Console.SetCursorPosition(1, 18)
+        Console.WriteLine($"Press q to stop acquisition")
 
+        While True
+            Dim i = 0
+            Dim aliveThread = 0
             For Each atp In ATT
                 If atp.th.IsAlive Then
-                    Console.WriteLine(atp.ATQ.sEventCounter)
-                Else
-                    If atp.master Then
+                    Console.SetCursorPosition(1, 3 + i)
+                    Console.Write(atp.id.ToString.PadRight(4))
+                    Console.SetCursorPosition(7, 3 + i)
+                    Console.Write(atp.SN.PadRight(11))
+                    Console.SetCursorPosition(19, 3 + i)
+                    Console.Write(atp.ATQ.sTime.ToString.PadLeft(17))
+                    Console.SetCursorPosition(37, 3 + i)
+                    Console.Write(atp.ATQ.sEventCounter.ToString.PadLeft(17))
+                    Console.SetCursorPosition(55, 3 + i)
+                    Console.Write(atp.ATQ.CurrentTimecode.ToString.PadLeft(17))
+                    Console.SetCursorPosition(83, 3 + i)
+                    Console.Write(Math.Round(atp.ATQ.Temp, 1).ToString.PadLeft(6))
+                    Console.SetCursorPosition(90, 3 + i)
+                    Console.Write(Math.Round(atp.ATQ.HV, 2).ToString.PadLeft(6))
 
+                    Console.SetCursorPosition(10, 5)
+
+                    If atp.master Then
+                        Console.SetCursorPosition(73, 3 + i)
+                        Console.Write(Math.Round(atp.ATQ.sTargetPercent, 1).ToString.PadLeft(9))
+                    Else
+                        Console.SetCursorPosition(73, 3 + i)
+                        Console.Write("    *    ")
+                    End If
+                    aliveThread += 1
+                Else
+                    Console.SetCursorPosition(73, 3 + i)
+                    Console.Write("         ")
+
+                    If atp.master Then
+                        Console.SetCursorPosition(1, 17)
                         Console.ForegroundColor = ConsoleColor.Green
-                        Console.WriteLine("Acquisition completed")
+                        Console.WriteLine($"Acquisition completed. RUN ID:{RunId}                                                              ")
+                        Console.SetCursorPosition(1, 18)
+                        Console.WriteLine($"Waiting for all other thread exits                                                                 ")
                         Console.ForegroundColor = ConsoleColor.White
-                        End
+                        running = False
                     End If
                 End If
+
+                i = i + 1
             Next
 
+            If Console.KeyAvailable Then
+                Dim k As ConsoleKeyInfo = Console.ReadKey()
+                If k.KeyChar = "q" Or k.KeyChar = "Q" Then
+                    running = False
+                End If
+            End If
+
+            If aliveThread = 0 Then
+                End
+            End If
         End While
 
 
@@ -281,17 +445,22 @@ Module MainModule
         Public ATS As AcqThreadSettings
         Public ATQ As AcqThreadStatus
 
+        Public RunId As String
+
     End Class
-    Public Structure AcqThreadStatus
+    Public Class AcqThreadStatus
 
         Public sEventCounter As Long
         Public sByteCounter As Long
         Public sTargetPercent As Double
-        Public sTime As String
+        Public sTime As String = ""
         Public sProcTime As Double
         Public sAcqTime As Double
         Public RunCompleted As Boolean
-    End Structure
+        Public Temp As Double
+        Public CurrentTimecode As Double
+        Public HV As Double
+    End Class
 
 
     Public Class AcqThreadSettings
@@ -303,25 +472,54 @@ Module MainModule
         Public CurrentHVON As Boolean = False
         Public CurrentHVMax As Double = 25
         Public InputPolarity As Integer = 0
+        Public File As String = ""
     End Class
 
-    Public Sub AcquisitionThread(board As DT5550W_HAL, ATS As AcqThreadSettings, ByRef ATQ As AcqThreadStatus)
 
+    Public Function LaunchThread(j As Integer, RunId As String)
+        DTList(j).RUNControl(True)
+        Dim ATS As New AcqThreadSettings
+        Dim ATQ As New AcqThreadStatus
 
+        Dim ATN As New AcqThreads
+        ATN.id = j
+        ATN.SN = DTList(j).SerialNumber
+        ATN.master = True
+        ATN.ATS = ATS
+        ATN.ATQ = ATQ
+        ATN.RunId = RunId
+        ATN.ATS.File = cCfg.DataStorageFolder & "\" & cCfg.FileName & "_" & RunId & "_" & ATN.SN & ".data"
+        ATT.Add(ATN)
+        ATT.Last.th = New Thread(Sub()
+                                     AcquisitionThread(ATN.id)
+                                 End Sub)
+        ATT.Last.th.Start()
+    End Function
+    Public Sub AcquisitionThread(thid As Integer)
+
+        Dim iid = -1
+        For j = 0 To ATT.Count - 1
+            If ATT(j).id = thid Then
+                iid = j
+                Exit For
+            End If
+        Next
+
+        If iid = -1 Then
+            Console.WriteLine("Unable to start acquistion thread")
+            Exit Sub
+        End If
 
         Dim StartTime As Date
 
-
-
-        Dim file As String = "c:\\temp\\file_test.jdata"
         Dim TransferSize As Integer = 1000
 
-        Dim BI As t_BoardInfo = board.GetBoardInfo
+        Dim BI As t_BoardInfo = DTList(ATT(iid).id).GetBoardInfo
         Dim Buffer(BI.DigitalDataPacketSize * TransferSize * 2) As UInt32
         Dim ValidWord As UInt32 = 0
-        board.FlushFIFO()
+        DTList(ATT(iid).id).FlushFIFO()
 
-        board.RUNControl(False)
+        DTList(ATT(iid).id).RUNControl(False)
         Dim Events As New Queue(Of DT5550W_PETIROC.t_DataPETIROC)
         Dim TotalEvents As Int64 = 0
         Dim DecodedEvents As Int64 = 0
@@ -335,15 +533,13 @@ Module MainModule
         Dim CurrentTimecode As Double = 0
         Dim EventCounter As Int64 = 0
 
-
         Dim tx As StreamWriter = Nothing
 
-
         Try
-            tx = New StreamWriter(file)
+            tx = New StreamWriter(ATT(iid).ATS.File)
         Catch ex As Exception
             Console.ForegroundColor = ConsoleColor.Red
-            Console.WriteLine($"Unable to open file: {file}. Error: " & ex.Message)
+            Console.WriteLine($"Unable to open file: {ATT(iid).ATS.File }. Error: " & ex.Message)
             Console.ForegroundColor = ConsoleColor.White
         End Try
 
@@ -367,51 +563,47 @@ Module MainModule
 
         strline = strline.Remove(strline.Length - 1)
 
-
-
-
         tx.WriteLine(strline)
 
-
-
-
         Dim TempTime = Now
-        ATQ.sByteCounter = 0
+        ATT(iid).ATQ.sByteCounter = 0
         StartTime = Now
 
-        board.RUNControl(True)
+        DTList(ATT(iid).id).RUNControl(True)
         While running
             DwnTime = Now
 
             'HV Temperature feedback
-            If ATS.DisableTempReadingAcq = False Then
-                If (Now - TempTime).TotalMilliseconds > 10000 Then
+            If ATT(iid).ATS.DisableTempReadingAcq = False Then
+                If (Now - TempTime).TotalMilliseconds > 1000 Then
                     Dim tA = -1000, tb = -1000
-                    If ATS.TempSensorSource = 0 Then
-                        board.GetSensTemperature(0, tA)
-                        If board.GetBoardInfo.totalAsics > 2 Then
-                            board.GetSensTemperature(1, tb)
+                    If ATT(iid).ATS.TempSensorSource = 0 Then
+                        DTList(ATT(iid).id).GetSensTemperature(0, tA)
+                        If DTList(ATT(iid).id).GetBoardInfo.totalAsics > 2 Then
+                            DTList(ATT(iid).id).GetSensTemperature(1, tb)
                         End If
                     Else
-                        board.GetSensTemperature(2, tA)
+                        DTList(ATT(iid).id).GetSensTemperature(2, tA)
                     End If
-
-                    If ATS.EnableTempComp Then
-                        Dim tAv = 0
-                        If tb > -150 Then
-                            tAv = (tA + tb) / 2
-                        Else
-                            tAv = tA
-                        End If
-                        board.SetHVTempFB(ATS.CurrentHVON, ATS.CurrentHVSet, ATS.CurrentHVMax, ATS.TempCompCoef, tAv)
+                    Dim tAv = 0
+                    If tb > -150 Then
+                        tAv = (tA + tb) / 2
+                    Else
+                        tAv = tA
+                    End If
+                    If ATT(iid).ATS.EnableTempComp Then
+                        DTList(ATT(iid).id).SetHVTempFB(ATT(iid).ATS.CurrentHVON, ATT(iid).ATS.CurrentHVSet, ATT(iid).ATS.CurrentHVMax, ATT(iid).ATS.TempCompCoef, tAv)
                     End If
 
 
 
                     Dim enable, voltage, current
-                    If board.GetHV(enable, voltage, current) Then
+                    If DTList(ATT(iid).id).GetHV(enable, voltage, current) Then
 
                     End If
+
+                    ATT(iid).ATQ.HV = voltage
+                    ATT(iid).ATQ.Temp = tAv
 
                     TempTime = Now
                 End If
@@ -419,11 +611,11 @@ Module MainModule
 
 
             tDwnTime = Now - DwnTime
-            ATQ.sAcqTime = tDwnTime.TotalMilliseconds
+            ATT(iid).ATQ.sAcqTime = tDwnTime.TotalMilliseconds
 
 
             DURATION = DateTime.Now - StartTime
-            ATQ.sTime = DURATION.Hours.ToString.PadLeft(2, "0"c) & ":" &
+            ATT(iid).ATQ.sTime = DURATION.Hours.ToString.PadLeft(2, "0"c) & ":" &
                         DURATION.Minutes.ToString.PadLeft(2, "0"c) & ":" &
                         DURATION.Seconds.ToString.PadLeft(2, "0"c) & "." &
                         DURATION.Milliseconds.ToString.PadLeft(3, "0"c)
@@ -433,9 +625,9 @@ Module MainModule
 
 
             'Events acquisition and decode
-            board.GetRawBuffer(Buffer, TransferSize, 4000, BI.DigitalDataPacketSize, ValidWord)
+            DTList(ATT(iid).id).GetRawBuffer(Buffer, TransferSize, 2000, BI.DigitalDataPacketSize, ValidWord)
             EventsBefore = TotalEvents
-            DecodedEvents = board.DecodePetirocRowEvents(Buffer, ValidWord, Events, 0, ATS.InputPolarity)
+            DecodedEvents = DTList(ATT(iid).id).DecodePetirocRowEvents(Buffer, ValidWord, Events, 0, ATT(iid).ATS.InputPolarity)
 
 
 
@@ -458,7 +650,7 @@ Module MainModule
                 Next
                 strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.EventTimecode & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime)
                 tx.WriteLine(strline)
-                ATQ.sByteCounter += strline.Length
+                ATT(iid).ATQ.sByteCounter += strline.Length
 
                 TotalEvents += 1
                 CurrentTimecode = e.RunEventTimecode_ns
@@ -466,25 +658,26 @@ Module MainModule
 
 
             tProcTime = Now - ProcTime
-            ATQ.sProcTime = tProcTime.TotalMilliseconds
-            ATQ.sEventCounter = TotalEvents
+            ATT(iid).ATQ.sProcTime = tProcTime.TotalMilliseconds
+            ATT(iid).ATQ.sEventCounter = TotalEvents
 
+            ATT(iid).ATQ.CurrentTimecode = CurrentTimecode
 
             'Check for end conditions
 
             If RUN_TARGET_MODE = TargetMode.Time_ns Then
-                ATQ.sTargetPercent = CurrentTimecode / RUN_TARGET_VALUE * 100
+                ATT(iid).ATQ.sTargetPercent = CurrentTimecode / RUN_TARGET_VALUE * 100
                 If RUN_TARGET_VALUE <= CurrentTimecode Then
                     running = False
-                    ATQ.RunCompleted = True
+                    ATT(iid).ATQ.RunCompleted = True
                 End If
 
             End If
             If RUN_TARGET_MODE = TargetMode.Events Then
-                ATQ.sTargetPercent = TotalEvents / RUN_TARGET_VALUE * 100
+                ATT(iid).ATQ.sTargetPercent = TotalEvents / RUN_TARGET_VALUE * 100
                 If RUN_TARGET_VALUE <= TotalEvents Then
                     running = False
-                    ATQ.RunCompleted = True
+                    ATT(iid).ATQ.RunCompleted = True
 
                 End If
             End If
@@ -495,7 +688,7 @@ Module MainModule
             tx.Close()
         End If
 
-        board.RUNControl(False)
+        DTList(ATT(iid).id).RUNControl(False)
     End Sub
 
 
