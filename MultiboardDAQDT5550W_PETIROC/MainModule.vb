@@ -8,9 +8,77 @@ Module MainModule
     Dim running As Boolean = False
     Dim ATT As New List(Of AcqThreads)
     Dim cCfg As ConfigClass
+    Private Structure NameCommandLineStuct
+        Dim Name As String
+        Dim Value As String
+    End Structure
+    Private CommandLineArgs As New List(Of NameCommandLineStuct)
+
+    Function ParseCommandLine() As Boolean
+        'step one, Do we have a command line?
+        If String.IsNullOrEmpty(Command) Then
+            'give up if we don't
+            Return False
+        End If
+
+        'does the command line have at least one named parameter?
+        If Not Command.Contains("/") Then
+            'give up if we don't
+            Return False
+        End If
+        'Split the command line on our slashes.  
+        Dim Params As String() = Split(Command, "/")
+
+        'Iterate through the parameters passed
+        For Each arg As String In Params
+            'only process if the argument is not empty
+            If Not String.IsNullOrEmpty(arg) Then
+                'and contains an equal 
+                If arg.Contains("=") Then
+
+                    Dim tmp As NameCommandLineStuct
+                    'find the equal sign
+                    Dim idx As Integer = arg.IndexOf("=")
+                    'if the equal isn't at the end of the string
+                    If idx < arg.Length - 1 Then
+                        'parse the name value pair
+                        tmp.Name = arg.Substring(0, idx).Trim()
+                        tmp.Value = arg.Substring(idx + 1).Trim()
+                        'add it to the list.
+                        CommandLineArgs.Add(tmp)
+                    End If
+                Else
+                    Dim tmp As NameCommandLineStuct
+                    tmp.Name = arg.Trim()
+                    tmp.Value = 0
+                    'add it to the list.
+                    CommandLineArgs.Add(tmp)
+                End If
+            End If
+
+        Next
+        Return True
+    End Function
+
     Sub Main()
 
         Dim configurationFile = "config.json"
+        Dim skipAsic As Boolean = False
+
+        If ParseCommandLine() Then
+            For Each commandItem As NameCommandLineStuct In CommandLineArgs
+                Select Case commandItem.Name.ToLower
+                    Case "config"
+                        Console.WriteLine(String.Format("Config file is is {0}", commandItem.Value))
+                        configurationFile = commandItem.Value
+                    Case "skipconfig"
+                        Console.WriteLine(String.Format("Skip asic configuration"))
+                        skipAsic = True
+                End Select
+            Next
+        End If
+
+
         'Create a simple configuration
         Console.ForegroundColor = ConsoleColor.White
 
@@ -99,210 +167,286 @@ Module MainModule
         Console.ForegroundColor = ConsoleColor.White
 
 
-        Console.WriteLine("")
-        Console.WriteLine("")
-        Console.WriteLine("Configuring ASIC...")
+        If skipAsic = False Then
+            Console.WriteLine("")
+            Console.WriteLine("")
+            Console.WriteLine("Configuring ASIC...")
 
-        For i = 0 To cCfg.BoardsSettings.Count - 1
-            Dim found = False
-            For j = 0 To DTList.Count - 1
-                If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
-                    Console.WriteLine($"Configuring BOARD {i}...")
+            For i = 0 To cCfg.BoardsSettings.Count - 1
+                Dim found = False
+                For j = 0 To DTList.Count - 1
+                    If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
+                        Console.WriteLine($"Configuring BOARD {i}...")
 
 
-                    If cCfg.BoardsSettings(j).configuration_mode.ToUpper = "ASIC_CONFIGURATION" Then
-                        Dim model As String = "AAAAAAAAAAAAAAAAAAAAAAAAA"
-                        Dim asic_count As Integer
-                        Dim SN As Integer
-                        DTList(j).GetDGCardModel(model, asic_count, SN)
+                        If cCfg.BoardsSettings(j).configuration_mode.ToUpper = "ASIC_CONFIGURATION" Then
+                            Dim model As String = "AAAAAAAAAAAAAAAAAAAAAAAAA"
+                            Dim asic_count As Integer
+                            Dim SN As Integer
+                            DTList(j).GetDGCardModel(model, asic_count, SN)
 
-                        For asic = 0 To asic_count - 1
-                            Console.WriteLine($"    Generating bitstream ASIC {asic} OK")
-                            Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
-                            Dim pC As New DT5550W_PETIROC.PetirocConfig
+                            For asic = 0 To asic_count - 1
+                                Console.WriteLine($"    Generating bitstream ASIC {asic} OK")
+                                Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
+                                Dim pC As New DT5550W_PETIROC.PetirocConfig
 
-                            Dim aset As New AsicSetting
-                            If cCfg.BoardsSettings(j).asic_configuration.asic_settings.Count <= asic Then
-                                aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings.Last
-                            Else
-                                aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings(asic)
-                            End If
-                            For z = 0 To 31
-                                Dim cset As New ChannelSpecific
-                                If aset.channel_specific.Count <= z Then
-                                    cset = aset.channel_specific.Last
+                                Dim aset As New AsicSetting
+                                If cCfg.BoardsSettings(j).asic_configuration.asic_settings.Count <= asic Then
+                                    aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings.Last
                                 Else
-                                    cset = aset.channel_specific(z)
+                                    aset = cCfg.BoardsSettings(j).asic_configuration.asic_settings(asic)
+                                End If
+                                For z = 0 To 31
+                                    Dim cset As New ChannelSpecific
+                                    If aset.channel_specific.Count <= z Then
+                                        cset = aset.channel_specific.Last
+                                    Else
+                                        cset = aset.channel_specific(z)
+                                    End If
+
+
+                                    pC.inputDAC(z).enable = cset.BIAS
+                                    pC.inputDAC(z).value = cset.BIAS_OFFSET
+                                    pC.InputDiscriminator(z).maskDiscriminatorQ = cset.MASK_CHARGE
+                                    pC.InputDiscriminator(z).maskDiscriminatorT = cset.MASK_TIME
+                                    pC.InputDiscriminator(z).DACValue = cset.THRESHOLD_ADJ
+                                Next
+
+                                pC.InputPolarity = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
+                                pC.DAC_Q_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER)
+                                pC.DAC_T_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER)
+                                pC.DelayTrigger = cCfg.BoardsSettings(j).asic_configuration.global_settings.INTERNAL_TRIGGER_DELAY
+                                If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "1.25PF" Then
+                                    pC.SlowInputC = 0
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "2.5PF" Then
+                                    pC.SlowInputC = 1
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "3.75PF" Then
+                                    pC.SlowInputC = 2
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "5PF" Then
+                                    pC.SlowInputC = 3
+                                End If
+
+                                If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "100PF" Then
+                                    pC.SlowFeedbackC = 0
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "200PF" Then
+                                    pC.SlowFeedbackC = 1
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "300PF" Then
+                                    pC.SlowFeedbackC = 2
+                                ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "400PF" Then
+                                    pC.SlowFeedbackC = 3
+                                End If
+
+                                If cCfg.BoardsSettings(j).UseChangeTrigger = True Then
+                                    pC.TriggerOut = False
+                                Else
+                                    pC.TriggerOut = True
                                 End If
 
 
-                                pC.inputDAC(z).enable = cset.BIAS
-                                pC.inputDAC(z).value = cset.BIAS_OFFSET
-                                pC.InputDiscriminator(z).maskDiscriminatorQ = cset.MASK_CHARGE
-                                pC.InputDiscriminator(z).maskDiscriminatorT = cset.MASK_TIME
-                                pC.InputDiscriminator(z).DACValue = cset.THRESHOLD_ADJ
+                                'disable T disciminator if external trigger is selected
+                                If cCfg.BoardsSettings(i).TriggerSource = "EXTERNAL" Then
+                                    pC.PowerControl.DiscrT = False
+                                    pC.PowerControl.Delay_Discr = False
+                                    pC.PowerControl.Delay_Ramp = False
+                                    pC.PowerControl.TDC_ramp = False
+                                    pC.PulseMode.DiscrT = False
+                                    pC.PulseMode.Delay_Discr = False
+                                    pC.PulseMode.Delay_Ramp = False
+                                    pC.PulseMode.TDC_ramp = False
+                                    For z = 0 To 31
+                                        pC.InputDiscriminator(z).maskDiscriminatorQ = True
+                                        pC.InputDiscriminator(z).maskDiscriminatorT = True
+                                    Next
+                                Else
+                                    pC.PowerControl.DiscrT = True
+                                    pC.PowerControl.Delay_Discr = True
+                                    pC.PowerControl.Delay_Ramp = True
+                                    pC.PowerControl.TDC_ramp = True
+                                    pC.PulseMode.DiscrT = True
+                                    pC.PulseMode.Delay_Discr = True
+                                    pC.PulseMode.Delay_Ramp = True
+                                    pC.PulseMode.TDC_ramp = True
+                                End If
+
+
+                                pC.GenerateUint32Config(ProgramWord)
+                                Select Case asic
+                                    Case 0
+                                        DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
+                                    Case 1
+                                        DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
+                                    Case 2
+                                        DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
+                                    Case 3
+                                        DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
+                                End Select
+                                Console.WriteLine($"    Configuring ASIC {asic} OK")
                             Next
 
-                            pC.InputPolarity = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
-                            pC.DAC_Q_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.CHARGE_TRIGGER)
-                            pC.DAC_T_threshold = IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", 1024 - cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER, cCfg.BoardsSettings(j).asic_configuration.global_settings.TIME_TRIGGER)
-                            pC.DelayTrigger = cCfg.BoardsSettings(j).asic_configuration.global_settings.INTERNAL_TRIGGER_DELAY
-                            If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "1.25PF" Then
-                                pC.SlowInputC = 0
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "2.5PF" Then
-                                pC.SlowInputC = 1
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "3.75PF" Then
-                                pC.SlowInputC = 2
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "5PF" Then
-                                pC.SlowInputC = 3
-                            End If
-
-                            If cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "100PF" Then
-                                pC.SlowFeedbackC = 0
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "200PF" Then
-                                pC.SlowFeedbackC = 1
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "300PF" Then
-                                pC.SlowFeedbackC = 2
-                            ElseIf cCfg.BoardsSettings(j).asic_configuration.global_settings.SHAPER_C1.ToUpper = "400PF" Then
-                                pC.SlowFeedbackC = 3
-                            End If
-
-                            If cCfg.BoardsSettings(j).UseChangeTrigger = True Then
-                                pC.TriggerOut = False
-                            Else
-                                pC.TriggerOut = True
-                            End If
+                        Else
+                            For a = 0 To cCfg.BoardsSettings(i).bitstreams.Count - 1
+                                Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
+                                DTList(j).PetirocClass.PetirocCfg.ConvertStringToUint32Config(cCfg.BoardsSettings(i).bitstreams(a), ProgramWord)
+                                Select Case a
+                                    Case 0
+                                        DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
+                                    Case 1
+                                        DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
+                                    Case 2
+                                        DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
+                                    Case 3
+                                        DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
+                                End Select
+                                Console.WriteLine($"    Configuring ASIC {a} OK")
+                            Next
+                        End If
 
 
-                            'disable T disciminator if external trigger is selected
-                            If cCfg.BoardsSettings(i).TriggerSource = "EXTERNAL" Then
-                                pC.PowerControl.DiscrT = False
-                                pC.PowerControl.Delay_Discr = False
-                                pC.PowerControl.Delay_Ramp = False
-                                pC.PowerControl.TDC_ramp = False
-                                pC.PulseMode.DiscrT = False
-                                pC.PulseMode.Delay_Discr = False
-                                pC.PulseMode.Delay_Ramp = False
-                                pC.PulseMode.TDC_ramp = False
-                                For z = 0 To 31
-                                    pC.InputDiscriminator(z).maskDiscriminatorQ = True
-                                    pC.InputDiscriminator(z).maskDiscriminatorT = True
-                                Next
-                            Else
-                                pC.PowerControl.DiscrT = True
-                                pC.PowerControl.Delay_Discr = True
-                                pC.PowerControl.Delay_Ramp = True
-                                pC.PowerControl.TDC_ramp = True
-                                pC.PulseMode.DiscrT = True
-                                pC.PulseMode.Delay_Discr = True
-                                pC.PulseMode.Delay_Ramp = True
-                                pC.PulseMode.TDC_ramp = True
-                            End If
 
 
-                            pC.GenerateUint32Config(ProgramWord)
-                            Select Case asic
-                                Case 0
-                                    DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
-                                Case 1
-                                    DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
-                                Case 2
-                                    DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
-                                Case 3
-                                    DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
-                            End Select
-                            Console.WriteLine($"    Configuring ASIC {asic} OK")
-                        Next
 
-                    Else
-                        For a = 0 To cCfg.BoardsSettings(i).bitstreams.Count - 1
-                            Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
-                            DTList(j).PetirocClass.PetirocCfg.ConvertStringToUint32Config(cCfg.BoardsSettings(i).bitstreams(a), ProgramWord)
-                            Select Case a
-                                Case 0
-                                    DTList(j).ConfigureAsic(True, False, False, False, ProgramWord)
-                                Case 1
-                                    DTList(j).ConfigureAsic(False, True, False, False, ProgramWord)
-                                Case 2
-                                    DTList(j).ConfigureAsic(False, False, True, False, ProgramWord)
-                                Case 3
-                                    DTList(j).ConfigureAsic(False, False, False, True, ProgramWord)
-                            End Select
-                            Console.WriteLine($"    Configuring ASIC {a} OK")
-                        Next
+                        DTList(j).SetHV(IIf(cCfg.BoardsSettings(i).HV_VOLT > 5, 1, 0), cCfg.BoardsSettings(i).HV_VOLT, cCfg.BoardsSettings(i).HV_MAX)
+
+                        DTList(j).ConfigureSignalGenerator(cCfg.BoardsSettings(i).SelfTrigger.enable,
+                                                cCfg.BoardsSettings(i).SelfTrigger.enable,
+                                                cCfg.BoardsSettings(i).SelfTrigger.enable,
+                                                cCfg.BoardsSettings(i).SelfTrigger.enable,
+                                                 cCfg.BoardsSettings(i).SelfTrigger.rate)
+                        Dim TriggerMode As Integer = 0
+                        If cCfg.BoardsSettings(i).TriggerSource = "INTERNAL" Then
+                            TriggerMode = 0
+                        ElseIf cCfg.BoardsSettings(i).TriggerSource = "INT/EXT" Then
+                            TriggerMode = 1
+                        ElseIf cCfg.BoardsSettings(i).TriggerSource = "EXTERNAL" Then
+                            TriggerMode = 2
+                        Else
+                            Console.ForegroundColor = ConsoleColor.Red
+                            Console.WriteLine("Invalid parameter in TriggerSource")
+                            Console.ForegroundColor = ConsoleColor.White
+                            End
+                        End If
+
+                        DTList(j).SelectTriggerMode(cCfg.BoardsSettings(i).UseChangeTrigger)
+
+                        DTList(j).EnableTriggerFrame(cCfg.BoardsSettings(i).EnableFrameTrigger)
+
+                        If TriggerMode = 0 Then
+                            DTList(j).EnableExternalTrigger(False)
+                            DTList(j).ConfigureExtHold(1, False)
+                        End If
+                        If TriggerMode = 1 Then
+                            DTList(j).EnableExternalTrigger(True)
+                            DTList(j).ConfigureExtHold(1, False)
+                        End If
+                        If TriggerMode = 2 Then
+                            DTList(j).EnableExternalTrigger(False)
+                            DTList(j).ConfigureExtHold(cCfg.BoardsSettings(i).ExtHoldDelay, True)
+                        End If
+
+
+                        DTList(j).EnableExternalVeto(cCfg.BoardsSettings(i).EnableExternalVeto)
+                        DTList(j).EnableResetTDCOnT0(True)
+
+
+                        If DTList(j).isMaster Then
+                            DTList(j).ExtRunEnable(False)
+                            DTList(j).RUNControl(False)
+                        Else
+                            DTList(j).ExtRunEnable(True)
+                            DTList(j).RUNControl(False)
+                        End If
+
+
+                        found = True
                     End If
+                Next
 
-
-
-
-
-                    DTList(j).SetHV(IIf(cCfg.BoardsSettings(i).HV_VOLT > 5, 1, 0), cCfg.BoardsSettings(i).HV_VOLT, cCfg.BoardsSettings(i).HV_MAX)
-
-                    DTList(j).ConfigureSignalGenerator(cCfg.BoardsSettings(i).SelfTrigger.enable,
-                                            cCfg.BoardsSettings(i).SelfTrigger.enable,
-                                            cCfg.BoardsSettings(i).SelfTrigger.enable,
-                                            cCfg.BoardsSettings(i).SelfTrigger.enable,
-                                             cCfg.BoardsSettings(i).SelfTrigger.rate)
-                    Dim TriggerMode As Integer = 0
-                    If cCfg.BoardsSettings(i).TriggerSource = "INTERNAL" Then
-                        TriggerMode = 0
-                    ElseIf cCfg.BoardsSettings(i).TriggerSource = "INT/EXT" Then
-                        TriggerMode = 1
-                    ElseIf cCfg.BoardsSettings(i).TriggerSource = "EXTERNAL" Then
-                        TriggerMode = 2
-                    Else
-                        Console.ForegroundColor = ConsoleColor.Red
-                        Console.WriteLine("Invalid parameter in TriggerSource")
-                        Console.ForegroundColor = ConsoleColor.White
-                        End
-                    End If
-
-                    DTList(j).SelectTriggerMode(cCfg.BoardsSettings(i).UseChangeTrigger)
-
-                    DTList(j).EnableTriggerFrame(cCfg.BoardsSettings(i).EnableFrameTrigger)
-
-                    If TriggerMode = 0 Then
-                        DTList(j).EnableExternalTrigger(False)
-                        DTList(j).ConfigureExtHold(1, False)
-                    End If
-                    If TriggerMode = 1 Then
-                        DTList(j).EnableExternalTrigger(True)
-                        DTList(j).ConfigureExtHold(1, False)
-                    End If
-                    If TriggerMode = 2 Then
-                        DTList(j).EnableExternalTrigger(False)
-                        DTList(j).ConfigureExtHold(cCfg.BoardsSettings(i).ExtHoldDelay, True)
-                    End If
-
-
-                    DTList(j).EnableExternalVeto(cCfg.BoardsSettings(i).EnableExternalVeto)
-                    DTList(j).EnableResetTDCOnT0(True)
-
-
-                    If DTList(j).isMaster Then
-                        DTList(j).ExtRunEnable(False)
-                        DTList(j).RUNControl(False)
-                    Else
-                        DTList(j).ExtRunEnable(True)
-                        DTList(j).RUNControl(False)
-                    End If
-
-
-                    found = True
-                    End If
+                If found = False Then
+                    Console.ForegroundColor = ConsoleColor.Red
+                    Console.WriteLine($"Error in the configuration file. Settings for SN: {cCfg.BoardsSettings(i).SN} does not exists.")
+                    Console.ForegroundColor = ConsoleColor.White
+                    End
+                End If
             Next
 
-            If found = False Then
-                Console.ForegroundColor = ConsoleColor.Red
-                Console.WriteLine($"Error in the configuration file. Settings for SN: {cCfg.BoardsSettings(i).SN} does not exists.")
-                Console.ForegroundColor = ConsoleColor.White
-                End
-            End If
-        Next
+            Console.ForegroundColor = ConsoleColor.Green
+            Console.WriteLine("All board are successfully configured")
+            Console.ForegroundColor = ConsoleColor.White
+        Else
+            Console.ForegroundColor = ConsoleColor.Green
+            Console.WriteLine("Board configuration skipped")
+            Console.ForegroundColor = ConsoleColor.White
 
-        Console.ForegroundColor = ConsoleColor.Green
-        Console.WriteLine("All board are successfully configured")
+        End If
+        Console.Clear()
+        Console.ForegroundColor = ConsoleColor.Yellow
+        Console.WriteLine("-------------------------------------------------------------------------------")
+        Console.WriteLine("|   ID    |       SN       |    SET POINT   |        V       | WAIT |    mA    |")
+        Console.WriteLine("|---------|----------------|----------------|----------------|------|----------|")
+        For i = 0 To DTList.Count - 1
+            Console.WriteLine("|         |                |                |                |      |          |")
+        Next
+        Console.WriteLine("-------------------------------------------------------------------------------")
+
+        Console.SetCursorPosition(1, 17)
+        Console.WriteLine("Waiting HV on selected board...")
+        Console.SetCursorPosition(1, 18)
+        Console.WriteLine($"Press q to exit or press s to skip waiting HV")
+
+        Dim good = True
+
+        Do
+            good = True
+            For i = 0 To cCfg.BoardsSettings.Count - 1
+                For j = 0 To DTList.Count - 1
+                    If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
+                        Dim hv_enable As Boolean = 0
+                        Dim hv_volt As Single = 0
+                        Dim hv_current As Single = 0
+                        DTList(j).GetHV(hv_enable, hv_volt, hv_current)
+                        Console.SetCursorPosition(1, 3 + i)
+                        Console.Write(i.ToString.PadRight(4))
+                        Console.SetCursorPosition(11, 3 + i)
+                        Console.Write(DTList(j).SerialNumber.PadRight(16))
+                        Console.SetCursorPosition(28, 3 + i)
+                        Console.Write(cCfg.BoardsSettings(i).HV_VOLT.ToString.PadLeft(16))
+                        Console.SetCursorPosition(45, 3 + i)
+                        Console.Write(Math.Round(hv_volt, 3).ToString.PadLeft(16))
+                        Console.SetCursorPosition(62, 3 + i)
+                        Console.Write(IIf(cCfg.BoardsSettings(i).wait_hv, "  **  ", "      "))
+                        Console.SetCursorPosition(69, 3 + i)
+                        Console.Write(Math.Round(hv_current, 3).ToString.PadLeft(10))
+                        If cCfg.BoardsSettings(i).wait_hv Then
+                            If hv_volt < cCfg.BoardsSettings(i).HV_VOLT - 0.2 Then
+                                good = False
+                            End If
+                        End If
+                    End If
+                Next
+            Next
+
+
+            If Console.KeyAvailable Then
+                Dim k As ConsoleKeyInfo = Console.ReadKey()
+                If k.KeyChar = "q" Or k.KeyChar = "Q" Then
+                    Console.ForegroundColor = ConsoleColor.White
+                    Console.WriteLine("")
+                    End
+                End If
+                If k.KeyChar = "s" Or k.KeyChar = "S" Then
+                    Console.ForegroundColor = ConsoleColor.White
+                    Console.WriteLine("")
+                    good = True
+                End If
+            End If
+            System.Threading.Thread.Sleep(100)
+        Loop While good = False
+
+
+
         Console.ForegroundColor = ConsoleColor.White
+
+
 
         Console.ForegroundColor = ConsoleColor.Green
         Console.WriteLine("")
@@ -312,8 +456,18 @@ Module MainModule
         Console.ForegroundColor = ConsoleColor.White
 
         running = True
-        RUN_TARGET_MODE = TargetMode.Time_ns
-        RUN_TARGET_VALUE = 10000000000
+
+        If cCfg.GeneralSettings.RunTarget.ToUpper = "FREE" Then
+            RUN_TARGET_MODE = TargetMode.FreeRunning
+            RUN_TARGET_VALUE = 10
+        ElseIf cCfg.GeneralSettings.RunTarget.ToUpper = "TIME" Then
+            RUN_TARGET_MODE = TargetMode.Time_ns
+            RUN_TARGET_VALUE = cCfg.GeneralSettings.TargetValue * 1000000000
+        ElseIf cCfg.GeneralSettings.RunTarget.ToUpper = "COUNTS" Then
+            RUN_TARGET_MODE = TargetMode.Events
+            RUN_TARGET_VALUE = cCfg.GeneralSettings.TargetValue
+
+        End If
 
 
         Dim RunId As Integer
@@ -416,10 +570,28 @@ Module MainModule
             End If
 
             If aliveThread = 0 Then
+                Console.ForegroundColor = ConsoleColor.Yellow
+                Console.WriteLine("")
+
+
+
+                For i = 0 To cCfg.BoardsSettings.Count - 1
+                    For j = 0 To DTList.Count - 1
+                        If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
+                            If cCfg.BoardsSettings(i).switch_off_hv_on_end Then
+                                Console.WriteLine("Switching of HV on board " & DTList(j).SerialNumber)
+                                DTList(j).SetHV(False, 20, 25)
+                            End If
+                        End If
+                    Next
+                Next
+
+                Console.ForegroundColor = ConsoleColor.White
+
                 End
             End If
+            System.Threading.Thread.Sleep(100)
         End While
-
 
 
 
@@ -465,7 +637,7 @@ Module MainModule
 
     Public Class AcqThreadSettings
         Public TempSensorSource As Integer = 0
-        Public DisableTempReadingAcq As Boolean = True
+        Public DisableTempReadingAcq As Boolean = False
         Public EnableTempComp As Boolean = False
         Public TempCompCoef As Double = 0
         Public CurrentHVSet As Double = 25
@@ -488,6 +660,21 @@ Module MainModule
         ATN.ATS = ATS
         ATN.ATQ = ATQ
         ATN.RunId = RunId
+
+
+        For i = 0 To cCfg.BoardsSettings.Count - 1
+            If DTList(j).SerialNumber = cCfg.BoardsSettings(i).SN Then
+                ATS.CurrentHVSet = cCfg.BoardsSettings(i).HV_VOLT
+                ATS.CurrentHVON = IIf(cCfg.BoardsSettings(i).HV_VOLT > 5, True, False)
+                ATS.CurrentHVMax = cCfg.BoardsSettings(i).HV_MAX
+                ATS.EnableTempComp = cCfg.BoardsSettings(i).EnableHVCompensation
+                ATS.DisableTempReadingAcq = Not cCfg.BoardsSettings(i).ReadTemperatureAndHV
+                ATS.TempCompCoef = cCfg.BoardsSettings(i).HVCompensationCoefficent
+                ATS.InputPolarity =  IIf(cCfg.BoardsSettings(j).Polarity.ToUpper = "POSITIVE", tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
+            End If
+        Next
+
+
         ATN.ATS.File = cCfg.DataStorageFolder & "\" & cCfg.FileName & "_" & RunId & "_" & ATN.SN & ".data"
         ATT.Add(ATN)
         ATT.Last.th = New Thread(Sub()
@@ -560,14 +747,33 @@ Module MainModule
         For i = 0 To BI.channelsPerAsic - 1
             strline &= $"FINE_{i};"
         Next
-
-        strline = strline.Remove(strline.Length - 1)
+        strline &= "HV;mA;TEMPERATURE"
+        'strline = strline.Remove(strline.Length - 1)
 
         tx.WriteLine(strline)
 
         Dim TempTime = Now
         ATT(iid).ATQ.sByteCounter = 0
         StartTime = Now
+
+        Dim tA = -1000, tb = -1000
+
+        DTList(ATT(iid).id).GetSensTemperature(2, tA)
+        Dim enable, voltage, current
+        If DTList(ATT(iid).id).GetHV(enable, voltage, current) Then
+
+        End If
+
+        If ATT(iid).ATS.TempSensorSource = 0 Then
+            DTList(ATT(iid).id).GetSensTemperature(0, tA)
+        Else
+            DTList(ATT(iid).id).GetSensTemperature(2, tA)
+        End If
+
+        Dim CurTemp As Double = 0, CurHv As Double = 0, CurI As Double = 0
+        CurTemp = tA
+        CurHv = voltage
+        CurI = current
 
         DTList(ATT(iid).id).RUNControl(True)
         While running
@@ -576,7 +782,8 @@ Module MainModule
             'HV Temperature feedback
             If ATT(iid).ATS.DisableTempReadingAcq = False Then
                 If (Now - TempTime).TotalMilliseconds > 1000 Then
-                    Dim tA = -1000, tb = -1000
+                    tA = -1000
+                    tb = -1000
                     If ATT(iid).ATS.TempSensorSource = 0 Then
                         DTList(ATT(iid).id).GetSensTemperature(0, tA)
                         If DTList(ATT(iid).id).GetBoardInfo.totalAsics > 2 Then
@@ -592,16 +799,19 @@ Module MainModule
                         tAv = tA
                     End If
                     If ATT(iid).ATS.EnableTempComp Then
-                        DTList(ATT(iid).id).SetHVTempFB(ATT(iid).ATS.CurrentHVON, ATT(iid).ATS.CurrentHVSet, ATT(iid).ATS.CurrentHVMax, ATT(iid).ATS.TempCompCoef, tAv)
+                        DTList(ATT(iid).id).SetHVTempFB(ATT(iid).ATS.CurrentHVON, ATT(iid).ATS.CurrentHVSet, ATT(iid).ATS.CurrentHVMax, ATT(iid).ATS.TempCompCoef, tA)
                     End If
 
 
 
-                    Dim enable, voltage, current
+
                     If DTList(ATT(iid).id).GetHV(enable, voltage, current) Then
 
                     End If
 
+                    CurTemp = tA
+                    CurHv = voltage
+                    CurI = current
                     ATT(iid).ATQ.HV = voltage
                     ATT(iid).ATQ.Temp = tAv
 
@@ -649,6 +859,7 @@ Module MainModule
                     hitNumber(i) = IIf(e.hit(i), 1, 0)
                 Next
                 strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.EventTimecode & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime)
+                strline &= ";" & CurHv & ";" & CurI & ";" & CurTemp
                 tx.WriteLine(strline)
                 ATT(iid).ATQ.sByteCounter += strline.Length
 

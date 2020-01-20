@@ -1,5 +1,7 @@
 ﻿
 Public Class GeneralSettings
+    Public Property RunTarget As String = "FREE"
+    Public Property TargetValue As Double = 0
 End Class
 
 Public Class SelfTrigger
@@ -35,8 +37,13 @@ End Class
 
 Public Class BoardsSetting
     Public Property SN As String
-    Public Property HV_VOLT As Integer
+    Public Property HV_VOLT As Double
     Public Property HV_MAX As Double
+    Public Property wait_hv As Boolean
+    Public Property ReadTemperatureAndHV As Boolean
+    Public Property EnableHVCompensation As Boolean
+    Public Property HVCompensationCoefficent As Double
+    Public Property switch_off_hv_on_end As Boolean
     Public Property TriggerSource As String
     Public Property EnableFrameTrigger As Boolean
     Public Property ExtHoldDelay As Integer
