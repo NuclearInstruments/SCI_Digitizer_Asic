@@ -16,6 +16,7 @@ namespace DT5550W_P_lib
     public enum TriggerMode { TIME_TRIG, CHARGE_TRIG, EXT_TRIG, GBL_TRIG_TIME, GBL_TRIG_CHARGE, SELF_TRIG };
 
     public enum T0Mode { SOFTWARE_STARTRUN = 0, SOFTWARE_PERIODIC = 1, EXTERNAL = 2 };
+    public enum PCMode { PERIODIC_WIN = 0, EXTERNAL_WIN = 1, PERIODIC_WIN_EXT_START =2, PERIODIC_WIN_INT_START =3};
 
     public enum t_AsicModels
     {
@@ -54,6 +55,24 @@ namespace DT5550W_P_lib
             chargeLG = new ushort[32];
             chargeHG = new ushort[32];
             hit = new bool[32];
+        }
+
+    }
+
+    public class t_DataCITIROCPC
+    {
+        public UInt64 EventTimecode;
+        public UInt64 PacketID;
+        public UInt64 WindowsID;
+        public UInt64 StartID;
+
+        public double EventTimecode_ns;
+        
+
+        public UInt64[] counters;
+        public t_DataCITIROCPC()
+        {
+            counters = new UInt64[128];
         }
 
     }

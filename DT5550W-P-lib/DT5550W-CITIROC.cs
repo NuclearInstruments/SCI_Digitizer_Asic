@@ -107,6 +107,12 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
 
 
+        const UInt32 SCI_REG_FR_LIMIT =0x00000011;
+        const UInt32 SCI_REG_FR_IFP2 = 0x00000012;
+        const UInt32 SCI_REG_FR_MODE = 0x00000013;
+        const UInt32 SCI_REG_FR_IFP =  0x00000010;
+        const UInt32 SCI_REG_FR_CP0 =  0x00200000;
+
 
         int DLL_ASIC_COUNT = 4;
         public CitirocConfig CitirocCfg;
@@ -578,30 +584,32 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             uint read_word = 0;
             uint valid_data = 0;
             phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_0_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
-            for (i=0;i<32;i++)
+            for (i=1;i<32;i++)
             {
-                cps[i + 0] = data[i];
+                cps[i] = data[i-1];
             }
-
+            cps[0] = data[31];
 
             phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_1_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
-            for (i = 0; i < 32; i++)
+            for (i = 1; i < 32; i++)
             {
-                cps[i + 32] = data[i];
+                cps[i + 32] = data[i - 1];
             }
+            cps[32] = data[31];
 
             phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_2_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
-            for (i = 0; i < 32; i++)
+            for (i = 1; i < 32; i++)
             {
-                cps[i + 64] = data[i];
+                cps[i + 64] = data[i - 1];
             }
+            cps[64] = data[31];
 
             phy.NI_USB3_ReadData_M(data, (UInt32)32, SCI_REG_RateMeter_3_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.REG_ACCESS, 500, ref read_word, ref valid_data);
-            for (i = 0; i < 32; i++)
+            for (i = 1; i < 32; i++)
             {
-                cps[i + 96] = data[i];
+                cps[i + 96] = data[i - 1];
             }
-
+            cps[96] = data[31];
 
             return true;
         }
@@ -1012,6 +1020,90 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
             valid_word = valid_data;
             return retcode;
+        }
+
+
+        public int DecodeCitirocRowEventsPC(ref Queue<t_DataCITIROCPC> pC, int ThresholdSoftware)
+        {
+            int DecodedPackets = 0;
+            double Time = 0;
+            double minTime = 0;
+            UInt32 i, j, t, s;
+            UInt32 bword = 0;
+            uint[] datarow = new uint[97];
+
+            t_DataCITIROCPC DataPC = null;
+            t = 0;
+            s = 0;
+            while (InternalBuffer.Count > PacketSize)
+            {
+                switch (s)
+                {
+                    case 0:
+                        bword = InternalBuffer.Dequeue();
+                        if (bword  == 0xFFFFFFFF)
+                        {
+                            s = 1;
+                            DataPC = new t_DataCITIROCPC();
+                            DataPC.PacketID = ((UInt64)InternalBuffer.Dequeue());                            
+                            t = t + 2;
+
+                        }
+                        else
+                            t++;
+                        break;
+
+                    case 1:
+                        for (i = 0; i < 128; i++)
+                        {
+                            bword = InternalBuffer.Dequeue();
+                            DataPC.counters[i] = bword;
+                            t++;
+                        }
+                        s = 2;
+                        break;
+
+                    case 2:
+
+
+                        DataPC.EventTimecode  = (((UInt64)InternalBuffer.Dequeue())) + (((UInt64)InternalBuffer.Dequeue()) << 32);
+                        DataPC.WindowsID = ((UInt64)InternalBuffer.Dequeue());
+                        DataPC.StartID = ((UInt64)InternalBuffer.Dequeue());
+
+                        DataPC.EventTimecode_ns = ((double)DataPC.EventTimecode) * 6.25;
+                        pC.Enqueue(DataPC);
+                        DecodedPackets++;
+
+
+                        t+=4;
+                        s = 0;
+                        break;
+                }
+            }
+            return DecodedPackets;
+        }
+
+        public int GetRawBufferPC(UInt32[] data, UInt32 event_count, UInt32 timeout, UInt32 PacketSize, ref UInt32 valid_word)
+        {
+            int retcode = 0;
+            UInt32 transfer_length = PacketSize * event_count;
+            UInt32 read_word = 0;
+            UInt32 valid_data = 0;
+
+            retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_FR_CP0, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
+
+            valid_word = valid_data;
+            return retcode;
+        }
+
+
+        public void ConfigurePC(PCMode mode, int PeriodicWidth, int PeriodicStart)
+        {
+            int period = 160000000 / PeriodicStart;
+            phy.NI_USB3_WriteReg_M((UInt32)mode, SCI_REG_FR_MODE);
+            phy.NI_USB3_WriteReg_M((UInt32)(PeriodicWidth/6.25), SCI_REG_FR_IFP);
+            phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_FR_IFP2);
+
         }
 
 

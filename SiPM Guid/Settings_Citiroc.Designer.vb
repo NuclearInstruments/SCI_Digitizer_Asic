@@ -84,6 +84,8 @@ Partial Class Settings_Citiroc
         Me.Label16 = New System.Windows.Forms.Label()
         Me.HVon = New System.Windows.Forms.CheckBox()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
+        Me.speBin = New System.Windows.Forms.ComboBox()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.SumSpectrumGain = New System.Windows.Forms.NumericUpDown()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Button2 = New System.Windows.Forms.Button()
@@ -112,6 +114,18 @@ Partial Class Settings_Citiroc
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.LabelHoldNs = New System.Windows.Forms.Label()
+        Me.TabPage9 = New System.Windows.Forms.TabPage()
+        Me.pcMode = New System.Windows.Forms.ComboBox()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.pc_WW = New System.Windows.Forms.NumericUpDown()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.pc_WC = New System.Windows.Forms.NumericUpDown()
+        Me.pc_IF = New System.Windows.Forms.NumericUpDown()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -140,6 +154,10 @@ Partial Class Settings_Citiroc
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
+        Me.TabPage9.SuspendLayout()
+        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -209,6 +227,7 @@ Partial Class Settings_Citiroc
         Me.TabControl2.Controls.Add(Me.TabPage6)
         Me.TabControl2.Controls.Add(Me.TabPage7)
         Me.TabControl2.Controls.Add(Me.TabPage8)
+        Me.TabControl2.Controls.Add(Me.TabPage9)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl2.Location = New System.Drawing.Point(0, 0)
         Me.TabControl2.Name = "TabControl2"
@@ -236,7 +255,7 @@ Partial Class Settings_Citiroc
         Me.TabPage3.Controls.Add(Me.Label1)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage3.Size = New System.Drawing.Size(803, 248)
         Me.TabPage3.TabIndex = 0
         Me.TabPage3.Text = "Asic General"
@@ -317,7 +336,7 @@ Partial Class Settings_Citiroc
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(24, 66)
+        Me.Label10.Location = New System.Drawing.Point(23, 30)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(95, 13)
         Me.Label10.TabIndex = 77
@@ -326,7 +345,7 @@ Partial Class Settings_Citiroc
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(25, 30)
+        Me.Label6.Location = New System.Drawing.Point(24, 65)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(93, 13)
         Me.Label6.TabIndex = 76
@@ -388,6 +407,7 @@ Partial Class Settings_Citiroc
         '
         'TabPage4
         '
+        Me.TabPage4.Controls.Add(Me.LabelHoldNs)
         Me.TabPage4.Controls.Add(Me.HoldDelay)
         Me.TabPage4.Controls.Add(Me.Label31)
         Me.TabPage4.Controls.Add(Me.Label18)
@@ -405,7 +425,7 @@ Partial Class Settings_Citiroc
         Me.TabPage4.Controls.Add(Me.Label19)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage4.Size = New System.Drawing.Size(803, 248)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Trigger"
@@ -619,7 +639,7 @@ Partial Class Settings_Citiroc
         Me.TabPage5.Controls.Add(Me.Label9)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
         Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage5.Size = New System.Drawing.Size(803, 248)
         Me.TabPage5.TabIndex = 2
         Me.TabPage5.Text = "Timestamp"
@@ -676,7 +696,7 @@ Partial Class Settings_Citiroc
         Me.TabPage6.Controls.Add(Me.HVon)
         Me.TabPage6.Location = New System.Drawing.Point(4, 22)
         Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage6.Size = New System.Drawing.Size(803, 248)
         Me.TabPage6.TabIndex = 3
         Me.TabPage6.Text = "HV"
@@ -795,6 +815,8 @@ Partial Class Settings_Citiroc
         '
         'TabPage7
         '
+        Me.TabPage7.Controls.Add(Me.speBin)
+        Me.TabPage7.Controls.Add(Me.Label32)
         Me.TabPage7.Controls.Add(Me.SumSpectrumGain)
         Me.TabPage7.Controls.Add(Me.Label25)
         Me.TabPage7.Controls.Add(Me.Button2)
@@ -809,11 +831,28 @@ Partial Class Settings_Citiroc
         Me.TabPage7.Controls.Add(Me.Label13)
         Me.TabPage7.Location = New System.Drawing.Point(4, 22)
         Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage7.Size = New System.Drawing.Size(803, 248)
         Me.TabPage7.TabIndex = 4
         Me.TabPage7.Text = "Data Processing"
         Me.TabPage7.UseVisualStyleBackColor = True
+        '
+        'speBin
+        '
+        Me.speBin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.speBin.FormattingEnabled = True
+        Me.speBin.Location = New System.Drawing.Point(397, 91)
+        Me.speBin.Name = "speBin"
+        Me.speBin.Size = New System.Drawing.Size(103, 21)
+        Me.speBin.TabIndex = 74
+        '
+        'Label32
+        '
+        Me.Label32.Location = New System.Drawing.Point(272, 94)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(114, 13)
+        Me.Label32.TabIndex = 73
+        Me.Label32.Text = "Spectrum Bins"
         '
         'SumSpectrumGain
         '
@@ -937,8 +976,8 @@ Partial Class Settings_Citiroc
         Me.TabPage8.Controls.Add(Me.Label11)
         Me.TabPage8.Location = New System.Drawing.Point(4, 22)
         Me.TabPage8.Name = "TabPage8"
-        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
-        Me.TabPage8.Size = New System.Drawing.Size(804, 252)
+        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage8.Size = New System.Drawing.Size(803, 248)
         Me.TabPage8.TabIndex = 5
         Me.TabPage8.Text = "Monitor"
         Me.TabPage8.UseVisualStyleBackColor = True
@@ -1062,7 +1101,7 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage1.Size = New System.Drawing.Size(809, 320)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
@@ -1072,11 +1111,127 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage2.Size = New System.Drawing.Size(809, 320)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'LabelHoldNs
+        '
+        Me.LabelHoldNs.Location = New System.Drawing.Point(517, 44)
+        Me.LabelHoldNs.Name = "LabelHoldNs"
+        Me.LabelHoldNs.Size = New System.Drawing.Size(99, 18)
+        Me.LabelHoldNs.TabIndex = 83
+        Me.LabelHoldNs.Text = "xxx"
+        '
+        'TabPage9
+        '
+        Me.TabPage9.Controls.Add(Me.Label38)
+        Me.TabPage9.Controls.Add(Me.Label37)
+        Me.TabPage9.Controls.Add(Me.pc_IF)
+        Me.TabPage9.Controls.Add(Me.Label36)
+        Me.TabPage9.Controls.Add(Me.pc_WC)
+        Me.TabPage9.Controls.Add(Me.Label35)
+        Me.TabPage9.Controls.Add(Me.pc_WW)
+        Me.TabPage9.Controls.Add(Me.Label34)
+        Me.TabPage9.Controls.Add(Me.pcMode)
+        Me.TabPage9.Controls.Add(Me.Label33)
+        Me.TabPage9.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage9.Name = "TabPage9"
+        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage9.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage9.TabIndex = 6
+        Me.TabPage9.Text = "Photon Counting"
+        Me.TabPage9.UseVisualStyleBackColor = True
+        '
+        'pcMode
+        '
+        Me.pcMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.pcMode.FormattingEnabled = True
+        Me.pcMode.Location = New System.Drawing.Point(155, 23)
+        Me.pcMode.Name = "pcMode"
+        Me.pcMode.Size = New System.Drawing.Size(303, 21)
+        Me.pcMode.TabIndex = 62
+        '
+        'Label33
+        '
+        Me.Label33.Location = New System.Drawing.Point(20, 26)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(116, 18)
+        Me.Label33.TabIndex = 61
+        Me.Label33.Text = "Time Windows Mode"
+        '
+        'pc_WW
+        '
+        Me.pc_WW.BackColor = System.Drawing.Color.White
+        Me.pc_WW.Location = New System.Drawing.Point(155, 78)
+        Me.pc_WW.Maximum = New Decimal(New Integer() {1410065408, 2, 0, 0})
+        Me.pc_WW.Name = "pc_WW"
+        Me.pc_WW.Size = New System.Drawing.Size(102, 20)
+        Me.pc_WW.TabIndex = 64
+        Me.pc_WW.Value = New Decimal(New Integer() {10000000, 0, 0, 0})
+        '
+        'Label34
+        '
+        Me.Label34.Location = New System.Drawing.Point(20, 80)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(105, 18)
+        Me.Label34.TabIndex = 63
+        Me.Label34.Text = "Windows Width"
+        '
+        'Label35
+        '
+        Me.Label35.Location = New System.Drawing.Point(20, 124)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(105, 18)
+        Me.Label35.TabIndex = 65
+        Me.Label35.Text = "Windows Count"
+        '
+        'pc_WC
+        '
+        Me.pc_WC.BackColor = System.Drawing.Color.White
+        Me.pc_WC.Location = New System.Drawing.Point(155, 122)
+        Me.pc_WC.Maximum = New Decimal(New Integer() {1215752192, 23, 0, 0})
+        Me.pc_WC.Name = "pc_WC"
+        Me.pc_WC.Size = New System.Drawing.Size(102, 20)
+        Me.pc_WC.TabIndex = 66
+        Me.pc_WC.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'pc_IF
+        '
+        Me.pc_IF.BackColor = System.Drawing.Color.White
+        Me.pc_IF.Location = New System.Drawing.Point(155, 166)
+        Me.pc_IF.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.pc_IF.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.pc_IF.Name = "pc_IF"
+        Me.pc_IF.Size = New System.Drawing.Size(102, 20)
+        Me.pc_IF.TabIndex = 68
+        Me.pc_IF.Value = New Decimal(New Integer() {100, 0, 0, 0})
+        '
+        'Label36
+        '
+        Me.Label36.Location = New System.Drawing.Point(20, 168)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(105, 18)
+        Me.Label36.TabIndex = 67
+        Me.Label36.Text = "Internal Start Freq"
+        '
+        'Label37
+        '
+        Me.Label37.Location = New System.Drawing.Point(276, 80)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(105, 18)
+        Me.Label37.TabIndex = 69
+        Me.Label37.Text = "ns"
+        '
+        'Label38
+        '
+        Me.Label38.Location = New System.Drawing.Point(276, 168)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(105, 18)
+        Me.Label38.TabIndex = 70
+        Me.Label38.Text = "Hz"
         '
         'Settings_Citiroc
         '
@@ -1117,6 +1272,10 @@ Partial Class Settings_Citiroc
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
+        Me.TabPage9.ResumeLayout(False)
+        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1211,4 +1370,18 @@ Partial Class Settings_Citiroc
     Friend WithEvents Label30 As Label
     Friend WithEvents HoldDelay As NumericUpDown
     Friend WithEvents Label31 As Label
+    Friend WithEvents speBin As ComboBox
+    Friend WithEvents Label32 As Label
+    Friend WithEvents LabelHoldNs As Label
+    Friend WithEvents TabPage9 As TabPage
+    Friend WithEvents Label38 As Label
+    Friend WithEvents Label37 As Label
+    Friend WithEvents pc_IF As NumericUpDown
+    Friend WithEvents Label36 As Label
+    Friend WithEvents pc_WC As NumericUpDown
+    Friend WithEvents Label35 As Label
+    Friend WithEvents pc_WW As NumericUpDown
+    Friend WithEvents Label34 As Label
+    Friend WithEvents pcMode As ComboBox
+    Friend WithEvents Label33 As Label
 End Class

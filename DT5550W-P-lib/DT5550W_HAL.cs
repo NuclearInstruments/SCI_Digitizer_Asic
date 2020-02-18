@@ -490,7 +490,25 @@ namespace DT5550W_P_lib
                 CitirocClass.SetHoldWindowsWidth(hd);
         }
 
-      
 
+
+        public void SelectTriggerMode(PCMode mode, int PeriodicWidth, int PeriodicStart)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                ;
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                CitirocClass.ConfigurePC(mode, PeriodicWidth, PeriodicStart);
+        }
+
+
+        public int GetRawBufferPC(UInt32[] data, UInt32 event_count, UInt32 timeout, UInt32 PacketSize, ref UInt32 valid_word)
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                ;
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                return CitirocClass.GetRawBufferPC(data, event_count, timeout, PacketSize, ref valid_word);
+
+            return -1;
+        }
     }
 }

@@ -187,14 +187,24 @@ Public Class ScanWindow
         Dim checked_ch = ListView1.CheckedItems.Count
         Pesgo1.PeData.Points = PointHistory(0).Count
         Pesgo1.PeData.Subsets = checked_ch
+        SetYLabel(sMode.Text)
+
+        Dim newp As New List(Of MainForm.ChannelScanPoint)
+
         For z = 0 To ListView1.CheckedItems.Count - 1
+            Dim newpp As New MainForm.ChannelScanPoint
+
+
             Dim sid = ListView1.CheckedItems.Item(z).Index
+
+            newpp.channel = ListView1.CheckedItems(z).SubItems(1).Text
+            newpp.value = PointHistory(sid).Last.YValue
             For p = 0 To PointHistory(sid).Count - 1
                 Pesgo1.PeData.X(l, p) = PointHistory(sid)(p).XValue
                 If logmode = False Then
                     Pesgo1.PeData.Y(l, p) = PointHistory(sid)(p).YValue 'spectra(MainForm.acquisition.CHList(s).id - 1, p)
                 Else
-                    Pesgo1.PeData.Y(l, p) = PointHistory(sid)(p).YValue  'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
+                    Pesgo1.PeData.Y(l, p) = Math.Log10(PointHistory(sid)(p).YValue + 1)  'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
                 End If
 
 
@@ -206,9 +216,15 @@ Public Class ScanWindow
             Pesgo1.PePlot.SubsetLineTypes(l) = LineType.ThinSolid
             Pesgo1.PeString.SubsetLabels(l) = "" 'MainForm.acquisition.CHList(s).name
             l = l + 1
+
+            newp.Add(newpp)
         Next
 
-        totAn=0
+        MainForm.LastScanResult.PushData(PointHistory(0).Last.XValue, PointHistory(0).Last.ScanValue, newp)
+
+
+
+        totAn =0
         For p = 0 To PointHistory(0).Count - 1
             If oScanXValue <> PointHistory(0)(p).ScanValue Then
                 Pesgo1.PeAnnotation.Graph.X(totAn) = PointHistory(0)(p).XValue
@@ -243,11 +259,27 @@ Public Class ScanWindow
 
     Public Function UpdateCPS(arr() As UInt32)
         ReDim TotalCps(arr.Length - 1)
-        For i = 0 To arr.Length - 1
-            TotalCps(i) = arr(i)
-        Next
+
         Dim sum As UInt64 = 0
+
+
         For i = 0 To ListView1.Items.Count - 2
+
+            Dim idx As Integer = -1
+            Dim q = 0
+            For Each cGC In MainForm.GC
+                If cGC.X + 1 = ListView1.Items(i).SubItems(2).Text And cGC.Y + 1 = ListView1.Items(i).SubItems(3).Text Then
+                    idx = (cGC.Asic * 32) + cGC.Channel
+                    Exit For
+                End If
+                q = q + 1
+            Next
+            If (idx = -1) Then
+                Continue For
+            End If
+            TotalCps(i) = arr(idx)
+
+
             ListView1.Items(i).SubItems(7).Text = TotalCps(i)
 
             If isRunning And discard_next = 0 Then
@@ -262,6 +294,8 @@ Public Class ScanWindow
                 tt.XValue = (Now - startTimeHistory).TotalSeconds
                 ' End If
                 PointHistory(i).Add(tt)
+
+
             End If
             lastUpdate = Now()
         Next
@@ -631,6 +665,16 @@ Public Class ScanWindow
         Button1.Text = "Start"
     End Sub
 
+    Public Sub SetYLabel(Str As String)
+        If logmode Then
+            Pesgo1.PeString.YAxisLabel = "Log (" & Str & ")"
+        Else
+            Pesgo1.PeString.YAxisLabel = Str
+        End If
+
+    End Sub
+
+
     Private Sub StartScan()
 
         If Not IsNumeric(sStep.Text) Or Not IsNumeric(sMax.Text) Or Not IsNumeric(sMin.Text) Or Not IsNumeric(sTime.Text) Then
@@ -672,6 +716,10 @@ Public Class ScanWindow
                 Pesgo1.PeString.MainTitle = "External Trigger Delay Scan"
                 MainForm.sets_citiroc.SCAN_PARAMETER(WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay, ScanXValue)
         End Select
+
+        MainForm.LastScanResult.Title = Pesgo1.PeString.MainTitle
+        MainForm.LastScanResult.Clear()
+
         System.Threading.Thread.Sleep(2000)
         ResetHistory()
         isRunning = True
@@ -726,10 +774,14 @@ Public Class ScanWindow
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If Button1.Text = "Start" Then
+
             StartScan()
+
         Else
             StopScan()
         End If
+
+
 
     End Sub
 End Class

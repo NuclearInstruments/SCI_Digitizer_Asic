@@ -59,6 +59,9 @@ Public Class Settings_Citiroc
         cfg.TriggerLatch = LatchTrigger.Checked
         cfg.HoldDelay = HoldDelay.Value
 
+
+        cfg.Rebin = speBin.Text
+
         ReDim cfg.sA(asicCount)
 
         For q = 0 To asicCount - 1
@@ -130,6 +133,8 @@ Public Class Settings_Citiroc
         cfg.TriggerLatch = True
         cfg.HoldDelay = 10
 
+        LabelHoldNs.Text = Math.Round(HoldDelay.Value * 1000 / 160, 0) & " ns"
+
         ReDim cfg.sA(asicCount)
 
         For q = 0 To asicCount - 1
@@ -152,6 +157,7 @@ Public Class Settings_Citiroc
 
         Next
 
+        cfg.Rebin = 2048
         Return cfg
 
     End Function
@@ -216,6 +222,9 @@ Public Class Settings_Citiroc
             TriggerMode.Text = cfg.TriggerMode
             LatchTrigger.Checked = cfg.TriggerLatch
             HoldDelay.Value = cfg.HoldDelay
+            LabelHoldNs.Text = Math.Round(HoldDelay.Value * 1000 / 160, 0) & " ns"
+
+            speBin.Text = cfg.Rebin
 
             Dim asC As Integer = IIf(cfg.AsicCount >= asicCount, asicCount, cfg.AsicCount)
 
@@ -432,6 +441,21 @@ Public Class Settings_Citiroc
         TriggerMode.Items.Add("Self Trigger")
         TriggerMode.SelectedIndex = 0
 
+        speBin.Items.Add("256")
+        speBin.Items.Add("512")
+        speBin.Items.Add("1024")
+        speBin.Items.Add("2048")
+        speBin.Items.Add("4096")
+        speBin.Items.Add("8192")
+        speBin.SelectedIndex = 3
+
+        LabelHoldNs.Text = Math.Round(HoldDelay.Value * 1000 / 160, 0) & " ns"
+
+        pcMode.Items.Add("Periodic Window, Internal Start")
+        pcMode.Items.Add("Periodic Window, External Start (LEMO7)")
+        pcMode.Items.Add("Windows Scan, Extrnal Scan Start (LEMO7)")
+        pcMode.Items.Add("Windows Scan, Periodic Scan Start ")
+        pcMode.SelectedIndex = 0
     End Sub
 
     Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
@@ -677,6 +701,22 @@ Public Class Settings_Citiroc
 
         End Try
 
+        Select Case speBin.Text
+            Case "256"
+                MainForm.SetRebin(64)
+            Case "512"
+                MainForm.SetRebin(32)
+            Case "1024"
+                MainForm.SetRebin(16)
+            Case "2048"
+                MainForm.SetRebin(8)
+            Case "4096"
+                MainForm.SetRebin(4)
+            Case "8192"
+                MainForm.SetRebin(2)
+        End Select
+
+
     End Sub
 
 
@@ -861,6 +901,18 @@ Public Class Settings_Citiroc
     End Sub
 
     Private Sub Panel3_Paint(sender As Object, e As PaintEventArgs) Handles Panel3.Paint
+
+    End Sub
+
+    Private Sub TransferSize_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TransferSize.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub HoldDelay_ValueChanged(sender As Object, e As EventArgs) Handles HoldDelay.ValueChanged
+        LabelHoldNs.Text = Math.Round(HoldDelay.Value * 1000 / 160, 0) & " ns"
+    End Sub
+
+    Private Sub TabPage9_Click(sender As Object, e As EventArgs) Handles TabPage9.Click
 
     End Sub
 End Class

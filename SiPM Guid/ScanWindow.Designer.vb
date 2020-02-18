@@ -27,19 +27,19 @@ Partial Class ScanWindow
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.Pesgo1 = New Gigasoft.ProEssentials.Pesgo()
         Me.ListView1 = New System.Windows.Forms.ListView()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.sMode = New System.Windows.Forms.ComboBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.sMin = New System.Windows.Forms.TextBox()
-        Me.sStep = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.sMax = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.sTime = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.sMax = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.sStep = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.sMin = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.sMode = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -98,10 +98,6 @@ Partial Class ScanWindow
         Me.ListView1.UseCompatibleStateImageBehavior = False
         Me.ListView1.View = System.Windows.Forms.View.Details
         '
-        'Timer1
-        '
-        Me.Timer1.Interval = 3000
-        '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.sTime)
@@ -121,57 +117,31 @@ Partial Class ScanWindow
         Me.Panel1.Size = New System.Drawing.Size(1129, 36)
         Me.Panel1.TabIndex = 2
         '
-        'Label1
+        'sTime
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(23, 11)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(59, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Scan Type"
+        Me.sTime.Location = New System.Drawing.Point(751, 9)
+        Me.sTime.Name = "sTime"
+        Me.sTime.Size = New System.Drawing.Size(61, 20)
+        Me.sTime.TabIndex = 10
+        Me.sTime.Text = "5"
         '
-        'sMode
+        'Label5
         '
-        Me.sMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.sMode.FormattingEnabled = True
-        Me.sMode.Location = New System.Drawing.Point(99, 8)
-        Me.sMode.Name = "sMode"
-        Me.sMode.Size = New System.Drawing.Size(121, 21)
-        Me.sMode.TabIndex = 1
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(721, 12)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(24, 13)
+        Me.Label5.TabIndex = 9
+        Me.Label5.Text = "sec"
         '
-        'Label2
+        'Button1
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(245, 11)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(27, 13)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "MIN"
-        '
-        'sMin
-        '
-        Me.sMin.Location = New System.Drawing.Point(287, 9)
-        Me.sMin.Name = "sMin"
-        Me.sMin.Size = New System.Drawing.Size(100, 20)
-        Me.sMin.TabIndex = 3
-        Me.sMin.Text = "10"
-        '
-        'sStep
-        '
-        Me.sStep.Location = New System.Drawing.Point(446, 9)
-        Me.sStep.Name = "sStep"
-        Me.sStep.Size = New System.Drawing.Size(100, 20)
-        Me.sStep.TabIndex = 5
-        Me.sStep.Text = "5"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(405, 12)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(35, 13)
-        Me.Label3.TabIndex = 4
-        Me.Label3.Text = "STEP"
+        Me.Button1.Location = New System.Drawing.Point(832, 8)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 8
+        Me.Button1.Text = "Start"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'sMax
         '
@@ -190,31 +160,61 @@ Partial Class ScanWindow
         Me.Label4.TabIndex = 6
         Me.Label4.Text = "MAX"
         '
-        'Button1
+        'sStep
         '
-        Me.Button1.Location = New System.Drawing.Point(832, 6)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 8
-        Me.Button1.Text = "Start"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.sStep.Location = New System.Drawing.Point(446, 9)
+        Me.sStep.Name = "sStep"
+        Me.sStep.Size = New System.Drawing.Size(100, 20)
+        Me.sStep.TabIndex = 5
+        Me.sStep.Text = "5"
         '
-        'sTime
+        'Label3
         '
-        Me.sTime.Location = New System.Drawing.Point(751, 9)
-        Me.sTime.Name = "sTime"
-        Me.sTime.Size = New System.Drawing.Size(61, 20)
-        Me.sTime.TabIndex = 10
-        Me.sTime.Text = "5"
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(405, 12)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(35, 13)
+        Me.Label3.TabIndex = 4
+        Me.Label3.Text = "STEP"
         '
-        'Label5
+        'sMin
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(721, 12)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(24, 13)
-        Me.Label5.TabIndex = 9
-        Me.Label5.Text = "sec"
+        Me.sMin.Location = New System.Drawing.Point(287, 9)
+        Me.sMin.Name = "sMin"
+        Me.sMin.Size = New System.Drawing.Size(100, 20)
+        Me.sMin.TabIndex = 3
+        Me.sMin.Text = "10"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(245, 11)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(27, 13)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "MIN"
+        '
+        'sMode
+        '
+        Me.sMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.sMode.FormattingEnabled = True
+        Me.sMode.Location = New System.Drawing.Point(99, 8)
+        Me.sMode.Name = "sMode"
+        Me.sMode.Size = New System.Drawing.Size(121, 21)
+        Me.sMode.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(23, 11)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(59, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Scan Type"
+        '
+        'Timer1
+        '
+        Me.Timer1.Interval = 3000
         '
         'ScanWindow
         '

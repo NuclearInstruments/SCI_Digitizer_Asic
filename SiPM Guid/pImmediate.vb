@@ -87,6 +87,7 @@ Public Class pImmediate
             .YAxisKey = "pxl",
             .RenderMethod = HeatMapRenderMethod.Rectangles,
             .LabelFontSize = 0.2,
+            .LabelFormatString = "0",
             .Data = data
         }
         Else

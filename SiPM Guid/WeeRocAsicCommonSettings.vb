@@ -86,4 +86,6 @@
         ScanHoldDelay
         ScanExternalDelay
     End Enum
+
+    Public Rebin As Integer = 2048
 End Class

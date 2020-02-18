@@ -34,7 +34,7 @@ Public Class pSpectra
 
     Dim t1 As Thread
     Dim StopT1 As Boolean = False
-    Dim rebin = 8
+    Dim rebin = 1
     Public Structure ChnData
         Public X As String
         Public Y As String
@@ -65,6 +65,10 @@ Public Class pSpectra
             Return returnVal
         End Function
     End Class
+
+    Public Sub SetRebin(rbn)
+        rebin = rbn
+    End Sub
 
     Public Sub UpdateChannels(lch As List(Of ChnData))
         ListView1.Items.Clear()
@@ -425,7 +429,8 @@ Public Class pSpectra
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Dim rebinned_spectum(SpectrumLength / rebin - 1) As UInt64
+
+        Dim rebinned_spectum((SpectrumLength / rebin) - 1) As UInt64
 
         Dim checked_ch = ListView1.CheckedItems.Count
         If MainForm.fit_enabled = False Then

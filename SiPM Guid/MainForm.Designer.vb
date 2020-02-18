@@ -104,6 +104,9 @@ Partial Class MainForm
         Me.ConfigureAllASICToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
+        Me.EnegySpectrumHGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ScanResultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RunCounterMode = New System.Windows.Forms.ToolStripButton()
         Me.MenuStrip.SuspendLayout()
         Me.ToolStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
@@ -289,7 +292,7 @@ Partial Class MainForm
         'ToolStrip
         '
         Me.ToolStrip.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripButton, Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator1, Me.ToolStripLabel1, Me.wRun, Me.wSingle, Me.wRunStop, Me.ToolStripSeparator2, Me.ToolStripLabel2, Me.Wspectrum, Me.sRun, Me.WspectrumStop, Me.ToolStripButton5, Me.ToolStripButton1, Me.ToolStripSeparator7, Me.HV, Me.hvon, Me.hvoff, Me.ToolStripButton2})
+        Me.ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripButton, Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator1, Me.ToolStripLabel1, Me.wRun, Me.wSingle, Me.wRunStop, Me.ToolStripSeparator2, Me.ToolStripLabel2, Me.Wspectrum, Me.RunCounterMode, Me.sRun, Me.WspectrumStop, Me.ToolStripButton5, Me.ToolStripButton1, Me.ToolStripSeparator7, Me.HV, Me.hvon, Me.hvoff, Me.ToolStripButton2})
         Me.ToolStrip.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip.Name = "ToolStrip"
         Me.ToolStrip.Size = New System.Drawing.Size(1384, 27)
@@ -383,7 +386,7 @@ Partial Class MainForm
         Me.Wspectrum.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.Wspectrum.Name = "Wspectrum"
         Me.Wspectrum.Size = New System.Drawing.Size(24, 24)
-        Me.Wspectrum.Text = "Real Time Spectrum"
+        Me.Wspectrum.Text = "Run Acquisition mode (Realtime)"
         Me.Wspectrum.ToolTipText = "Free Running (No Save)"
         '
         'sRun
@@ -535,7 +538,7 @@ Partial Class MainForm
         '
         'ExportToolStripMenuItem
         '
-        Me.ExportToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportEnergySpectrumToolStripMenuItem, Me.TimeSpectrumToolStripMenuItem, Me.HitmapCumulativeToolStripMenuItem, Me.HitmapToolStripMenuItem, Me.ChannelsMappingToolStripMenuItem})
+        Me.ExportToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportEnergySpectrumToolStripMenuItem, Me.EnegySpectrumHGToolStripMenuItem, Me.TimeSpectrumToolStripMenuItem, Me.HitmapCumulativeToolStripMenuItem, Me.HitmapToolStripMenuItem, Me.ChannelsMappingToolStripMenuItem, Me.ScanResultToolStripMenuItem})
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
         Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
@@ -543,31 +546,31 @@ Partial Class MainForm
         'ExportEnergySpectrumToolStripMenuItem
         '
         Me.ExportEnergySpectrumToolStripMenuItem.Name = "ExportEnergySpectrumToolStripMenuItem"
-        Me.ExportEnergySpectrumToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.ExportEnergySpectrumToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ExportEnergySpectrumToolStripMenuItem.Text = "&Energy Spectrum"
         '
         'TimeSpectrumToolStripMenuItem
         '
         Me.TimeSpectrumToolStripMenuItem.Name = "TimeSpectrumToolStripMenuItem"
-        Me.TimeSpectrumToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.TimeSpectrumToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.TimeSpectrumToolStripMenuItem.Text = "&Time Spectrum"
         '
         'HitmapCumulativeToolStripMenuItem
         '
         Me.HitmapCumulativeToolStripMenuItem.Name = "HitmapCumulativeToolStripMenuItem"
-        Me.HitmapCumulativeToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.HitmapCumulativeToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.HitmapCumulativeToolStripMenuItem.Text = "&Hitmap Cumulative"
         '
         'HitmapToolStripMenuItem
         '
         Me.HitmapToolStripMenuItem.Name = "HitmapToolStripMenuItem"
-        Me.HitmapToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.HitmapToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.HitmapToolStripMenuItem.Text = "&Hitmap"
         '
         'ChannelsMappingToolStripMenuItem
         '
         Me.ChannelsMappingToolStripMenuItem.Name = "ChannelsMappingToolStripMenuItem"
-        Me.ChannelsMappingToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.ChannelsMappingToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ChannelsMappingToolStripMenuItem.Text = "Channels Mapping"
         '
         'ToolStripSeparator9
@@ -665,6 +668,27 @@ Partial Class MainForm
         'Timer3
         '
         Me.Timer3.Interval = 1000
+        '
+        'EnegySpectrumHGToolStripMenuItem
+        '
+        Me.EnegySpectrumHGToolStripMenuItem.Name = "EnegySpectrumHGToolStripMenuItem"
+        Me.EnegySpectrumHGToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+        Me.EnegySpectrumHGToolStripMenuItem.Text = "Enegy Spectrum (HG)"
+        '
+        'ScanResultToolStripMenuItem
+        '
+        Me.ScanResultToolStripMenuItem.Name = "ScanResultToolStripMenuItem"
+        Me.ScanResultToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+        Me.ScanResultToolStripMenuItem.Text = "Scan Result"
+        '
+        'RunCounterMode
+        '
+        Me.RunCounterMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.RunCounterMode.Image = CType(resources.GetObject("RunCounterMode.Image"), System.Drawing.Image)
+        Me.RunCounterMode.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RunCounterMode.Name = "RunCounterMode"
+        Me.RunCounterMode.Size = New System.Drawing.Size(24, 24)
+        Me.RunCounterMode.Text = "Run Counter Mode"
         '
         'MainForm
         '
@@ -772,4 +796,7 @@ Partial Class MainForm
     Friend WithEvents ConfigureAllASICToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ChannelsMappingToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Timer3 As Timer
+    Friend WithEvents EnegySpectrumHGToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ScanResultToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RunCounterMode As ToolStripButton
 End Class

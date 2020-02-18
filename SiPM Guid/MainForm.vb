@@ -117,6 +117,46 @@ Public Class MainForm
     Public ClusterMaxTime As Int64 = 1000
     Public RunCompleted As Boolean = False
 
+    Public Structure ChannelScanPoint
+        Public channel As Integer
+        Public value As Double
+        Public Overrides Function ToString() As String
+            Return String.Format("{0};{1}", channel, value.ToString.Replace(",", "."))
+        End Function
+    End Structure
+    Public Structure ScanPoint
+        Public Time As Double
+        Public ParamValue As Double
+        Public ScanValue As List(Of ChannelScanPoint)
+    End Structure
+
+    Public Class ScanResult
+        Public Title As String
+        Public LitOfScanPoint As List(Of ScanPoint)
+        Public Valid As Boolean
+        Public Sub New()
+            LitOfScanPoint = New List(Of ScanPoint)
+        End Sub
+
+        Public Sub Clear()
+            Valid = False
+            LitOfScanPoint.Clear()
+        End Sub
+
+        Public Sub PushData(_time As Double, _pv As Double, _sv As List(Of ChannelScanPoint))
+            Dim newSP As New ScanPoint
+            newSP.Time = _time
+            newSP.ParamValue = _pv
+            newSP.ScanValue = _sv
+            LitOfScanPoint.Add(newSP)
+            Valid = True
+        End Sub
+
+    End Class
+
+    Public LastScanResult As New ScanResult
+
+
     Public Sub UpdateOscilloscope()
 
         Select Case GBL_ASIC_MODEL
@@ -240,6 +280,7 @@ Public Class MainForm
             list_dockPanel.Add(content1a)
             pRT4.Pesgo1.PeString.MainTitle = "Energy Spectrum"
             AppendToLog(LogMode.mINFO, "Creating panel Energy Spectrum")
+
         End If
 
         If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
@@ -250,6 +291,7 @@ Public Class MainForm
             pRT4.Dock = DockStyle.Fill
             list_dockPanel.Add(content1a)
             pRT4.Pesgo1.PeString.MainTitle = "Energy Spectrum - Low Gain"
+            pRT4.SetRebin(8)
             AppendToLog(LogMode.mINFO, "Creating panel Energy Spectrum")
 
             Dim content1a_HG As DockContent = GetDockContentForm("Energy HG", DockState.Document, Color.White)
@@ -259,6 +301,7 @@ Public Class MainForm
             pRT4_HG.Dock = DockStyle.Fill
             list_dockPanel.Add(content1a)
             pRT4_HG.Pesgo1.PeString.MainTitle = "Energy Spectrum - High Gain"
+            pRT4_HG.SetRebin(8)
             AppendToLog(LogMode.mINFO, "Creating panel Energy Spectrum for high Gain")
         End If
 
@@ -779,10 +822,15 @@ Public Class MainForm
 
         If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
             Allocator(1024)
+            EnegySpectrumHGToolStripMenuItem.Visible = False
+            ScanResultToolStripMenuItem.Visible = False
         End If
 
         If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
             Allocator(16384)
+            EnegySpectrumHGToolStripMenuItem.Visible = True
+            ExportEnergySpectrumToolStripMenuItem.Text = "Energy Spectrum (LG)"
+            ScanResultToolStripMenuItem.Visible = True
         End If
 
 
@@ -2328,7 +2376,7 @@ Public Class MainForm
             Try
 
                 Dim file As System.IO.StreamWriter
-                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
 
                 For i = 0 To RawESpectrum.GetUpperBound(0) - 1
                     file.WriteLine(String.Join(";", GetRow(RawESpectrum, i)))
@@ -2350,7 +2398,7 @@ Public Class MainForm
             Try
 
                 Dim file As System.IO.StreamWriter
-                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
 
                 For i = 0 To RawTSpectrum.GetUpperBound(0) - 1
                     file.WriteLine(String.Join(";", GetRow(RawTSpectrum, i)))
@@ -2370,7 +2418,7 @@ Public Class MainForm
             Try
 
                 Dim file As System.IO.StreamWriter
-                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
 
 
                 file.WriteLine(String.Join(";", MatrixCumulative))
@@ -2389,7 +2437,7 @@ Public Class MainForm
             Try
 
                 Dim file As System.IO.StreamWriter
-                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
 
 
                 file.WriteLine(String.Join(";", MatrixInst))
@@ -2407,7 +2455,7 @@ Public Class MainForm
             Try
 
                 Dim file As System.IO.StreamWriter
-                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
                 file.WriteLine("ID;BOARD;ASIC;CHANNEL;X;Y")
                 For i = 0 To GC.Count - 1
                     If GC(i).ValidLocation Then
@@ -2536,5 +2584,60 @@ Public Class MainForm
     End Sub
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
         GenerateEmptyConfigration()
+    End Sub
+
+    Public Sub SetRebin(ByVal rebin)
+        If Not IsNothing(pRT4) Then
+            pRT4.SetRebin(rebin)
+        End If
+
+        If Not IsNothing(pRT4_HG) Then
+            pRT4_HG.SetRebin(rebin)
+        End If
+
+    End Sub
+
+    Private Sub EnegySpectrumHGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EnegySpectrumHGToolStripMenuItem.Click
+        SaveFileDialog1.Filter = "Column Separated Values (*.csv)|*.csv"
+        If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+            Try
+
+                Dim file As System.IO.StreamWriter
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
+
+                For i = 0 To RawE_HG_Spectrum.GetUpperBound(0) - 1
+                    file.WriteLine(String.Join(";", GetRow(RawE_HG_Spectrum, i)))
+                Next
+                file.Close()
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly + MsgBoxStyle.Exclamation, "Error exporting data")
+            End Try
+
+        End If
+    End Sub
+
+    Private Sub ScanResultToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ScanResultToolStripMenuItem.Click
+        If LastScanResult.Valid = False Then
+            MsgBox("No valid scan to be exported stored in memory.", vbCritical + vbOKOnly)
+            Exit Sub
+        End If
+        SaveFileDialog1.Filter = "Column Separated Values (*.csv)|*.csv"
+        If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+            Try
+
+                Dim file As System.IO.StreamWriter
+                file = My.Computer.FileSystem.OpenTextFileWriter(SaveFileDialog1.FileName, False)
+                file.WriteLine("TIME;PARAMETER_VALUE;CHANNEL[n];VALUE[n]")
+                For Each sp In LastScanResult.LitOfScanPoint
+                    file.WriteLine(sp.Time.ToString.Replace(",", ".") & ";" & sp.ParamValue.ToString.Replace(",", ".") & ";" & String.Join(";", sp.ScanValue))
+                Next
+
+                file.Close()
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly + MsgBoxStyle.Exclamation, "Error exporting data")
+            End Try
+
+        End If
+
     End Sub
 End Class
