@@ -1101,7 +1101,13 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             if (available_data> PacketSize)
             {
                 transfer_length = available_data > transfer_length ? transfer_length : available_data;
+                transfer_length = ((UInt32)Math.Floor( ((double)transfer_length / (double)PacketSize)))* PacketSize;
+
+
+
                 retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_FR_CP0, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
+
+                Console.WriteLine(valid_data);
 
                 valid_word = valid_data;
                 return retcode;

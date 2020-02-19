@@ -456,6 +456,11 @@ Public Class Settings_Citiroc
         pcMode.Items.Add("Windows Scan, Extrnal Scan Start (LEMO7)")
         pcMode.Items.Add("Windows Scan, Periodic Scan Start ")
         pcMode.SelectedIndex = 0
+
+        ImgPath.Items.Add("Low Gain")
+        ImgPath.Items.Add("High Gain")
+        ImgPath.SelectedIndex = 0
+
     End Sub
 
     Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
@@ -727,6 +732,7 @@ Public Class Settings_Citiroc
                 MainForm.SetRebin(2)
         End Select
 
+        MainForm.MatrixHGMode = IIf(ImgPath.SelectedIndex = 0, False, True)
 
     End Sub
 
@@ -928,6 +934,10 @@ Public Class Settings_Citiroc
     End Sub
 
     Private Sub pcMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles pcMode.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub TabPage7_Click(sender As Object, e As EventArgs) Handles TabPage7.Click
 
     End Sub
 End Class

@@ -41,6 +41,7 @@ Public Class MainForm
 
     Public SumSpectrumGain As Double = 25
 
+
     Public Structure CorrPoint
         Public Offset
         Public Gain
@@ -1002,6 +1003,8 @@ Public Class MainForm
 
     End Sub
 
+    Public MatrixHGMode As Boolean = False
+
     Public MatrixCumulative(1) As UInt64
     Public MatrixCumulativePerAsic(16, 64) As UInt64
     Public MatrixCumulativePerAsicCount(16, 64) As UInt64
@@ -1261,7 +1264,7 @@ Public Class MainForm
 
                         Dim EnergySum = 0
                         'Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
-                        For j = 0 To 127
+                        For j = 0 To MatrixCumulative.Count - 1
 
 
 
@@ -1869,10 +1872,17 @@ Public Class MainForm
                                         RawE_HG_Spectrum(c, e.chargeHG(j)) += 1
                                         EnergySum_HG += e.chargeHG(j)
                                     End If
-                                    MatrixCumulative(c) += e.chargeLG(j) ' quest due righe erano dentro hit
+                                    If MatrixHGMode = True Then
+                                        MatrixCumulative(c) += e.chargeHG(j)
+                                        MatrixInst(c) = e.chargeHG(j)
+                                    Else
+                                        MatrixCumulative(c) += e.chargeLG(j)
+                                        MatrixInst(c) = e.chargeLG(j)
+                                    End If
+
                                     MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
                                     MatrixCumulativePerAsicCount(e.AsicID, j) += 1
-                                    MatrixInst(c) = e.chargeLG(j)
+
 
                                     If e.hit(j) = True Then
                                         Dim time As Double = 0
@@ -2015,7 +2025,12 @@ Public Class MainForm
                                 For j = 0 To BI.channelsPerAsic - 1
                                     Dim c = SpXIndx + j
                                     If c < RawESpectrum.GetUpperBound(0) Then
-                                        MatrixInst(c) = e.chargeLG(j)
+                                        If MatrixHGMode Then
+                                            MatrixInst(c) = e.chargeHG(j)
+                                        Else
+                                            MatrixInst(c) = e.chargeLG(j)
+                                        End If
+
                                     End If
                                 Next
                             Next
@@ -2046,8 +2061,12 @@ Public Class MainForm
                                                     EnergySum_HG += e.chargeHG(j)
                                                 End If
 
-                                                MatrixCumulative(c) += e.chargeLG(j) ' quest due righe erano dentro hit
-                                                MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
+                                            If MatrixHGMode = True Then
+                                                MatrixCumulative(c) += e.chargeHG(j)
+                                            Else
+                                                MatrixCumulative(c) += e.chargeLG(j)
+                                            End If
+                                            MatrixCumulativePerAsic(e.AsicID, j) = MatrixCumulative(c)
                                                 MatrixCumulativePerAsicCount(e.AsicID, j) += 1
                                                 'MatrixInst(c) = e.chargeLG(j)
                                                 If e.hit(j) = True Then
