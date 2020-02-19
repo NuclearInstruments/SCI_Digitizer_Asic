@@ -824,6 +824,7 @@ Public Class MainForm
             Allocator(1024)
             EnegySpectrumHGToolStripMenuItem.Visible = False
             ScanResultToolStripMenuItem.Visible = False
+            RunCounterMode.Visible = False
         End If
 
         If GBL_ASIC_MODEL = t_AsicModels.CITIROC Then
@@ -831,6 +832,7 @@ Public Class MainForm
             EnegySpectrumHGToolStripMenuItem.Visible = True
             ExportEnergySpectrumToolStripMenuItem.Text = "Energy Spectrum (LG)"
             ScanResultToolStripMenuItem.Visible = True
+            RunCounterMode.Visible = True
         End If
 
 
@@ -864,6 +866,9 @@ Public Class MainForm
         'running = True
 
         Dim g As New RunStart
+        If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
+            g.LockMode(0)
+        End If
         If g.ShowDialog = DialogResult.OK Then
             Select Case g.cTargetMode.SelectedIndex
                 Case 0
@@ -884,8 +889,14 @@ Public Class MainForm
             SaveFilePath = g.FilePathName
 
             sStatus = "RUNNING"
+            If g.mode = 0 Then
+                StartRun()
+            Else
+                If g.mode = 1 Then
+                    StartRunPC()
+                End If
+            End If
 
-            StartRun()
 
         End If
 
@@ -960,6 +971,7 @@ Public Class MainForm
         wRunStop.Enabled = False
         Wspectrum.Enabled = True
         WspectrumStop.Enabled = False
+        RunCounterMode.Enabled = True
         '  pprop.Button1.Enabled = True
         System.Threading.Thread.Sleep(100)
         running = False
@@ -1104,7 +1116,172 @@ Public Class MainForm
     Public TSM As TimeSpectrumMode = 2
     Public TimePsBin As UInt64 = 70
     Dim StartTime As Date
+    Public Sub AcquisitionThreadPC2(board As DT5550W_HAL)
 
+    End Sub
+    Public Sub AcquisitionThreadPC(board As DT5550W_HAL, file As String, TransferSize As Integer, BoardArrayOffset As Integer)
+        Dim BI As t_BoardInfo = board.GetBoardInfo
+        Dim PachetSize = 1 + 1 + 128 + 2 + 1 + 1
+        Dim Buffer(PachetSize * TransferSize * 2) As UInt32
+        Dim ValidWord As UInt32 = 0
+        board.FlushFIFO()
+        Dim Frames As New Queue(Of DT5550W_P_lib.t_DataCITIROCPC)
+        Dim TotalEvents As Int64 = 0
+        Dim DURATION As TimeSpan
+        Dim DwnTime As Date
+        Dim tDwnTime As TimeSpan
+        Dim ProcTime As Date
+        Dim tProcTime As TimeSpan
+        Dim CurrentTimecode As Double = 0
+        Dim EventCounter As Int64 = 0
+        Dim DecodedEvents As Int64 = 0
+        Dim AsicCount = 4
+        Dim tx As StreamWriter = Nothing
+        Dim bwriter As BinaryWriter = Nothing
+
+        AppendToLog(LogMode.mACQUISITION, "Starting acquisition", BI.SerialNumber)
+        If EnableSaveFile = True Then
+            AppendToLog(LogMode.mACQUISITION, "List mode save file is enabled", BI.SerialNumber)
+            If SaveFileType = FileType.CSV Then
+                tx = New StreamWriter(SaveFilePath)
+                AppendToLog(LogMode.mACQUISITION, "File is CSV", BI.SerialNumber)
+                AppendToLog(LogMode.mACQUISITION, "Saving on file: " & SaveFilePath, BI.SerialNumber)
+            End If
+            If SaveFileType = FileType.BINARY Then
+                bwriter = New BinaryWriter(New FileStream(SaveFilePath, IO.FileMode.Create))
+                AppendToLog(LogMode.mACQUISITION, "File is BINARY", BI.SerialNumber)
+                AppendToLog(LogMode.mACQUISITION, "Saving on file: " & SaveFilePath, BI.SerialNumber)
+            End If
+        End If
+        If SaveFileType = FileType.CSV And EnableSaveFile = True Then
+            Dim strline = ""
+            strline = "ID;TimeCodeLSB;TimeCodeLSB_ns;Window_ID;Start_ID;"
+            For i = 0 To 127
+                strline &= $"PIXEL{i};"
+            Next
+            strline &= "ProcessingTime"
+        End If
+
+        Dim TempTime = Now
+        sByteCounter = 0
+        StartTime = Now
+
+        board.StartPC()
+
+        While running
+            DwnTime = Now
+            If DisableTempReadingAcq = False Then
+                If (Now - TempTime).TotalMilliseconds > 10000 Then
+                    Dim tA = -1000, tb = -1000
+                    If TempSensorSource = 0 Then
+                        board.GetSensTemperature(0, tA)
+                        If board.GetBoardInfo.totalAsics > 2 Then
+                            board.GetSensTemperature(1, tb)
+                        End If
+                    Else
+                        board.GetSensTemperature(2, tA)
+                    End If
+
+                    If EnableTempComp Then
+                        Dim tAv = 0
+                        If tb > -150 Then
+                            tAv = (tA + tb) / 2
+                        Else
+                            tAv = tA
+                        End If
+                        board.SetHVTempFB(CurrentHVON, CurrentHVSet, CurrentHVMax, TempCompCoef, tAv)
+                    End If
+
+                    Me.Invoke(Sub()
+                                  plog.UpdateSiPMTemp(tA, tb)
+                                  Dim enable, voltage, current
+                                  If board.GetHV(enable, voltage, current) Then
+                                      plog.UpdateHvStatus(enable, voltage, current)
+                                  End If
+
+                              End Sub
+                    )
+
+
+                    TempTime = Now
+                End If
+            End If
+
+
+            tDwnTime = Now - DwnTime
+            'End If
+            ProcTime = Now
+
+            Dim res = board.GetRawBufferPC(Buffer, TransferSize, 4000, PachetSize, ValidWord)
+            If res >= 0 Then
+                'boa
+
+                sAcqTime = tDwnTime.TotalMilliseconds
+
+                'If CurrentProcessMode = ProcessMode.OFF Then
+                DURATION = DateTime.Now - StartTime
+                sTime = DURATION.Hours.ToString.PadLeft(2, "0"c) & ":" &
+                        DURATION.Minutes.ToString.PadLeft(2, "0"c) & ":" &
+                        DURATION.Seconds.ToString.PadLeft(2, "0"c) & "." &
+                        DURATION.Milliseconds.ToString.PadLeft(3, "0"c)
+
+                If EnableSaveFile = True Then   'FILE SAVE
+                    If SaveFileType = FileType.BINARY Then
+                        For i = 0 To ValidWord - 1
+                            bwriter.Write(Buffer(i))
+                        Next
+                        sByteCounter += ValidWord * 4
+                    End If
+                End If
+                If CurrentProcessMode > ProcessMode.OFF Then
+                    board.CitirocPushRawDataInBuffer(Buffer, ValidWord)
+                    DecodedEvents = 0
+                    DecodedEvents = board.DecodeCitirocRowEventsPC(Frames)
+
+
+                    While Frames.Count > 0
+
+
+                        Dim strline = ""
+                        Dim e = Frames.Dequeue
+
+
+
+                        If SaveFileType = FileType.CSV And EnableSaveFile = True Then
+                            strline &= e.PacketID & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & e.WindowsID & ";" & e.StartID & ";" & String.Join(";", e.counters) & ";" & (Now - ProcTime).TotalMilliseconds
+                            tx.WriteLine(strline)
+                            sByteCounter += strline.Length
+                        End If
+                        TotalEvents += 1
+                        CurrentTimecode = e.EventTimecode_ns
+
+                        For t = 0 To MatrixInst.GetUpperBound(0)
+                            MatrixInst(t) = 0
+                        Next
+
+                        Dim EnergySum = 0
+                        'Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
+                        For j = 0 To 127
+
+
+
+                            MatrixCumulative(j) += e.counters(j) ' quest due righe erano dentro hit
+                            MatrixInst(j) = e.counters(j)
+
+                            RawHitCounter(0, j) += e.counters(j)
+
+
+                        Next
+
+
+
+                    End While
+                    pRT6.PostData(RawHitCounter, RawHitCounter.GetUpperBound(1))
+                End If
+            End If
+        End While
+
+    End Sub
 
 
     Public Sub AcquisitionThread(board As DT5550W_HAL, file As String, TransferSize As Integer, BoardArrayOffset As Integer)
@@ -1998,6 +2175,7 @@ Public Class MainForm
         sRun.Enabled = False
         Wspectrum.Enabled = False
         WspectrumStop.Enabled = True
+        RunCounterMode.Enabled = False
 
         StartFreeRunToolStripMenuItem.Enabled = False
         StartAcquisitionRunToolStripMenuItem.Enabled = False
@@ -2032,12 +2210,76 @@ Public Class MainForm
 
         t.Start()
     End Sub
+
     Public Sub RunFreerun()
         sStatus = "FREE RUNNING"
         RUN_TARGET_MODE = TargetMode.FreeRunning
         EnableSaveFile = False
         RunCompleted = False
         StartRun()
+    End Sub
+
+
+    Public Sub StartRunPC()
+        Timer3.Enabled = False
+
+        running = True
+        ACQLOCK = True
+        System.Threading.Thread.Sleep(100)
+        ' rdc.cTargetMode = 0
+        ' rdc.StartAcquisition(nboard)
+        'pRT4.startspectrum()
+        'pRT.Timer1.Enabled = True
+        'pRT2.Timer1.Enabled = True
+
+        wSingle.Enabled = False
+        wRun.Enabled = False
+        wRunStop.Enabled = False
+        sRun.Enabled = False
+        Wspectrum.Enabled = False
+        WspectrumStop.Enabled = True
+        RunCounterMode.Enabled = False
+
+        StartFreeRunToolStripMenuItem.Enabled = False
+        StartAcquisitionRunToolStripMenuItem.Enabled = False
+        StopRunToolStripMenuItem.Enabled = True
+        SingleShotToolStripMenuItem.Enabled = False
+        PeriodicToolStripMenuItem.Enabled = False
+        StopToolStripMenuItem.Enabled = False
+        ConfigureAllASICToolStripMenuItem.Enabled = False
+
+
+        EnableDisableUpdate(True)
+
+        map.EnableDisableUpdate(True)
+        '        pRT4.startspectrum()
+        '        pRT4_HG.startspectrum()
+        '        pRT5.startspectrum()
+        pRT6.startspectrum()
+        'pRT7.startspectrum()
+        pRT.StartLive()
+        pRT2.StartLive()
+
+
+        Dim BoardLaunch = 0
+
+        Dim t As New Task(Sub()
+                              Dim CHO = 0
+                              For i = 0 To BoardLaunch - 1
+                                  Dim BI As t_BoardInfo = DTList(i).GetBoardInfo
+                                  CHO += BI.totalChannels
+                              Next
+                              AcquisitionThreadPC(DTList(BoardLaunch), "c:\temp\temp.txt", TransferSize, CHO)
+                          End Sub)
+
+        t.Start()
+    End Sub
+    Public Sub RunFreerunPC()
+        sStatus = "FREE RUNNING - PC"
+        RUN_TARGET_MODE = TargetMode.FreeRunning
+        EnableSaveFile = False
+        RunCompleted = False
+        StartRunPC()
     End Sub
     Private Sub Wspectrum_Click(sender As Object, e As EventArgs) Handles Wspectrum.Click
         RunFreerun()
@@ -2638,6 +2880,11 @@ Public Class MainForm
             End Try
 
         End If
+
+    End Sub
+
+    Private Sub RunCounterMode_Click(sender As Object, e As EventArgs) Handles RunCounterMode.Click
+        RunFreerunPC()
 
     End Sub
 End Class

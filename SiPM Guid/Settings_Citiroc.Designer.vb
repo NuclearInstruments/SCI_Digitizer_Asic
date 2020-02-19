@@ -46,6 +46,7 @@ Partial Class Settings_Citiroc
         Me.ScaBias = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.LabelHoldNs = New System.Windows.Forms.Label()
         Me.HoldDelay = New System.Windows.Forms.NumericUpDown()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
@@ -108,24 +109,23 @@ Partial Class Settings_Citiroc
         Me.moniorCHAnalog = New System.Windows.Forms.NumericUpDown()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.TabPage9 = New System.Windows.Forms.TabPage()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.pc_IF = New System.Windows.Forms.NumericUpDown()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.pc_WC = New System.Windows.Forms.NumericUpDown()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.pc_WW = New System.Windows.Forms.NumericUpDown()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.pcMode = New System.Windows.Forms.ComboBox()
+        Me.Label33 = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.ButtonSetCfg = New System.Windows.Forms.Button()
         Me.ButtonSetMonitor = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.LabelHoldNs = New System.Windows.Forms.Label()
-        Me.TabPage9 = New System.Windows.Forms.TabPage()
-        Me.pcMode = New System.Windows.Forms.ComboBox()
-        Me.Label33 = New System.Windows.Forms.Label()
-        Me.pc_WW = New System.Windows.Forms.NumericUpDown()
-        Me.Label34 = New System.Windows.Forms.Label()
-        Me.Label35 = New System.Windows.Forms.Label()
-        Me.pc_WC = New System.Windows.Forms.NumericUpDown()
-        Me.pc_IF = New System.Windows.Forms.NumericUpDown()
-        Me.Label36 = New System.Windows.Forms.Label()
-        Me.Label37 = New System.Windows.Forms.Label()
-        Me.Label38 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -152,12 +152,12 @@ Partial Class Settings_Citiroc
         Me.TabPage8.SuspendLayout()
         CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage9.SuspendLayout()
+        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
-        Me.TabPage9.SuspendLayout()
-        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -430,6 +430,14 @@ Partial Class Settings_Citiroc
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'LabelHoldNs
+        '
+        Me.LabelHoldNs.Location = New System.Drawing.Point(517, 44)
+        Me.LabelHoldNs.Name = "LabelHoldNs"
+        Me.LabelHoldNs.Size = New System.Drawing.Size(99, 18)
+        Me.LabelHoldNs.TabIndex = 83
+        Me.LabelHoldNs.Text = "xxx"
         '
         'HoldDelay
         '
@@ -1057,6 +1065,114 @@ Partial Class Settings_Citiroc
         Me.Label11.TabIndex = 23
         Me.Label11.Text = "Analog Monitor Mux"
         '
+        'TabPage9
+        '
+        Me.TabPage9.Controls.Add(Me.Label38)
+        Me.TabPage9.Controls.Add(Me.Label37)
+        Me.TabPage9.Controls.Add(Me.pc_IF)
+        Me.TabPage9.Controls.Add(Me.Label36)
+        Me.TabPage9.Controls.Add(Me.pc_WC)
+        Me.TabPage9.Controls.Add(Me.Label35)
+        Me.TabPage9.Controls.Add(Me.pc_WW)
+        Me.TabPage9.Controls.Add(Me.Label34)
+        Me.TabPage9.Controls.Add(Me.pcMode)
+        Me.TabPage9.Controls.Add(Me.Label33)
+        Me.TabPage9.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage9.Name = "TabPage9"
+        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage9.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage9.TabIndex = 6
+        Me.TabPage9.Text = "Photon Counting"
+        Me.TabPage9.UseVisualStyleBackColor = True
+        '
+        'Label38
+        '
+        Me.Label38.Location = New System.Drawing.Point(276, 128)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(105, 18)
+        Me.Label38.TabIndex = 70
+        Me.Label38.Text = "Hz"
+        '
+        'Label37
+        '
+        Me.Label37.Location = New System.Drawing.Point(276, 66)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(105, 18)
+        Me.Label37.TabIndex = 69
+        Me.Label37.Text = "ns"
+        '
+        'pc_IF
+        '
+        Me.pc_IF.BackColor = System.Drawing.Color.White
+        Me.pc_IF.Location = New System.Drawing.Point(155, 126)
+        Me.pc_IF.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.pc_IF.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.pc_IF.Name = "pc_IF"
+        Me.pc_IF.Size = New System.Drawing.Size(102, 20)
+        Me.pc_IF.TabIndex = 68
+        Me.pc_IF.Value = New Decimal(New Integer() {100, 0, 0, 0})
+        '
+        'Label36
+        '
+        Me.Label36.Location = New System.Drawing.Point(20, 128)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(105, 18)
+        Me.Label36.TabIndex = 67
+        Me.Label36.Text = "Internal Start Freq"
+        '
+        'pc_WC
+        '
+        Me.pc_WC.BackColor = System.Drawing.Color.White
+        Me.pc_WC.Location = New System.Drawing.Point(155, 95)
+        Me.pc_WC.Maximum = New Decimal(New Integer() {1215752192, 23, 0, 0})
+        Me.pc_WC.Name = "pc_WC"
+        Me.pc_WC.Size = New System.Drawing.Size(102, 20)
+        Me.pc_WC.TabIndex = 66
+        Me.pc_WC.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'Label35
+        '
+        Me.Label35.Location = New System.Drawing.Point(20, 97)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(105, 18)
+        Me.Label35.TabIndex = 65
+        Me.Label35.Text = "Windows Count"
+        '
+        'pc_WW
+        '
+        Me.pc_WW.BackColor = System.Drawing.Color.White
+        Me.pc_WW.Location = New System.Drawing.Point(155, 64)
+        Me.pc_WW.Maximum = New Decimal(New Integer() {1410065408, 2, 0, 0})
+        Me.pc_WW.Name = "pc_WW"
+        Me.pc_WW.Size = New System.Drawing.Size(102, 20)
+        Me.pc_WW.TabIndex = 64
+        Me.pc_WW.Value = New Decimal(New Integer() {10000000, 0, 0, 0})
+        '
+        'Label34
+        '
+        Me.Label34.Location = New System.Drawing.Point(20, 66)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(105, 18)
+        Me.Label34.TabIndex = 63
+        Me.Label34.Text = "Windows Width"
+        '
+        'pcMode
+        '
+        Me.pcMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.pcMode.FormattingEnabled = True
+        Me.pcMode.Location = New System.Drawing.Point(155, 23)
+        Me.pcMode.Name = "pcMode"
+        Me.pcMode.Size = New System.Drawing.Size(303, 21)
+        Me.pcMode.TabIndex = 62
+        '
+        'Label33
+        '
+        Me.Label33.Location = New System.Drawing.Point(20, 26)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(116, 18)
+        Me.Label33.TabIndex = 61
+        Me.Label33.Text = "Time Windows Mode"
+        '
         'Panel3
         '
         Me.Panel3.Controls.Add(Me.ButtonSetCfg)
@@ -1117,122 +1233,6 @@ Partial Class Settings_Citiroc
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'LabelHoldNs
-        '
-        Me.LabelHoldNs.Location = New System.Drawing.Point(517, 44)
-        Me.LabelHoldNs.Name = "LabelHoldNs"
-        Me.LabelHoldNs.Size = New System.Drawing.Size(99, 18)
-        Me.LabelHoldNs.TabIndex = 83
-        Me.LabelHoldNs.Text = "xxx"
-        '
-        'TabPage9
-        '
-        Me.TabPage9.Controls.Add(Me.Label38)
-        Me.TabPage9.Controls.Add(Me.Label37)
-        Me.TabPage9.Controls.Add(Me.pc_IF)
-        Me.TabPage9.Controls.Add(Me.Label36)
-        Me.TabPage9.Controls.Add(Me.pc_WC)
-        Me.TabPage9.Controls.Add(Me.Label35)
-        Me.TabPage9.Controls.Add(Me.pc_WW)
-        Me.TabPage9.Controls.Add(Me.Label34)
-        Me.TabPage9.Controls.Add(Me.pcMode)
-        Me.TabPage9.Controls.Add(Me.Label33)
-        Me.TabPage9.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage9.Name = "TabPage9"
-        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage9.TabIndex = 6
-        Me.TabPage9.Text = "Photon Counting"
-        Me.TabPage9.UseVisualStyleBackColor = True
-        '
-        'pcMode
-        '
-        Me.pcMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.pcMode.FormattingEnabled = True
-        Me.pcMode.Location = New System.Drawing.Point(155, 23)
-        Me.pcMode.Name = "pcMode"
-        Me.pcMode.Size = New System.Drawing.Size(303, 21)
-        Me.pcMode.TabIndex = 62
-        '
-        'Label33
-        '
-        Me.Label33.Location = New System.Drawing.Point(20, 26)
-        Me.Label33.Name = "Label33"
-        Me.Label33.Size = New System.Drawing.Size(116, 18)
-        Me.Label33.TabIndex = 61
-        Me.Label33.Text = "Time Windows Mode"
-        '
-        'pc_WW
-        '
-        Me.pc_WW.BackColor = System.Drawing.Color.White
-        Me.pc_WW.Location = New System.Drawing.Point(155, 78)
-        Me.pc_WW.Maximum = New Decimal(New Integer() {1410065408, 2, 0, 0})
-        Me.pc_WW.Name = "pc_WW"
-        Me.pc_WW.Size = New System.Drawing.Size(102, 20)
-        Me.pc_WW.TabIndex = 64
-        Me.pc_WW.Value = New Decimal(New Integer() {10000000, 0, 0, 0})
-        '
-        'Label34
-        '
-        Me.Label34.Location = New System.Drawing.Point(20, 80)
-        Me.Label34.Name = "Label34"
-        Me.Label34.Size = New System.Drawing.Size(105, 18)
-        Me.Label34.TabIndex = 63
-        Me.Label34.Text = "Windows Width"
-        '
-        'Label35
-        '
-        Me.Label35.Location = New System.Drawing.Point(20, 124)
-        Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(105, 18)
-        Me.Label35.TabIndex = 65
-        Me.Label35.Text = "Windows Count"
-        '
-        'pc_WC
-        '
-        Me.pc_WC.BackColor = System.Drawing.Color.White
-        Me.pc_WC.Location = New System.Drawing.Point(155, 122)
-        Me.pc_WC.Maximum = New Decimal(New Integer() {1215752192, 23, 0, 0})
-        Me.pc_WC.Name = "pc_WC"
-        Me.pc_WC.Size = New System.Drawing.Size(102, 20)
-        Me.pc_WC.TabIndex = 66
-        Me.pc_WC.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'pc_IF
-        '
-        Me.pc_IF.BackColor = System.Drawing.Color.White
-        Me.pc_IF.Location = New System.Drawing.Point(155, 166)
-        Me.pc_IF.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
-        Me.pc_IF.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.pc_IF.Name = "pc_IF"
-        Me.pc_IF.Size = New System.Drawing.Size(102, 20)
-        Me.pc_IF.TabIndex = 68
-        Me.pc_IF.Value = New Decimal(New Integer() {100, 0, 0, 0})
-        '
-        'Label36
-        '
-        Me.Label36.Location = New System.Drawing.Point(20, 168)
-        Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(105, 18)
-        Me.Label36.TabIndex = 67
-        Me.Label36.Text = "Internal Start Freq"
-        '
-        'Label37
-        '
-        Me.Label37.Location = New System.Drawing.Point(276, 80)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(105, 18)
-        Me.Label37.TabIndex = 69
-        Me.Label37.Text = "ns"
-        '
-        'Label38
-        '
-        Me.Label38.Location = New System.Drawing.Point(276, 168)
-        Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(105, 18)
-        Me.Label38.TabIndex = 70
-        Me.Label38.Text = "Hz"
-        '
         'Settings_Citiroc
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1270,12 +1270,12 @@ Partial Class Settings_Citiroc
         Me.TabPage8.ResumeLayout(False)
         CType(Me.moniorCHDigital, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.moniorCHAnalog, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage9.ResumeLayout(False)
+        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
-        Me.TabPage9.ResumeLayout(False)
-        CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pc_WC, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pc_IF, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

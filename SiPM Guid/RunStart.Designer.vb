@@ -54,6 +54,8 @@ Partial Class RunStart
         Me.cTargetMode = New System.Windows.Forms.ComboBox()
         Me.unit = New System.Windows.Forms.Label()
         Me.UnitMult = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.runMode = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -202,7 +204,7 @@ Partial Class RunStart
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(34, 493)
+        Me.Label8.Location = New System.Drawing.Point(37, 550)
         Me.Label8.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(50, 24)
@@ -211,7 +213,7 @@ Partial Class RunStart
         '
         'pNote
         '
-        Me.pNote.Location = New System.Drawing.Point(35, 522)
+        Me.pNote.Location = New System.Drawing.Point(38, 579)
         Me.pNote.Margin = New System.Windows.Forms.Padding(2)
         Me.pNote.Multiline = True
         Me.pNote.Name = "pNote"
@@ -223,7 +225,7 @@ Partial Class RunStart
         '
         Me.Button1.BackColor = System.Drawing.Color.Lime
         Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(365, 607)
+        Me.Button1.Location = New System.Drawing.Point(368, 664)
         Me.Button1.Margin = New System.Windows.Forms.Padding(2)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(119, 36)
@@ -236,7 +238,7 @@ Partial Class RunStart
         Me.Button2.BackColor = System.Drawing.Color.Red
         Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button2.ForeColor = System.Drawing.Color.White
-        Me.Button2.Location = New System.Drawing.Point(35, 607)
+        Me.Button2.Location = New System.Drawing.Point(38, 664)
         Me.Button2.Margin = New System.Windows.Forms.Padding(2)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(119, 36)
@@ -349,7 +351,7 @@ Partial Class RunStart
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(34, 443)
+        Me.Label14.Location = New System.Drawing.Point(31, 443)
         Me.Label14.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(64, 24)
@@ -390,11 +392,33 @@ Partial Class RunStart
         Me.UnitMult.Size = New System.Drawing.Size(41, 21)
         Me.UnitMult.TabIndex = 33
         '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(34, 502)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(59, 24)
+        Me.Label5.TabIndex = 34
+        Me.Label5.Text = "Mode"
+        '
+        'runMode
+        '
+        Me.runMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.runMode.FormattingEnabled = True
+        Me.runMode.Location = New System.Drawing.Point(264, 507)
+        Me.runMode.Name = "runMode"
+        Me.runMode.Size = New System.Drawing.Size(217, 21)
+        Me.runMode.TabIndex = 35
+        '
         'RunStart
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(511, 657)
+        Me.ClientSize = New System.Drawing.Size(511, 716)
+        Me.Controls.Add(Me.runMode)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.UnitMult)
         Me.Controls.Add(Me.unit)
         Me.Controls.Add(Me.cTargetMode)
@@ -466,4 +490,6 @@ Partial Class RunStart
     Friend WithEvents cTargetMode As ComboBox
     Friend WithEvents unit As Label
     Friend WithEvents UnitMult As ComboBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents runMode As ComboBox
 End Class
