@@ -111,7 +111,10 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         const UInt32 SCI_REG_FR_IFP2 = 0x00000012;
         const UInt32 SCI_REG_FR_MODE = 0x00000013;
         const UInt32 SCI_REG_FR_IFP =  0x00000010;
-        const UInt32 SCI_REG_FR_CP0 =  0x00200000;
+        const UInt32 SCI_REG_FR_CP0 =        0x00200000;
+        const UInt32 SCI_REG_FR_CP0_STATUS = 0x00200001;
+        const UInt32 SCI_REG_FR_CP0_VALIDWORDS = 0x00200002;
+        const UInt32 SCI_REG_FR_CP0_CONFIG = 0x00200003;
 
 
         int DLL_ASIC_COUNT = 4;
@@ -1023,7 +1026,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         }
 
 
-        public int DecodeCitirocRowEventsPC(ref Queue<t_DataCITIROCPC> pC, int ThresholdSoftware)
+        public int DecodeCitirocRowEventsPC(ref Queue<t_DataCITIROCPC> pC)
         {
             int DecodedPackets = 0;
             double Time = 0;
@@ -1035,7 +1038,8 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             t_DataCITIROCPC DataPC = null;
             t = 0;
             s = 0;
-            while (InternalBuffer.Count > PacketSize)
+            int pcPacketSize = 1 + 1 + 128 + 2 + 1 + 1;
+            while (InternalBuffer.Count > pcPacketSize)
             {
                 switch (s)
                 {
@@ -1090,21 +1094,51 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             UInt32 read_word = 0;
             UInt32 valid_data = 0;
 
-            retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_FR_CP0, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
+            UInt32 available_data = 0;
 
-            valid_word = valid_data;
-            return retcode;
+            phy.NI_USB3_ReadReg_M(ref available_data, SCI_REG_FR_CP0_VALIDWORDS);
+
+            if (available_data> PacketSize)
+            {
+                transfer_length = available_data > transfer_length ? transfer_length : available_data;
+                transfer_length = ((UInt32)Math.Floor( ((double)transfer_length / (double)PacketSize)))* PacketSize;
+
+
+
+                retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_FR_CP0, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
+
+                Console.WriteLine(valid_data);
+
+                valid_word = valid_data;
+                return retcode;
+            }
+            else
+            {
+                valid_word = 0;
+                return -1;
+            }
+            
         }
 
 
-        public void ConfigurePC(PCMode mode, int PeriodicWidth, int PeriodicStart)
+        public void ConfigurePC(PCMode mode, int PeriodicWidth, int PeriodicStart, int windows_count)
         {
             int period = 160000000 / PeriodicStart;
             phy.NI_USB3_WriteReg_M((UInt32)mode, SCI_REG_FR_MODE);
             phy.NI_USB3_WriteReg_M((UInt32)(PeriodicWidth/6.25), SCI_REG_FR_IFP);
             phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_FR_IFP2);
-
+            phy.NI_USB3_WriteReg_M((UInt32)windows_count, SCI_REG_FR_LIMIT);
         }
+
+        public void StartPC()
+        {
+            phy.NI_USB3_WriteReg_M((UInt32)0, SCI_REG_FR_CP0_CONFIG); //STOP
+            phy.NI_USB3_WriteReg_M((UInt32)2, SCI_REG_FR_CP0_CONFIG); //RESET
+            phy.NI_USB3_WriteReg_M((UInt32)0, SCI_REG_FR_CP0_CONFIG); //STOP
+            phy.NI_USB3_WriteReg_M((UInt32)1, SCI_REG_FR_CP0_CONFIG); //START
+        }
+
+        
 
 
         public bool GetDefaultChannelMapping(ref tChannelMapping[] chmap)

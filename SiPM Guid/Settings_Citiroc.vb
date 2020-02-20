@@ -456,6 +456,11 @@ Public Class Settings_Citiroc
         pcMode.Items.Add("Windows Scan, Extrnal Scan Start (LEMO7)")
         pcMode.Items.Add("Windows Scan, Periodic Scan Start ")
         pcMode.SelectedIndex = 0
+
+        ImgPath.Items.Add("Low Gain")
+        ImgPath.Items.Add("High Gain")
+        ImgPath.SelectedIndex = 0
+
     End Sub
 
     Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
@@ -653,6 +658,17 @@ Public Class Settings_Citiroc
 
             MainForm.DTList(i).CITIROC_SetHoldDelay(HoldDelay.Value)
 
+            Select Case pcMode.SelectedIndex
+                Case 0
+                    MainForm.DTList(i).ConfigurePC(DT5550W_P_lib.PCMode.PERIODIC_WIN, pc_WW.Value, pc_IF.Value, pc_WC.Value)
+                Case 1
+                    MainForm.DTList(i).ConfigurePC(DT5550W_P_lib.PCMode.EXTERNAL_WIN, pc_WW.Value, pc_IF.Value, pc_WC.Value)
+                Case 2
+                    MainForm.DTList(i).ConfigurePC(DT5550W_P_lib.PCMode.PERIODIC_WIN_EXT_START, pc_WW.Value, pc_IF.Value, pc_WC.Value)
+                Case 3
+                    MainForm.DTList(i).ConfigurePC(DT5550W_P_lib.PCMode.PERIODIC_WIN_INT_START, pc_WW.Value, pc_IF.Value, pc_WC.Value)
+            End Select
+
         Next
 
 
@@ -716,6 +732,7 @@ Public Class Settings_Citiroc
                 MainForm.SetRebin(2)
         End Select
 
+        MainForm.MatrixHGMode = IIf(ImgPath.SelectedIndex = 0, False, True)
 
     End Sub
 
@@ -913,6 +930,14 @@ Public Class Settings_Citiroc
     End Sub
 
     Private Sub TabPage9_Click(sender As Object, e As EventArgs) Handles TabPage9.Click
+
+    End Sub
+
+    Private Sub pcMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles pcMode.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub TabPage7_Click(sender As Object, e As EventArgs) Handles TabPage7.Click
 
     End Sub
 End Class
