@@ -453,7 +453,7 @@ Public Class Settings_Citiroc
 
         pcMode.Items.Add("Periodic Window, Internal Start")
         pcMode.Items.Add("Periodic Window, External Start (LEMO7)")
-        pcMode.Items.Add("Windows Scan, External Scan Start (LEMO7)")
+        pcMode.Items.Add("Windows Scan, Extrnal Scan Start (LEMO7)")
         pcMode.Items.Add("Windows Scan, Periodic Scan Start ")
         pcMode.SelectedIndex = 0
 

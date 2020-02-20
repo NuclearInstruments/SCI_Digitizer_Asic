@@ -1264,7 +1264,7 @@ Public Class MainForm
 
                         Dim EnergySum = 0
                         'Dim SpXIndx = BoardArrayOffset + (e.AsicID * BI.channelsPerAsic)
-                        For j = 0 To IIf(MatrixCumulative.Count > e.counters.Count, e.counters.Count, MatrixCumulative.Count) - 1
+                        For j = 0 To MatrixCumulative.Count - 1
 
 
 
