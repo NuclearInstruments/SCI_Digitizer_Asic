@@ -335,6 +335,15 @@ namespace DT5550W_P_lib
         }
 
 
+        public int DecodeCitirocRowEventsPC(ref Queue<t_DataCITIROCPC> pC)
+        {
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                return CitirocClass.DecodeCitirocRowEventsPC(ref pC);
+
+            return -1;
+
+        }
+
         public bool  CitirocPushRawDataInBuffer(ref UInt32[] bufferA, UInt32 valid_wordA)
         {
             if (ConnectedAsic == t_AsicModels.CITIROC)
@@ -492,14 +501,21 @@ namespace DT5550W_P_lib
 
 
 
-        public void SelectTriggerMode(PCMode mode, int PeriodicWidth, int PeriodicStart)
+        public void ConfigurePC(PCMode mode, int PeriodicWidth, int PeriodicStart, int windows_count)
         {
             if (ConnectedAsic == t_AsicModels.PETIROC)
                 ;
             if (ConnectedAsic == t_AsicModels.CITIROC)
-                CitirocClass.ConfigurePC(mode, PeriodicWidth, PeriodicStart);
+                CitirocClass.ConfigurePC(mode, PeriodicWidth, PeriodicStart, windows_count);
         }
 
+        public void StartPC()
+        {
+            if (ConnectedAsic == t_AsicModels.PETIROC)
+                ;
+            if (ConnectedAsic == t_AsicModels.CITIROC)
+                CitirocClass.StartPC();
+        }
 
         public int GetRawBufferPC(UInt32[] data, UInt32 event_count, UInt32 timeout, UInt32 PacketSize, ref UInt32 valid_word)
         {

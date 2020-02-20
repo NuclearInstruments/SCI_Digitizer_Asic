@@ -61,6 +61,7 @@ Partial Class MainForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.Wspectrum = New System.Windows.Forms.ToolStripButton()
+        Me.RunCounterMode = New System.Windows.Forms.ToolStripButton()
         Me.sRun = New System.Windows.Forms.ToolStripButton()
         Me.WspectrumStop = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
@@ -84,10 +85,12 @@ Partial Class MainForm
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportEnergySpectrumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EnegySpectrumHGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeSpectrumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HitmapCumulativeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HitmapToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ChannelsMappingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ScanResultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.ExitToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.RunToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -104,9 +107,6 @@ Partial Class MainForm
         Me.ConfigureAllASICToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
-        Me.EnegySpectrumHGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ScanResultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RunCounterMode = New System.Windows.Forms.ToolStripButton()
         Me.MenuStrip.SuspendLayout()
         Me.ToolStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
@@ -389,6 +389,15 @@ Partial Class MainForm
         Me.Wspectrum.Text = "Run Acquisition mode (Realtime)"
         Me.Wspectrum.ToolTipText = "Free Running (No Save)"
         '
+        'RunCounterMode
+        '
+        Me.RunCounterMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.RunCounterMode.Image = CType(resources.GetObject("RunCounterMode.Image"), System.Drawing.Image)
+        Me.RunCounterMode.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RunCounterMode.Name = "RunCounterMode"
+        Me.RunCounterMode.Size = New System.Drawing.Size(24, 24)
+        Me.RunCounterMode.Text = "Run Counter Mode"
+        '
         'sRun
         '
         Me.sRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
@@ -549,6 +558,12 @@ Partial Class MainForm
         Me.ExportEnergySpectrumToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ExportEnergySpectrumToolStripMenuItem.Text = "&Energy Spectrum"
         '
+        'EnegySpectrumHGToolStripMenuItem
+        '
+        Me.EnegySpectrumHGToolStripMenuItem.Name = "EnegySpectrumHGToolStripMenuItem"
+        Me.EnegySpectrumHGToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+        Me.EnegySpectrumHGToolStripMenuItem.Text = "Enegy Spectrum (HG)"
+        '
         'TimeSpectrumToolStripMenuItem
         '
         Me.TimeSpectrumToolStripMenuItem.Name = "TimeSpectrumToolStripMenuItem"
@@ -572,6 +587,12 @@ Partial Class MainForm
         Me.ChannelsMappingToolStripMenuItem.Name = "ChannelsMappingToolStripMenuItem"
         Me.ChannelsMappingToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ChannelsMappingToolStripMenuItem.Text = "Channels Mapping"
+        '
+        'ScanResultToolStripMenuItem
+        '
+        Me.ScanResultToolStripMenuItem.Name = "ScanResultToolStripMenuItem"
+        Me.ScanResultToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+        Me.ScanResultToolStripMenuItem.Text = "Scan Result"
         '
         'ToolStripSeparator9
         '
@@ -668,27 +689,6 @@ Partial Class MainForm
         'Timer3
         '
         Me.Timer3.Interval = 1000
-        '
-        'EnegySpectrumHGToolStripMenuItem
-        '
-        Me.EnegySpectrumHGToolStripMenuItem.Name = "EnegySpectrumHGToolStripMenuItem"
-        Me.EnegySpectrumHGToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-        Me.EnegySpectrumHGToolStripMenuItem.Text = "Enegy Spectrum (HG)"
-        '
-        'ScanResultToolStripMenuItem
-        '
-        Me.ScanResultToolStripMenuItem.Name = "ScanResultToolStripMenuItem"
-        Me.ScanResultToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
-        Me.ScanResultToolStripMenuItem.Text = "Scan Result"
-        '
-        'RunCounterMode
-        '
-        Me.RunCounterMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.RunCounterMode.Image = CType(resources.GetObject("RunCounterMode.Image"), System.Drawing.Image)
-        Me.RunCounterMode.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.RunCounterMode.Name = "RunCounterMode"
-        Me.RunCounterMode.Size = New System.Drawing.Size(24, 24)
-        Me.RunCounterMode.Text = "Run Counter Mode"
         '
         'MainForm
         '

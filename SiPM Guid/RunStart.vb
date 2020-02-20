@@ -6,6 +6,7 @@ Public Class RunStart
 
     Public TargetValue As Double = 0
     Public FilePathName As String
+    Public mode As Integer
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles pMRun.TextChanged
 
     End Sub
@@ -18,6 +19,10 @@ Public Class RunStart
 
     End Sub
 
+    Public Sub LockMode(mode As Integer)
+        runMode.SelectedIndex = mode
+        runMode.Enabled = False
+    End Sub
 
     Private Sub RunStart_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cTargetMode.Items.Clear()
@@ -50,7 +55,10 @@ Public Class RunStart
 
         TextBox1.Text = My.Settings.folderpos
         Me.StartPosition = FormStartPosition.CenterScreen
-        Me.Height = 700
+
+        runMode.Items.Add("Spectroscopy")
+        runMode.Items.Add("Photon Counting")
+        runMode.SelectedIndex = 0
     End Sub
 
     Public Structure RunGlobal
@@ -73,6 +81,7 @@ Public Class RunStart
 
     Structure RunInfoGlobal
         Public SystemInfo As String
+        Public RunMode As String
         Public AsicInfo As String
         Public AsicCount As String
         Public ApplicationVersion As String
@@ -93,6 +102,8 @@ Public Class RunStart
 
         My.Settings.Save()
 
+        mode = runMode.SelectedIndex
+
         ' MainForm.rdc.ScaleFactor = 4 'MainForm.pprop.iTime.Value / MainForm.Ts
         Dim header As String
         Dim BI = MainForm.DTList(0).GetBoardInfo
@@ -110,6 +121,7 @@ Public Class RunStart
 
         Select Case MainForm.GBL_ASIC_MODEL
             Case DT5550W_P_lib.t_AsicModels.PETIROC
+                RIG.RunMode = runMode.Text
                 RIG.GlobalRun.PacketSize = MainForm.sets_petiroc.TransferSize.Text
                 RIG.GlobalRun.T0Mode = MainForm.sets_petiroc.T0Mode.Text
                 RIG.GlobalRun.T0freq = MainForm.sets_petiroc.T0Freq.Value
@@ -130,6 +142,7 @@ Public Class RunStart
                     RIG.BoardConfiguration.Add(aCFG)
                 Next
             Case DT5550W_P_lib.t_AsicModels.CITIROC
+                RIG.RunMode = runMode.Text
                 RIG.GlobalRun.PacketSize = MainForm.sets_citiroc.TransferSize.Text
                 RIG.GlobalRun.T0Mode = MainForm.sets_citiroc.T0Mode.Text
                 RIG.GlobalRun.T0freq = MainForm.sets_citiroc.T0Freq.Value
@@ -267,6 +280,10 @@ Public Class RunStart
             UnitMult.SelectedIndex = 0
         End If
 
+
+    End Sub
+
+    Private Sub Label14_Click(sender As Object, e As EventArgs) Handles Label14.Click
 
     End Sub
 End Class
