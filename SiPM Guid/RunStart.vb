@@ -20,7 +20,9 @@ Public Class RunStart
     End Sub
 
     Public Sub LockMode(mode As Integer)
-        runMode.SelectedIndex = mode
+        If runMode.Items.Count > mode Then
+            runMode.SelectedIndex = mode
+        End If
         runMode.Enabled = False
     End Sub
 
