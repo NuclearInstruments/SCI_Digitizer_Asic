@@ -1,11 +1,20 @@
 ﻿Imports DT5550W_P_lib
 Imports DT5550W_P_lib.DT5550W
 Imports SiPM_Guid.AcquisitionClass
-
+Imports System.Reflection
 Public Class Settings
 
     Dim gridList As New List(Of DataGridView)
+    Public Sub EnableDoubleBuffered(ByVal dgv As DataGridView)
 
+        Dim dgvType As Type = dgv.[GetType]()
+
+        Dim pi As PropertyInfo = dgvType.GetProperty("DoubleBuffered",
+                                                 BindingFlags.Instance Or BindingFlags.NonPublic)
+
+        pi.SetValue(dgv, True, Nothing)
+
+    End Sub
 
     Public Class ClassSettings
         Public Class SingleAsicCFG
@@ -40,6 +49,8 @@ Public Class Settings
         Public SignalPolarity As String
         Public ChargeThreshold As Integer
         Public TimeThreshold As Integer
+        Public TriggerMode As Integer
+        Public ExternalStartDelay As Integer
         Public DelayTrigger As Integer
         Public ShaperCF As String
         Public ShaperCI As String
@@ -57,13 +68,14 @@ Public Class Settings
         Public ProcessMode As String
         Public FileFormat As String
         Public ClusterTimens As Integer
+        Public multiboard As Integer
 
         Public sA() As SingleAsicCFG
 
         Public sMap() As chMap
     End Class
-    Public Function GetSettingsClass() As ClassSettings
-        Dim cfg As New ClassSettings
+    Public Function GetSettingsClass() As WeeRocAsicCommonSettings
+        Dim cfg As New WeeRocAsicCommonSettings
         Dim asicCount As Integer = 0
 
         For i = 0 To MainForm.DTList.Count - 1
@@ -94,14 +106,15 @@ Public Class Settings
         cfg.ProcessMode = aProcessingMode.Text
         cfg.FileFormat = aFileFormat.Text
         cfg.ClusterTimens = aClusterTime.Value
-
+        cfg.TriggerMode = TriggerMode.SelectedIndex
+        cfg.ExternalStartDelay = ExtTrigDelay.Value
         ReDim cfg.sA(asicCount)
 
         For q = 0 To asicCount - 1
-            cfg.sA(q) = New ClassSettings.SingleAsicCFG()
+            cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
             ReDim cfg.sA(q).sC(31)
             For z = 0 To 31
-                cfg.sA(q).sC(z) = New ClassSettings.SingleAsicCFG.SignleChannelCFG
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
                 cfg.sA(q).sC(z).BiasCompEnable = IIf(gridList(q).Rows(z).Cells("Enableb").Value = 0, False, True)
                 cfg.sA(q).sC(z).BiasComp = gridList(q).Rows(z).Cells("DACb").Value
                 cfg.sA(q).sC(z).ChargeMask = IIf(gridList(q).Rows(z).Cells("DiscrQ").Value = 0, False, True)
@@ -117,8 +130,62 @@ Public Class Settings
 
     End Function
 
+    Public Function GetDefaultSettingsClass() As WeeRocAsicCommonSettings
+        Dim cfg As New WeeRocAsicCommonSettings
+        Dim asicCount As Integer = 0
 
-    Public Function SetSettingsFromClass(ByRef cfg As ClassSettings) As Boolean
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            asicCount += BI.totalAsics
+        Next
+        cfg.AsicModel = "PETIROC 2A"
+        cfg.AsicCount = asicCount
+        cfg.Timestamp = Now
+        cfg.AppVersion = Application.ProductVersion.ToString
+        cfg.SignalPolarity = "Positive"
+        cfg.ChargeThreshold = 1000
+        cfg.TimeThreshold = 1000
+        cfg.DelayTrigger = 0
+        cfg.ShaperCF = "100fF"
+        cfg.ShaperCI = "5pF"
+        cfg.TransferSize = "10 Events"
+        cfg.T0Mode = "FIRST PHOTON"
+        cfg.psbin = 50
+        cfg.HvOutputOn = False
+        cfg.HVVoltage = 56
+        cfg.T0Freq = 1
+        cfg.SelfTriggerEnable = False
+        cfg.SelfTRiggerFreq = 1000
+        cfg.MonitorMux = "None"
+        cfg.Channel = 0
+        cfg.AnalogReadout = False
+        cfg.ProcessMode = "FULL"
+        cfg.FileFormat = "CSV"
+        cfg.ClusterTimens = 1000
+        cfg.TriggerMode = "Internal Trigger"
+        cfg.ExternalStartDelay = 0
+        ReDim cfg.sA(asicCount)
+
+        For q = 0 To asicCount - 1
+            cfg.sA(q) = New WeeRocAsicCommonSettings.SingleAsicCFG()
+            ReDim cfg.sA(q).sC(31)
+            For z = 0 To 31
+                cfg.sA(q).sC(z) = New WeeRocAsicCommonSettings.SingleAsicCFG.SingleChannelCFG
+                cfg.sA(q).sC(z).BiasCompEnable = True
+                cfg.sA(q).sC(z).BiasComp = 128
+                cfg.sA(q).sC(z).ChargeMask = False
+                cfg.sA(q).sC(z).TimeMask = False
+                cfg.sA(q).sC(z).ThCompensation = 32
+                cfg.sA(q).sC(z).Gain = 1
+                cfg.sA(q).sC(z).Offset = 0
+            Next
+
+        Next
+
+        Return cfg
+    End Function
+
+    Public Function SetSettingsFromClass(ByRef cfg As WeeRocAsicCommonSettings) As Boolean
 
         Dim asicCount As Integer = 0
 
@@ -163,6 +230,8 @@ Public Class Settings
             aProcessingMode.Text = cfg.ProcessMode
             aFileFormat.Text = cfg.FileFormat
             aClusterTime.Value = cfg.ClusterTimens
+            TriggerMode.SelectedIndex = cfg.TriggerMode
+            ExtTrigDelay.Value = cfg.ExternalStartDelay
 
 
             Dim asC As Integer = IIf(cfg.AsicCount >= asicCount, asicCount, cfg.AsicCount)
@@ -222,6 +291,9 @@ Public Class Settings
 
                 Dim ControlPage As New TabPage
                 Dim dgw As New DataGridView
+
+                EnableDoubleBuffered(dgw)
+
                 gridList.Add(dgw)
                 ControlPage.Controls.Add(dgw)
                 ControlPage.Text = "(" & ABCDLETTERS(j) & ") " & MainForm.DTList(i).SerialNumber
@@ -340,6 +412,16 @@ Public Class Settings
         TempSensor.Items.Add("Internal (Avg)")
         TempSensor.Items.Add("External")
         TempSensor.SelectedIndex = 0
+
+        TriggerMode.Items.Add("Internal Trigger")
+        TriggerMode.Items.Add("INT/EXT Trigger")
+        TriggerMode.Items.Add("External")
+        TriggerMode.SelectedIndex = 0
+
+        multiboard.Items.Add("Master")
+        multiboard.Items.Add("Slave")
+        multiboard.SelectedIndex = 0
+
     End Sub
 
     Public Sub UpdateSettings()
@@ -347,13 +429,13 @@ Public Class Settings
         MainForm.TriggerModeCharge = IIf(TriggerSelector.SelectedIndex = 1, True, False)
 
         For i = 0 To MainForm.DTList.Count - 1
-            MainForm.DTList(i).pCFG.Clear()
+            MainForm.DTList(i).PetirocClass.pCFG.Clear()
             Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
             For j = 0 To BI.totalAsics - 1
 
                 Dim strPtrc As String
                 Dim ProgramWord() As UInt32 = New UInt32((20) - 1) {}
-                Dim pC As New PetirocConfig
+                Dim pC As New DT5550W_PETIROC.PetirocConfig
                 For z = 0 To 31
                     pC.inputDAC(z).enable = IIf(gridList(i * BI.totalAsics + j).Rows(z).Cells("Enableb").Value = 0, False, True)
                     pC.inputDAC(z).value = gridList(i * BI.totalAsics + j).Rows(z).Cells("DACb").Value
@@ -367,7 +449,7 @@ Public Class Settings
 
                 Next
 
-                pC.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
+                pC.InputPolarity = IIf(A_polarity.SelectedIndex = 0, tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
                 pC.DAC_Q_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_ChargeTHR.Value, A_ChargeTHR.Value)
                 pC.DAC_T_threshold = IIf(A_polarity.SelectedIndex = 0, 1024 - A_TimeTHR.Value, A_TimeTHR.Value)
                 pC.DelayTrigger = A_DelayBox.Value
@@ -380,8 +462,33 @@ Public Class Settings
                     pC.TriggerOut = True
                 End If
 
+                'disable T disciminator if external trigger is selected
+                If TriggerMode.SelectedIndex = 2 Then
+                    pC.PowerControl.DiscrT = False
+                    pC.PowerControl.Delay_Discr = False
+                    pC.PowerControl.Delay_Ramp = False
+                    pC.PowerControl.TDC_ramp = False
+                    pC.PulseMode.DiscrT = False
+                    pC.PulseMode.Delay_Discr = False
+                    pC.PulseMode.Delay_Ramp = False
+                    pC.PulseMode.TDC_ramp = False
+                    For z = 0 To 31
+                        pC.InputDiscriminator(z).maskDiscriminatorQ = True
+                        pC.InputDiscriminator(z).maskDiscriminatorT = True
+                    Next
+                Else
+                    pC.PowerControl.DiscrT = True
+                    pC.PowerControl.Delay_Discr = True
+                    pC.PowerControl.Delay_Ramp = True
+                    pC.PowerControl.TDC_ramp = True
+                    pC.PulseMode.DiscrT = True
+                    pC.PulseMode.Delay_Discr = True
+                    pC.PulseMode.Delay_Ramp = True
+                    pC.PulseMode.TDC_ramp = True
+                End If
+
                 MainForm.SoftwareThreshold = SoftwareTrigger.Value
-                MainForm.InputPolarity = IIf(A_polarity.SelectedIndex = 0, pC.tPOLARITY.POSITIVE, pC.tPOLARITY.NEGATIVE)
+                MainForm.InputPolarity = IIf(A_polarity.SelectedIndex = 0, tPOLARITY.POSITIVE, tPOLARITY.NEGATIVE)
                 'pC.TriggerLatch = True
                 'pC.Raz_Ext = False
                 'pC.Raz_Int = True
@@ -398,34 +505,34 @@ Public Class Settings
 
                 Select Case j
                     Case 0
-                        MainForm.DTList(i).ConfigPetiroc(True, False, False, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(True, False, False, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 1
-                        MainForm.DTList(i).ConfigPetiroc(False, True, False, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, True, False, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 2
-                        MainForm.DTList(i).ConfigPetiroc(False, False, True, False, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, False, True, False, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                     Case 3
-                        MainForm.DTList(i).ConfigPetiroc(False, False, False, True, ProgramWord)
-                        MainForm.DTList(i).pCFG.Add(pC)
+                        MainForm.DTList(i).ConfigureAsic(False, False, False, True, ProgramWord)
+                        MainForm.DTList(i).PetirocClass.pCFG.Add(pC)
                 End Select
-                Dim t0m As DT5550W_P_lib.DT5550W.T0Mode
+                Dim t0m As DT5550W_P_lib.T0Mode
 
                 Select Case T0Mode.SelectedIndex
                     Case 0
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_STARTRUN
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_STARTRUN
                         MainForm.TSM = MainForm.TimeSpectrumMode.FIRST_REF
                     Case 1
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_STARTRUN
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_STARTRUN
                         MainForm.TSM = MainForm.TimeSpectrumMode.FIRST_REF_ASIC_0
 
                     Case 2
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.SOFTWARE_PERIODIC
+                        t0m = DT5550W_P_lib.T0Mode.SOFTWARE_PERIODIC
                         MainForm.TSM = MainForm.TimeSpectrumMode.T0REF
 
                     Case 3
-                        t0m = DT5550W_P_lib.DT5550W.T0Mode.EXTERNAL
+                        t0m = DT5550W_P_lib.T0Mode.EXTERNAL
                         MainForm.TSM = MainForm.TimeSpectrumMode.T0REF
 
                 End Select
@@ -444,9 +551,33 @@ Public Class Settings
             MainForm.DTList(i).SelectTriggerMode(MainForm.TriggerModeCharge)
 
             MainForm.DTList(i).EnableTriggerFrame(EnableGlobalTrigger.Checked)
-            MainForm.DTList(i).EnableExternalTrigger(EnableExternalTrigger.Checked)
+
+            If TriggerMode.SelectedIndex = 0 Then
+                MainForm.DTList(i).EnableExternalTrigger(False)
+                MainForm.DTList(i).ConfigureExtHold(1, False)
+            End If
+            If TriggerMode.SelectedIndex = 1 Then
+                MainForm.DTList(i).EnableExternalTrigger(True)
+                MainForm.DTList(i).ConfigureExtHold(1, False)
+            End If
+            If TriggerMode.SelectedIndex = 2 Then
+                MainForm.DTList(i).EnableExternalTrigger(False)
+                MainForm.DTList(i).ConfigureExtHold(ExtTrigDelay.Value, True)
+            End If
+
+
             MainForm.DTList(i).EnableExternalVeto(EnableExternalVeto.Checked)
             MainForm.DTList(i).EnableResetTDCOnT0(ResetTDConT0.Checked)
+
+
+            If multiboard.SelectedIndex = 0 Then
+                MainForm.DTList(i).ExtRunEnable(False)
+                MainForm.DTList(i).RUNControl(False)
+            Else
+                MainForm.DTList(i).ExtRunEnable(True)
+                MainForm.DTList(i).RUNControl(False)
+            End If
+
         Next
 
         MainForm.hvon.Enabled = Not HVon.Checked
@@ -464,6 +595,9 @@ Public Class Settings
         MainForm.SumSpectrumGain = SumSpectrumGain.Value
 
         MainForm.Timer3.Enabled = True
+
+
+
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonSetCfg.Click
@@ -508,7 +642,7 @@ Public Class Settings
             For j = 0 To BI.totalAsics - 1
 
                 Dim MonitorWord() As UInt32 = New UInt32((7) - 1) {}
-                Dim pC As New PetirocConfig
+                Dim pC As New DT5550W_PETIROC.PetirocConfig
                 pC.PetirocMonitorSelector = monitorMux.SelectedIndex
 
                 pC.MonitorChannel = moniorCH.Value
@@ -527,13 +661,13 @@ Public Class Settings
 
                 Select Case j
                     Case 0
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(True, False, False, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(True, False, False, False, MonitorWord)
                     Case 1
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, True, False, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, True, False, False, MonitorWord)
                     Case 2
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, False, True, False, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, False, True, False, MonitorWord)
                     Case 3
-                        MainForm.DTList(i).ConfigureMonitorPetiroc(False, False, False, True, MonitorWord)
+                        MainForm.DTList(i).ConfigureMonitor(False, False, False, True, MonitorWord)
                 End Select
 
                 MainForm.DTList(i).EnableAnalogReadoutMonitor(aAnalogRead.Checked)
@@ -650,6 +784,68 @@ Public Class Settings
     End Sub
 
     Private Sub TempSensor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TempSensor.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
+
+    End Sub
+
+    Private Sub TriggerMode_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TriggerMode.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub SumSpectrumGain_ValueChanged(sender As Object, e As EventArgs) Handles SumSpectrumGain.ValueChanged
+
+    End Sub
+
+
+    Public Sub SCAN_PARAMETER(sm As WeeRocAsicCommonSettings.ScanMode, val As Double)
+        Dim AsicCount
+        For i = 0 To MainForm.DTList.Count - 1
+            Dim BI As t_BoardInfo = MainForm.DTList(i).GetBoardInfo
+            AsicCount += BI.totalAsics
+        Next
+        Select Case sm
+            Case WeeRocAsicCommonSettings.ScanMode.ScanTimeThreshold
+                A_TimeTHR.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHV
+                Voltage.Value = val
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanInputDAC
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("DACb").Value = val
+                    Next
+                Next
+                UpdateSettings()
+
+            Case WeeRocAsicCommonSettings.ScanMode.ScanCorrThreshold
+                For q = 0 To AsicCount - 1
+                    For z = 0 To 31
+                        gridList(q).Rows(z).Cells("THcomp").Value = val
+                    Next
+                Next
+                UpdateSettings()
+            Case WeeRocAsicCommonSettings.ScanMode.ScanHoldDelay
+                A_DelayBox.Value = val
+                UpdateSettings()
+
+            Case WeeRocAsicCommonSettings.ScanMode.ScanExternalDelay
+                ExtTrigDelay.Value = val
+                UpdateSettings()
+
+        End Select
+    End Sub
+
+
+
+    Private Sub TabPage3_Click(sender As Object, e As EventArgs) Handles TabPage3.Click
+
+    End Sub
+
+    Private Sub TabPage7_Click(sender As Object, e As EventArgs) Handles TabPage7.Click
 
     End Sub
 End Class

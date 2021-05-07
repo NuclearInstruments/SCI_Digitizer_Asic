@@ -49,5 +49,5 @@ Partial Class CPSMonitor
 
     End Sub
 
-    Friend WithEvents cps As DataGridView
+    Public WithEvents cps As DataGridView
 End Class

@@ -31,7 +31,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\BIN\</OutputPath>
     <DocumentationFile>SciDigitizerAsic.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
@@ -194,11 +194,23 @@
     <Compile Include="RunStart.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ScanWindow.Designer.vb">
+      <DependentUpon>ScanWindow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ScanWindow.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="SciCompilerExportClass.vb" />
     <Compile Include="Settings.Designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
     </Compile>
     <Compile Include="Settings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Settings_Citiroc.Designer.vb">
+      <DependentUpon>Settings_Citiroc.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Settings_Citiroc.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Translation.vb" />
@@ -214,6 +226,7 @@
     <Compile Include="WaveformCaptureSelect.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WeeRocAsicCommonSettings.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ChooseCh.resx">
@@ -259,8 +272,14 @@
     <EmbeddedResource Include="RunStart.resx">
       <DependentUpon>RunStart.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ScanWindow.resx">
+      <DependentUpon>ScanWindow.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings_Citiroc.resx">
+      <DependentUpon>Settings_Citiroc.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Statistics.resx">
       <DependentUpon>Statistics.vb</DependentUpon>
@@ -297,6 +316,9 @@
     <None Include="Resources\logo mada.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /K /D /H /Y "$(SolutionDir)COPY_TO_BIN" "$(SolutionDir)BIN"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

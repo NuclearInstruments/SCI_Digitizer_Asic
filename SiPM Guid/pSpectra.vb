@@ -34,7 +34,7 @@ Public Class pSpectra
 
     Dim t1 As Thread
     Dim StopT1 As Boolean = False
-
+    Dim rebin = 1
     Public Structure ChnData
         Public X As String
         Public Y As String
@@ -65,6 +65,10 @@ Public Class pSpectra
             Return returnVal
         End Function
     End Class
+
+    Public Sub SetRebin(rbn)
+        rebin = rbn
+    End Sub
 
     Public Sub UpdateChannels(lch As List(Of ChnData))
         ListView1.Items.Clear()
@@ -426,20 +430,30 @@ Public Class pSpectra
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 
+        Dim rebinned_spectum((SpectrumLength / rebin) - 1) As UInt64
+
         Dim checked_ch = ListView1.CheckedItems.Count
         If MainForm.fit_enabled = False Then
             Dim l = 0
 
-            Pesgo1.PeData.Points = SpectrumLength
+            Pesgo1.PeData.Points = SpectrumLength / rebin
             Pesgo1.PeData.Subsets = checked_ch
             For z = 0 To ListView1.CheckedItems.Count - 1
                 Dim sid = ListView1.CheckedItems.Item(z).SubItems("ID").Text
-                For p = 0 To SpectrumLength - 1
+                Dim rrr As UInt64
+                For p = 0 To SpectrumLength / rebin - 1
+                    rrr = 0
+                    For rb = 0 To rebin - 1
+                        rrr += spectra(sid, p * rebin + rb)
+                    Next
+                    rebinned_spectum(p) = rrr
+                Next
+                For p = 0 To SpectrumLength / rebin - 1
                     Pesgo1.PeData.X(l, p) = p
                     If logmode = False Then
-                        Pesgo1.PeData.Y(l, p) = spectra(sid, p) 'spectra(MainForm.acquisition.CHList(s).id - 1, p)
+                        Pesgo1.PeData.Y(l, p) = rebinned_spectum(p) 'spectra(MainForm.acquisition.CHList(s).id - 1, p)
                     Else
-                        Pesgo1.PeData.Y(l, p) = Math.Log10(spectra(sid, p) + 1) 'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
+                        Pesgo1.PeData.Y(l, p) = Math.Log10(rebinned_spectum(p) + 1) 'Math.Log10(spectra(MainForm.acquisition.CHList(s).id - 1, p) + 1)
                     End If
 
                 Next p
@@ -651,6 +665,10 @@ Public Class pSpectra
     End Sub
 
     Private Sub ListView1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListView1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint
 
     End Sub
 End Class

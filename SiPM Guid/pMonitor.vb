@@ -1,4 +1,5 @@
-﻿Imports Gigasoft.ProEssentials.Enums
+﻿Imports DT5550W_P_lib
+Imports Gigasoft.ProEssentials.Enums
 
 Public Class pMonitor
 
@@ -160,14 +161,177 @@ Public Class pMonitor
         Pesgo1.PeFunction.Force3dxVerticeRebuild = True
         Pesgo1.PeFunction.Force3dxNewColors = True
         Pesgo1.PeFunction.ReinitializeResetImage()
-
+        Pesgo1.PeUserInterface.Allow.Zooming = AllowZooming.HorzAndVert
 
 
 
     End Sub
 
 
-    Public Sub Plot(PMD As DT5550W_P_lib.DT5550W.PetirocMonitorData)
+
+    Public Sub CreatePlotTopCitiroc()
+
+        Pesgo1.PeData.Subsets = 8
+        Pesgo1.PeData.Points = 1024
+        Pesgo1.PeSpecial.AutoImageReset = False
+
+        Pesgo1.PeGrid.MultiAxesSubsets(0) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(1) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(2) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(3) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(4) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(5) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(6) = 1
+        Pesgo1.PeGrid.MultiAxesSubsets(7) = 1
+
+
+        'Pesgo1.PeGrid.OverlapMultiAxes(0) = 2
+        'Pesgo1.PeGrid.OverlapMultiAxes(1) = 1
+        'Pesgo1.PeGrid.OverlapMultiAxes(2) = 1
+
+        Pesgo1.PeLegend.Show = False
+
+        Pesgo1.PeConfigure.CacheBmp = True
+        Pesgo1.PeConfigure.PrepareImages = True
+
+        Pesgo1.PeColor.BitmapGradientMode = True
+
+        Pesgo1.PeColor.QuickStyle = QuickStyle.DarkNoBorder
+        Pesgo1.PeConfigure.AntiAliasGraphics = True
+        Pesgo1.PeFont.Fixed = True
+        Pesgo1.PeColor.SubsetColors(0) = Color.FromArgb(255, 255, 255)
+        Pesgo1.PeColor.SubsetColors(1) = Color.FromArgb(0, 255, 255)
+        Pesgo1.PeColor.SubsetColors(2) = Color.FromArgb(255, 255, 0)
+        Pesgo1.PeColor.SubsetColors(3) = Color.FromArgb(0, 255, 0)
+
+        Pesgo1.PePlot.DataShadows = DataShadows.None
+        Pesgo1.PePlot.SubsetLineTypes(0) = LineType.ThinSolid
+        Pesgo1.PePlot.SubsetLineTypes(1) = LineType.ThinSolid
+        Pesgo1.PePlot.SubsetLineTypes(2) = LineType.ThinSolid
+        Pesgo1.PePlot.SubsetLineTypes(3) = LineType.ThinSolid
+
+        Pesgo1.PeConfigure.ImageAdjustRight = 100
+        Pesgo1.PeConfigure.ImageAdjustLeft = 20
+
+
+        Pesgo1.PeSpecial.DpiX = 600
+        Pesgo1.PeSpecial.DpiY = 600
+
+        ' Setting to help with New Direct3D rendering And example expanded to 400K points //
+        Pesgo1.PePlot.Option.NullDataGaps = False
+        Pesgo1.PeUserInterface.Cursor.HourGlassThreshold = 10000000
+        Pesgo1.PeData.Filter2D = Filter2D.Fastest
+        Pesgo1.PeAnnotation.Show = True
+        Pesgo1.PeAnnotation.Line.RightMargin = "XXXXXXXXXXXX"
+        Pesgo1.PeConfigure.ImageAdjustLeft = 100
+        Pesgo1.PeSpecial.AutoImageReset = False '  // important For Direct3D rendering 
+
+        If (Pesgo1.IsDxAvailable) Then
+            Pesgo1.PeConfigure.RenderEngine = RenderEngine.Direct3D
+        Else
+            Pesgo1.PeConfigure.RenderEngine = RenderEngine.GdiTurbo
+        End If
+        '// Composite2D3D // Faster settings are 1-force only one D2D layer in back, 2-force only one D2D layer in front 
+        '// Default setting 0 creates 2 D2D layers, one in back ground And one in foreground, allowing normal separation 
+        '// of graphics as properties dictate.
+        Pesgo1.PeConfigure.Composite2D3D = Composite2D3D.Foreground
+
+        Pesgo1.PeData.NullDataValue = Double.MinValue
+
+        Pesgo1.PeGrid.WorkingAxis = 0
+        Pesgo1.PeString.YAxisLabel = "HG"
+        Pesgo1.PeGrid.WorkingAxis = 0
+        Pesgo1.PeString.YAxisLabel = "LG"
+        Pesgo1.PeGrid.WorkingAxis = 2
+        Pesgo1.PeString.YAxisLabel = "HIT"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+        Pesgo1.PeGrid.WorkingAxis = 3
+        Pesgo1.PeString.YAxisLabel = "CLK"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+        Pesgo1.PeGrid.WorkingAxis = 4
+        Pesgo1.PeString.YAxisLabel = "SR"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+        Pesgo1.PeGrid.WorkingAxis = 5
+        Pesgo1.PeString.YAxisLabel = "TRIG_C"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+        Pesgo1.PeGrid.WorkingAxis = 6
+        Pesgo1.PeString.YAxisLabel = "TRIG_T"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+        Pesgo1.PeGrid.WorkingAxis = 7
+        Pesgo1.PeString.YAxisLabel = "VETO_EXT"
+        Pesgo1.PeGrid.Configure.ManualScaleControlY = ManualScaleControl.MinMax
+        Pesgo1.PeGrid.Configure.ManualMinY = 0
+        Pesgo1.PeGrid.Configure.ManualMaxY = 1.1
+
+
+        Pesgo1.PeGrid.WorkingAxis = 0
+
+
+        Dim tmpXData(1024 * 8) As Single
+        Dim timeScaleFactor = 1 / 125000000 * 2
+        For i = 0 To 1023
+
+            tmpXData(i) = i * timeScaleFactor
+            tmpXData(i + (1024 * 1)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 2)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 3)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 4)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 5)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 6)) = i * timeScaleFactor
+            tmpXData(i + (1024 * 7)) = i * timeScaleFactor
+        Next
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.XData, tmpXData, 1023 * 8) '18252)
+        Pesgo1.PeData.Y(0, 0) = 0
+        Pesgo1.PeData.Y(0, 1) = 0
+        Pesgo1.PeData.Y(0, 2) = 0
+        Pesgo1.PeData.Y(0, 3) = 0
+
+        Dim y1(1024), y2(1024), y3(1024), y4(1024) As Single
+        Dim tmpYData2(1024 * 9) As Single
+        For i = 0 To 1023
+            y1(i) = 0 'Math.Sin(i / 10) * 34
+            y2(i) = 0 'IIf(y1(i) > 0, 1, 0)
+            y3(i) = 0 'IIf(y1(i) > 10, 1, 0)
+            y4(i) = 0 'IIf(y1(i) < 10, 1, 0)
+        Next
+        Array.Copy(y1, 0, tmpYData2, 0, 1024)
+        Array.Copy(y2, 0, tmpYData2, 1024 * 1, 1024)
+        Array.Copy(y3, 0, tmpYData2, 1024 * 2, 1024)
+        Array.Copy(y4, 0, tmpYData2, 1024 * 2, 1024)
+
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 1024 * 8) '18252)
+
+        'Pesgo1.PeUserInterface.Allow.MultiAxesSizing = True
+        Pesgo1.PeGrid.MultiAxesProportions(0) = 0.2
+        Pesgo1.PeGrid.MultiAxesProportions(1) = 0.2
+        Pesgo1.PeGrid.MultiAxesProportions(2) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(3) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(4) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(5) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(6) = 0.1
+        Pesgo1.PeGrid.MultiAxesProportions(7) = 0.1
+
+        '// Reset image //
+        Pesgo1.PeFunction.Force3dxVerticeRebuild = True
+        Pesgo1.PeFunction.Force3dxNewColors = True
+        Pesgo1.PeFunction.ReinitializeResetImage()
+
+
+
+
+    End Sub
+
+    Public Sub Plot(PMD As DT5550W_P_lib.DT5550W_PETIROC.PetirocMonitorData)
         Dim tmpYData2(2048 * 9) As Single
         Dim v1 = 0
         Dim v2 = 0
@@ -247,7 +411,81 @@ Public Class pMonitor
 
         Pesgo1.Invalidate()
 
-            Pesgo1.PeFunction.ReinitializeResetImage()
+        Pesgo1.PeFunction.ReinitializeResetImage()
+
+    End Sub
+
+
+
+    Public Sub Plot(PMD As CitirocMonitorData)
+        Dim tmpYData2(1024 * 9) As Single
+        Dim v1 = 0
+        Dim v2 = 0
+        Dim v3 = 0
+        Dim v4 = 0
+
+        Pesgo1.PeData.Subsets = 8
+        Pesgo1.PeData.Points = 1024
+
+
+        If ComboBox2.SelectedIndex = 0 Then
+            Array.Copy(PMD.A_chargeHG, 0, tmpYData2, 1024 * 0, 1024)
+            Array.Copy(PMD.A_chargeLG, 0, tmpYData2, 1024 * 1, 1024)
+            Array.Copy(PMD.A_HIT, 0, tmpYData2, 1024 * 2, 1024)
+            Array.Copy(PMD.A_CLK, 0, tmpYData2, 1024 * 3, 1024)
+            Array.Copy(PMD.A_SR, 0, tmpYData2, 1024 * 4, 1024)
+            Array.Copy(PMD.A_TrigC, 0, tmpYData2, 1024 * 5, 1024)
+            Array.Copy(PMD.A_TrigT, 0, tmpYData2, 1024 * 6, 1024)
+            Array.Copy(PMD.A_Veto_Ext, 0, tmpYData2, 1024 * 7, 1024)
+        End If
+        If ComboBox2.SelectedIndex = 1 Then
+            Array.Copy(PMD.B_chargeHG, 0, tmpYData2, 1024 * 0, 1024)
+            Array.Copy(PMD.B_chargeLG, 0, tmpYData2, 1024 * 1, 1024)
+            Array.Copy(PMD.B_HIT, 0, tmpYData2, 1024 * 2, 1024)
+            Array.Copy(PMD.B_CLK, 0, tmpYData2, 1024 * 3, 1024)
+            Array.Copy(PMD.B_SR, 0, tmpYData2, 1024 * 4, 1024)
+            Array.Copy(PMD.B_TrigC, 0, tmpYData2, 1024 * 5, 1024)
+            Array.Copy(PMD.B_TrigT, 0, tmpYData2, 1024 * 6, 1024)
+            Array.Copy(PMD.B_Veto_Ext, 0, tmpYData2, 1024 * 7, 1024)
+        End If
+        If ComboBox2.SelectedIndex = 2 Then
+            Array.Copy(PMD.C_chargeHG, 0, tmpYData2, 1024 * 0, 1024)
+            Array.Copy(PMD.C_chargeLG, 0, tmpYData2, 1024 * 1, 1024)
+            Array.Copy(PMD.C_HIT, 0, tmpYData2, 1024 * 2, 1024)
+            Array.Copy(PMD.C_CLK, 0, tmpYData2, 1024 * 3, 1024)
+            Array.Copy(PMD.C_SR, 0, tmpYData2, 1024 * 4, 1024)
+            Array.Copy(PMD.C_TrigC, 0, tmpYData2, 1024 * 5, 1024)
+            Array.Copy(PMD.C_TrigT, 0, tmpYData2, 1024 * 6, 1024)
+            Array.Copy(PMD.C_Veto_Ext, 0, tmpYData2, 1024 * 7, 1024)
+        End If
+        If ComboBox2.SelectedIndex = 3 Then
+            Array.Copy(PMD.D_chargeHG, 0, tmpYData2, 1024 * 0, 1024)
+            Array.Copy(PMD.D_chargeLG, 0, tmpYData2, 1024 * 1, 1024)
+            Array.Copy(PMD.D_HIT, 0, tmpYData2, 1024 * 2, 1024)
+            Array.Copy(PMD.D_CLK, 0, tmpYData2, 1024 * 3, 1024)
+            Array.Copy(PMD.D_SR, 0, tmpYData2, 1024 * 4, 1024)
+            Array.Copy(PMD.D_TrigC, 0, tmpYData2, 1024 * 5, 1024)
+            Array.Copy(PMD.D_TrigT, 0, tmpYData2, 1024 * 6, 1024)
+            Array.Copy(PMD.D_Veto_Ext, 0, tmpYData2, 1024 * 7, 1024)
+        End If
+
+
+
+        Gigasoft.ProEssentials.Api.PEvsetW(Pesgo1.PeSpecial.HObject, Gigasoft.ProEssentials.DllProperties.YData, tmpYData2, 1024 * 8)
+
+
+
+        If (Pesgo1.PeConfigure.RenderEngine = RenderEngine.Direct3D) Then
+            Pesgo1.PeFunction.Force3dxVerticeRebuild = True
+        Else
+
+            Pesgo1.PeFunction.Reinitialize()
+            Pesgo1.PeFunction.ResetImage(0, 0)
+        End If
+
+        Pesgo1.Invalidate()
+
+        Pesgo1.PeFunction.ReinitializeResetImage()
 
     End Sub
 
@@ -268,7 +506,7 @@ Public Class pMonitor
     End Sub
 
     Private Sub pMonitor_Load(sender As Object, e As EventArgs) Handles Me.Load
-        CreatePlotTopPetiroc()
+
         ComboBox2.Items.Add("A")
         ComboBox2.Items.Add("B")
         ComboBox2.Items.Add("C")
@@ -348,5 +586,9 @@ Public Class pMonitor
         End If
 
         Pesgo1.Refresh()
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
     End Sub
 End Class

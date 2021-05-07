@@ -24,9 +24,9 @@ Partial Class pSpectra
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.ListView1 = New System.Windows.Forms.ListView()
         Me.Pesgo1 = New Gigasoft.ProEssentials.Pesgo()
+        Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -46,9 +46,15 @@ Partial Class pSpectra
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(622, 426)
         Me.TableLayoutPanel1.TabIndex = 0
         '
-        'Timer1
+        'Pesgo1
         '
-        Me.Timer1.Interval = 1000
+        Me.Pesgo1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Pesgo1.Location = New System.Drawing.Point(156, 2)
+        Me.Pesgo1.Margin = New System.Windows.Forms.Padding(2)
+        Me.Pesgo1.Name = "Pesgo1"
+        Me.Pesgo1.Size = New System.Drawing.Size(464, 422)
+        Me.Pesgo1.TabIndex = 1
+        Me.Pesgo1.Text = "Pesgo1"
         '
         'ListView1
         '
@@ -62,15 +68,9 @@ Partial Class pSpectra
         Me.ListView1.UseCompatibleStateImageBehavior = False
         Me.ListView1.View = System.Windows.Forms.View.Details
         '
-        'Pesgo1
+        'Timer1
         '
-        Me.Pesgo1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Pesgo1.Location = New System.Drawing.Point(156, 2)
-        Me.Pesgo1.Margin = New System.Windows.Forms.Padding(2)
-        Me.Pesgo1.Name = "Pesgo1"
-        Me.Pesgo1.Size = New System.Drawing.Size(464, 422)
-        Me.Pesgo1.TabIndex = 1
-        Me.Pesgo1.Text = "Pesgo1"
+        Me.Timer1.Interval = 1000
         '
         'pSpectra
         '

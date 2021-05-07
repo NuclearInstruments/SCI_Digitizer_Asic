@@ -25,119 +25,123 @@ Partial Class Settings
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.aClusterTime = New System.Windows.Forms.NumericUpDown()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.aFileFormat = New System.Windows.Forms.ComboBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.aProcessingMode = New System.Windows.Forms.ComboBox()
-        Me.aAnalogRead = New System.Windows.Forms.CheckBox()
-        Me.moniorCH = New System.Windows.Forms.NumericUpDown()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.monitorMux = New System.Windows.Forms.ComboBox()
-        Me.ButtonSetMonitor = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.SoftwareTrigger = New System.Windows.Forms.NumericUpDown()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.TriggerSelector = New System.Windows.Forms.ComboBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.SelfFreq = New System.Windows.Forms.NumericUpDown()
-        Me.SelfEnable = New System.Windows.Forms.CheckBox()
-        Me.TimePsBin = New System.Windows.Forms.NumericUpDown()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.T0Freq = New System.Windows.Forms.NumericUpDown()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.T0Mode = New System.Windows.Forms.ComboBox()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.TransferSize = New System.Windows.Forms.ComboBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.A_ShaperCI = New System.Windows.Forms.ComboBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.A_DelayBox = New System.Windows.Forms.NumericUpDown()
-        Me.A_TimeTHR = New System.Windows.Forms.NumericUpDown()
-        Me.A_ChargeTHR = New System.Windows.Forms.NumericUpDown()
-        Me.HVon = New System.Windows.Forms.CheckBox()
-        Me.Voltage = New System.Windows.Forms.NumericUpDown()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.A_ShaperCF = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.A_polarity = New System.Windows.Forms.ComboBox()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.ButtonSetCfg = New System.Windows.Forms.Button()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.tempConmpCoef = New System.Windows.Forms.NumericUpDown()
-        Me.TempComp = New System.Windows.Forms.CheckBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.TempSensor = New System.Windows.Forms.ComboBox()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
-        Me.TabPage5 = New System.Windows.Forms.TabPage()
-        Me.TabPage6 = New System.Windows.Forms.TabPage()
-        Me.TabPage7 = New System.Windows.Forms.TabPage()
-        Me.TabPage8 = New System.Windows.Forms.TabPage()
-        Me.Label21 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.A_polarity = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.A_ShaperCF = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.A_ShaperCI = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.ExtTrigDelay = New System.Windows.Forms.NumericUpDown()
+        Me.TriggerMode = New System.Windows.Forms.ComboBox()
+        Me.EnableGlobalTrigger = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.EnableExternalVeto = New System.Windows.Forms.CheckBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.EnableExternalTrigger = New System.Windows.Forms.CheckBox()
-        Me.EnableGlobalTrigger = New System.Windows.Forms.CheckBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.MaxV = New System.Windows.Forms.NumericUpDown()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.CheckBox8 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox9 = New System.Windows.Forms.CheckBox()
+        Me.A_TimeTHR = New System.Windows.Forms.NumericUpDown()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.A_ChargeTHR = New System.Windows.Forms.NumericUpDown()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TriggerSelector = New System.Windows.Forms.ComboBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.A_DelayBox = New System.Windows.Forms.NumericUpDown()
+        Me.SelfFreq = New System.Windows.Forms.NumericUpDown()
+        Me.SelfEnable = New System.Windows.Forms.CheckBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.SoftwareTrigger = New System.Windows.Forms.NumericUpDown()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.TabPage5 = New System.Windows.Forms.TabPage()
         Me.ResetTDConT0 = New System.Windows.Forms.CheckBox()
+        Me.T0Mode = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.T0Freq = New System.Windows.Forms.NumericUpDown()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.TimePsBin = New System.Windows.Forms.NumericUpDown()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TabPage6 = New System.Windows.Forms.TabPage()
         Me.DisableTempRead = New System.Windows.Forms.CheckBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.MaxV = New System.Windows.Forms.NumericUpDown()
+        Me.Voltage = New System.Windows.Forms.NumericUpDown()
+        Me.TempComp = New System.Windows.Forms.CheckBox()
+        Me.TempSensor = New System.Windows.Forms.ComboBox()
+        Me.tempConmpCoef = New System.Windows.Forms.NumericUpDown()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.HVon = New System.Windows.Forms.CheckBox()
+        Me.TabPage7 = New System.Windows.Forms.TabPage()
         Me.SumSpectrumGain = New System.Windows.Forms.NumericUpDown()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.aClusterTime = New System.Windows.Forms.NumericUpDown()
+        Me.aFileFormat = New System.Windows.Forms.ComboBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.TransferSize = New System.Windows.Forms.ComboBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.aProcessingMode = New System.Windows.Forms.ComboBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.TabPage8 = New System.Windows.Forms.TabPage()
+        Me.CheckBox9 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox8 = New System.Windows.Forms.CheckBox()
+        Me.aAnalogRead = New System.Windows.Forms.CheckBox()
+        Me.monitorMux = New System.Windows.Forms.ComboBox()
+        Me.ButtonSetMonitor = New System.Windows.Forms.Button()
+        Me.moniorCH = New System.Windows.Forms.NumericUpDown()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.ButtonSetCfg = New System.Windows.Forms.Button()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.multiboard = New System.Windows.Forms.ComboBox()
+        Me.Label28 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
-        CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        CType(Me.SoftwareTrigger, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.SelfFreq, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.TimePsBin, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.T0Freq, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.A_DelayBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.Voltage, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel3.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
-        CType(Me.tempConmpCoef, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
-        Me.TabPage5.SuspendLayout()
-        Me.TabPage6.SuspendLayout()
-        Me.TabPage7.SuspendLayout()
-        Me.TabPage8.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage4.SuspendLayout()
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox2.SuspendLayout()
+        CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.A_DelayBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SelfFreq, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SoftwareTrigger, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage5.SuspendLayout()
+        CType(Me.T0Freq, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TimePsBin, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage6.SuspendLayout()
         CType(Me.MaxV, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Voltage, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tempConmpCoef, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage7.SuspendLayout()
         CType(Me.SumSpectrumGain, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage8.SuspendLayout()
+        CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel3.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -178,6 +182,687 @@ Partial Class Settings
         Me.Panel5.Size = New System.Drawing.Size(817, 293)
         Me.Panel5.TabIndex = 4
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.Panel2)
+        Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(817, 293)
+        Me.GroupBox1.TabIndex = 8
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "General Settings"
+        '
+        'Panel2
+        '
+        Me.Panel2.AutoScroll = True
+        Me.Panel2.Controls.Add(Me.TabControl2)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(3, 16)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(811, 274)
+        Me.Panel2.TabIndex = 0
+        '
+        'TabControl2
+        '
+        Me.TabControl2.Controls.Add(Me.TabPage3)
+        Me.TabControl2.Controls.Add(Me.TabPage4)
+        Me.TabControl2.Controls.Add(Me.TabPage5)
+        Me.TabControl2.Controls.Add(Me.TabPage6)
+        Me.TabControl2.Controls.Add(Me.TabPage7)
+        Me.TabControl2.Controls.Add(Me.TabPage8)
+        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl2.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl2.Name = "TabControl2"
+        Me.TabControl2.SelectedIndex = 0
+        Me.TabControl2.Size = New System.Drawing.Size(811, 274)
+        Me.TabControl2.TabIndex = 79
+        '
+        'TabPage3
+        '
+        Me.TabPage3.Controls.Add(Me.Label22)
+        Me.TabPage3.Controls.Add(Me.Label21)
+        Me.TabPage3.Controls.Add(Me.PictureBox1)
+        Me.TabPage3.Controls.Add(Me.A_polarity)
+        Me.TabPage3.Controls.Add(Me.Label1)
+        Me.TabPage3.Controls.Add(Me.A_ShaperCF)
+        Me.TabPage3.Controls.Add(Me.Label5)
+        Me.TabPage3.Controls.Add(Me.A_ShaperCI)
+        Me.TabPage3.Controls.Add(Me.Label6)
+        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage3.Name = "TabPage3"
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage3.TabIndex = 0
+        Me.TabPage3.Text = "Asic General"
+        Me.TabPage3.UseVisualStyleBackColor = True
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(402, 132)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(45, 13)
+        Me.Label22.TabIndex = 62
+        Me.Label22.Text = "Label22"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(299, 20)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(202, 13)
+        Me.Label21.TabIndex = 61
+        Me.Label21.Text = "Polarity should be positive for Positive HV"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.SciDigitizerAsic.My.Resources.Resources.Shaper
+        Me.PictureBox1.Location = New System.Drawing.Point(302, 54)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(277, 164)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 60
+        Me.PictureBox1.TabStop = False
+        '
+        'A_polarity
+        '
+        Me.A_polarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.A_polarity.FormattingEnabled = True
+        Me.A_polarity.Location = New System.Drawing.Point(133, 17)
+        Me.A_polarity.Name = "A_polarity"
+        Me.A_polarity.Size = New System.Drawing.Size(106, 21)
+        Me.A_polarity.TabIndex = 20
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(7, 20)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(73, 13)
+        Me.Label1.TabIndex = 21
+        Me.Label1.Text = "Signal Polarity"
+        '
+        'A_ShaperCF
+        '
+        Me.A_ShaperCF.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.A_ShaperCF.FormattingEnabled = True
+        Me.A_ShaperCF.Location = New System.Drawing.Point(133, 91)
+        Me.A_ShaperCF.Name = "A_ShaperCF"
+        Me.A_ShaperCF.Size = New System.Drawing.Size(106, 21)
+        Me.A_ShaperCF.TabIndex = 28
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(7, 94)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(120, 18)
+        Me.Label5.TabIndex = 29
+        Me.Label5.Text = "Shaper C2 (Feedback)"
+        '
+        'A_ShaperCI
+        '
+        Me.A_ShaperCI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.A_ShaperCI.FormattingEnabled = True
+        Me.A_ShaperCI.Location = New System.Drawing.Point(133, 54)
+        Me.A_ShaperCI.Name = "A_ShaperCI"
+        Me.A_ShaperCI.Size = New System.Drawing.Size(106, 21)
+        Me.A_ShaperCI.TabIndex = 59
+        '
+        'Label6
+        '
+        Me.Label6.Location = New System.Drawing.Point(7, 57)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(99, 18)
+        Me.Label6.TabIndex = 58
+        Me.Label6.Text = "Shaper C1 (Input)"
+        '
+        'TabPage4
+        '
+        Me.TabPage4.Controls.Add(Me.Label27)
+        Me.TabPage4.Controls.Add(Me.Label26)
+        Me.TabPage4.Controls.Add(Me.ExtTrigDelay)
+        Me.TabPage4.Controls.Add(Me.TriggerMode)
+        Me.TabPage4.Controls.Add(Me.EnableGlobalTrigger)
+        Me.TabPage4.Controls.Add(Me.GroupBox2)
+        Me.TabPage4.Controls.Add(Me.A_TimeTHR)
+        Me.TabPage4.Controls.Add(Me.Label3)
+        Me.TabPage4.Controls.Add(Me.A_ChargeTHR)
+        Me.TabPage4.Controls.Add(Me.Label2)
+        Me.TabPage4.Controls.Add(Me.TriggerSelector)
+        Me.TabPage4.Controls.Add(Me.Label17)
+        Me.TabPage4.Controls.Add(Me.A_DelayBox)
+        Me.TabPage4.Controls.Add(Me.SelfFreq)
+        Me.TabPage4.Controls.Add(Me.SelfEnable)
+        Me.TabPage4.Controls.Add(Me.Label4)
+        Me.TabPage4.Controls.Add(Me.SoftwareTrigger)
+        Me.TabPage4.Controls.Add(Me.Label18)
+        Me.TabPage4.Controls.Add(Me.Label19)
+        Me.TabPage4.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage4.Name = "TabPage4"
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage4.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage4.TabIndex = 1
+        Me.TabPage4.Text = "Trigger"
+        Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'Label27
+        '
+        Me.Label27.Location = New System.Drawing.Point(279, 55)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(132, 18)
+        Me.Label27.TabIndex = 81
+        Me.Label27.Text = "External Trigger Delay (ns)"
+        '
+        'Label26
+        '
+        Me.Label26.Location = New System.Drawing.Point(11, 24)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(70, 13)
+        Me.Label26.TabIndex = 80
+        Me.Label26.Text = "Trigger Mode"
+        '
+        'ExtTrigDelay
+        '
+        Me.ExtTrigDelay.BackColor = System.Drawing.Color.White
+        Me.ExtTrigDelay.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.ExtTrigDelay.Location = New System.Drawing.Point(417, 53)
+        Me.ExtTrigDelay.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.ExtTrigDelay.Name = "ExtTrigDelay"
+        Me.ExtTrigDelay.Size = New System.Drawing.Size(102, 20)
+        Me.ExtTrigDelay.TabIndex = 79
+        '
+        'TriggerMode
+        '
+        Me.TriggerMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TriggerMode.FormattingEnabled = True
+        Me.TriggerMode.Location = New System.Drawing.Point(142, 21)
+        Me.TriggerMode.Name = "TriggerMode"
+        Me.TriggerMode.Size = New System.Drawing.Size(113, 21)
+        Me.TriggerMode.TabIndex = 78
+        '
+        'EnableGlobalTrigger
+        '
+        Me.EnableGlobalTrigger.AutoSize = True
+        Me.EnableGlobalTrigger.Location = New System.Drawing.Point(570, 20)
+        Me.EnableGlobalTrigger.Name = "EnableGlobalTrigger"
+        Me.EnableGlobalTrigger.Size = New System.Drawing.Size(128, 17)
+        Me.EnableGlobalTrigger.TabIndex = 76
+        Me.EnableGlobalTrigger.Text = "Enable Global Trigger"
+        Me.EnableGlobalTrigger.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.EnableExternalVeto)
+        Me.GroupBox2.Controls.Add(Me.CheckBox4)
+        Me.GroupBox2.Controls.Add(Me.CheckBox3)
+        Me.GroupBox2.Controls.Add(Me.CheckBox2)
+        Me.GroupBox2.Controls.Add(Me.CheckBox1)
+        Me.GroupBox2.Location = New System.Drawing.Point(570, 84)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(195, 79)
+        Me.GroupBox2.TabIndex = 74
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "TRIGGER VETO"
+        '
+        'EnableExternalVeto
+        '
+        Me.EnableExternalVeto.AutoSize = True
+        Me.EnableExternalVeto.Location = New System.Drawing.Point(13, 51)
+        Me.EnableExternalVeto.Name = "EnableExternalVeto"
+        Me.EnableExternalVeto.Size = New System.Drawing.Size(125, 17)
+        Me.EnableExternalVeto.TabIndex = 4
+        Me.EnableExternalVeto.Text = "Enable External Veto"
+        Me.EnableExternalVeto.UseVisualStyleBackColor = True
+        '
+        'CheckBox4
+        '
+        Me.CheckBox4.AutoSize = True
+        Me.CheckBox4.Location = New System.Drawing.Point(121, 24)
+        Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(32, 17)
+        Me.CheckBox4.TabIndex = 3
+        Me.CheckBox4.Text = "4"
+        Me.CheckBox4.UseVisualStyleBackColor = True
+        '
+        'CheckBox3
+        '
+        Me.CheckBox3.AutoSize = True
+        Me.CheckBox3.Location = New System.Drawing.Point(89, 24)
+        Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(32, 17)
+        Me.CheckBox3.TabIndex = 2
+        Me.CheckBox3.Text = "3"
+        Me.CheckBox3.UseVisualStyleBackColor = True
+        '
+        'CheckBox2
+        '
+        Me.CheckBox2.AutoSize = True
+        Me.CheckBox2.Location = New System.Drawing.Point(51, 24)
+        Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(32, 17)
+        Me.CheckBox2.TabIndex = 1
+        Me.CheckBox2.Text = "2"
+        Me.CheckBox2.UseVisualStyleBackColor = True
+        '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(13, 24)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(32, 17)
+        Me.CheckBox1.TabIndex = 0
+        Me.CheckBox1.Text = "1"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
+        'A_TimeTHR
+        '
+        Me.A_TimeTHR.BackColor = System.Drawing.Color.White
+        Me.A_TimeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 51)
+        Me.A_TimeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
+        Me.A_TimeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.A_TimeTHR.Name = "A_TimeTHR"
+        Me.A_TimeTHR.Size = New System.Drawing.Size(112, 20)
+        Me.A_TimeTHR.TabIndex = 56
+        Me.A_TimeTHR.Value = New Decimal(New Integer() {800, 0, 0, 0})
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(11, 53)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(91, 13)
+        Me.Label3.TabIndex = 24
+        Me.Label3.Text = "Time Threshold"
+        '
+        'A_ChargeTHR
+        '
+        Me.A_ChargeTHR.BackColor = System.Drawing.Color.White
+        Me.A_ChargeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 79)
+        Me.A_ChargeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
+        Me.A_ChargeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.A_ChargeTHR.Name = "A_ChargeTHR"
+        Me.A_ChargeTHR.Size = New System.Drawing.Size(112, 20)
+        Me.A_ChargeTHR.TabIndex = 55
+        Me.A_ChargeTHR.Value = New Decimal(New Integer() {800, 0, 0, 0})
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(12, 81)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(92, 13)
+        Me.Label2.TabIndex = 23
+        Me.Label2.Text = "Charge Threshold"
+        '
+        'TriggerSelector
+        '
+        Me.TriggerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TriggerSelector.FormattingEnabled = True
+        Me.TriggerSelector.Location = New System.Drawing.Point(142, 105)
+        Me.TriggerSelector.Name = "TriggerSelector"
+        Me.TriggerSelector.Size = New System.Drawing.Size(113, 21)
+        Me.TriggerSelector.TabIndex = 70
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(510, 138)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(20, 13)
+        Me.Label17.TabIndex = 69
+        Me.Label17.Text = "Hz"
+        '
+        'A_DelayBox
+        '
+        Me.A_DelayBox.BackColor = System.Drawing.Color.White
+        Me.A_DelayBox.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.A_DelayBox.Location = New System.Drawing.Point(417, 21)
+        Me.A_DelayBox.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
+        Me.A_DelayBox.Name = "A_DelayBox"
+        Me.A_DelayBox.Size = New System.Drawing.Size(102, 20)
+        Me.A_DelayBox.TabIndex = 57
+        '
+        'SelfFreq
+        '
+        Me.SelfFreq.BackColor = System.Drawing.Color.White
+        Me.SelfFreq.Increment = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.SelfFreq.Location = New System.Drawing.Point(417, 136)
+        Me.SelfFreq.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
+        Me.SelfFreq.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
+        Me.SelfFreq.Name = "SelfFreq"
+        Me.SelfFreq.Size = New System.Drawing.Size(80, 20)
+        Me.SelfFreq.TabIndex = 68
+        Me.SelfFreq.Value = New Decimal(New Integer() {1000, 0, 0, 0})
+        '
+        'SelfEnable
+        '
+        Me.SelfEnable.AutoSize = True
+        Me.SelfEnable.Location = New System.Drawing.Point(282, 138)
+        Me.SelfEnable.Name = "SelfEnable"
+        Me.SelfEnable.Size = New System.Drawing.Size(80, 17)
+        Me.SelfEnable.TabIndex = 67
+        Me.SelfEnable.Text = "Self Trigger"
+        Me.SelfEnable.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(279, 24)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(120, 13)
+        Me.Label4.TabIndex = 27
+        Me.Label4.Text = "Internal Trigger Delay"
+        '
+        'SoftwareTrigger
+        '
+        Me.SoftwareTrigger.BackColor = System.Drawing.Color.White
+        Me.SoftwareTrigger.Increment = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.SoftwareTrigger.Location = New System.Drawing.Point(142, 137)
+        Me.SoftwareTrigger.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
+        Me.SoftwareTrigger.Name = "SoftwareTrigger"
+        Me.SoftwareTrigger.Size = New System.Drawing.Size(113, 20)
+        Me.SoftwareTrigger.TabIndex = 73
+        '
+        'Label18
+        '
+        Me.Label18.Location = New System.Drawing.Point(10, 108)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(99, 18)
+        Me.Label18.TabIndex = 71
+        Me.Label18.Text = "Trigger Selector"
+        '
+        'Label19
+        '
+        Me.Label19.Location = New System.Drawing.Point(10, 139)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(94, 17)
+        Me.Label19.TabIndex = 72
+        Me.Label19.Text = "Software Trigger"
+        '
+        'TabPage5
+        '
+        Me.TabPage5.Controls.Add(Me.ResetTDConT0)
+        Me.TabPage5.Controls.Add(Me.T0Mode)
+        Me.TabPage5.Controls.Add(Me.Label8)
+        Me.TabPage5.Controls.Add(Me.T0Freq)
+        Me.TabPage5.Controls.Add(Me.Label9)
+        Me.TabPage5.Controls.Add(Me.TimePsBin)
+        Me.TabPage5.Controls.Add(Me.Label10)
+        Me.TabPage5.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage5.Name = "TabPage5"
+        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage5.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage5.TabIndex = 2
+        Me.TabPage5.Text = "Timestamp"
+        Me.TabPage5.UseVisualStyleBackColor = True
+        '
+        'ResetTDConT0
+        '
+        Me.ResetTDConT0.AutoSize = True
+        Me.ResetTDConT0.Location = New System.Drawing.Point(22, 125)
+        Me.ResetTDConT0.Name = "ResetTDConT0"
+        Me.ResetTDConT0.Size = New System.Drawing.Size(145, 17)
+        Me.ResetTDConT0.TabIndex = 68
+        Me.ResetTDConT0.Text = "Reset TDC coarse on T0"
+        Me.ResetTDConT0.UseVisualStyleBackColor = True
+        '
+        'T0Mode
+        '
+        Me.T0Mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.T0Mode.FormattingEnabled = True
+        Me.T0Mode.Location = New System.Drawing.Point(119, 21)
+        Me.T0Mode.Name = "T0Mode"
+        Me.T0Mode.Size = New System.Drawing.Size(112, 21)
+        Me.T0Mode.TabIndex = 62
+        '
+        'Label8
+        '
+        Me.Label8.Location = New System.Drawing.Point(20, 24)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(70, 13)
+        Me.Label8.TabIndex = 61
+        Me.Label8.Text = "T0 Mode"
+        '
+        'T0Freq
+        '
+        Me.T0Freq.BackColor = System.Drawing.Color.White
+        Me.T0Freq.Location = New System.Drawing.Point(119, 52)
+        Me.T0Freq.Maximum = New Decimal(New Integer() {10000000, 0, 0, 0})
+        Me.T0Freq.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.T0Freq.Name = "T0Freq"
+        Me.T0Freq.Size = New System.Drawing.Size(112, 20)
+        Me.T0Freq.TabIndex = 64
+        Me.T0Freq.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'Label9
+        '
+        Me.Label9.Location = New System.Drawing.Point(19, 56)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(92, 16)
+        Me.Label9.TabIndex = 63
+        Me.Label9.Text = "T0 Frequency"
+        '
+        'TimePsBin
+        '
+        Me.TimePsBin.BackColor = System.Drawing.Color.White
+        Me.TimePsBin.Increment = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.TimePsBin.Location = New System.Drawing.Point(119, 84)
+        Me.TimePsBin.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
+        Me.TimePsBin.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
+        Me.TimePsBin.Name = "TimePsBin"
+        Me.TimePsBin.Size = New System.Drawing.Size(112, 20)
+        Me.TimePsBin.TabIndex = 66
+        Me.TimePsBin.Value = New Decimal(New Integer() {50, 0, 0, 0})
+        '
+        'Label10
+        '
+        Me.Label10.Location = New System.Drawing.Point(20, 86)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(70, 13)
+        Me.Label10.TabIndex = 65
+        Me.Label10.Text = "ps / bin"
+        '
+        'TabPage6
+        '
+        Me.TabPage6.Controls.Add(Me.DisableTempRead)
+        Me.TabPage6.Controls.Add(Me.Label24)
+        Me.TabPage6.Controls.Add(Me.Label23)
+        Me.TabPage6.Controls.Add(Me.MaxV)
+        Me.TabPage6.Controls.Add(Me.Voltage)
+        Me.TabPage6.Controls.Add(Me.TempComp)
+        Me.TabPage6.Controls.Add(Me.TempSensor)
+        Me.TabPage6.Controls.Add(Me.tempConmpCoef)
+        Me.TabPage6.Controls.Add(Me.Label20)
+        Me.TabPage6.Controls.Add(Me.Label16)
+        Me.TabPage6.Controls.Add(Me.HVon)
+        Me.TabPage6.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage6.Name = "TabPage6"
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage6.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage6.TabIndex = 3
+        Me.TabPage6.Text = "HV"
+        Me.TabPage6.UseVisualStyleBackColor = True
+        '
+        'DisableTempRead
+        '
+        Me.DisableTempRead.AutoSize = True
+        Me.DisableTempRead.Checked = True
+        Me.DisableTempRead.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.DisableTempRead.Location = New System.Drawing.Point(16, 154)
+        Me.DisableTempRead.Name = "DisableTempRead"
+        Me.DisableTempRead.Size = New System.Drawing.Size(248, 17)
+        Me.DisableTempRead.TabIndex = 82
+        Me.DisableTempRead.Text = "Disable Temperature readout during acquisition"
+        Me.DisableTempRead.UseVisualStyleBackColor = True
+        '
+        'Label24
+        '
+        Me.Label24.Location = New System.Drawing.Point(15, 119)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(111, 18)
+        Me.Label24.TabIndex = 81
+        Me.Label24.Text = "mv/°C Compensation"
+        '
+        'Label23
+        '
+        Me.Label23.Location = New System.Drawing.Point(261, 18)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(77, 13)
+        Me.Label23.TabIndex = 80
+        Me.Label23.Text = "MAX (V)"
+        '
+        'MaxV
+        '
+        Me.MaxV.BackColor = System.Drawing.Color.White
+        Me.MaxV.DecimalPlaces = 2
+        Me.MaxV.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.MaxV.Location = New System.Drawing.Point(344, 16)
+        Me.MaxV.Maximum = New Decimal(New Integer() {80, 0, 0, 0})
+        Me.MaxV.Minimum = New Decimal(New Integer() {20, 0, 0, 0})
+        Me.MaxV.Name = "MaxV"
+        Me.MaxV.Size = New System.Drawing.Size(101, 20)
+        Me.MaxV.TabIndex = 79
+        Me.MaxV.Value = New Decimal(New Integer() {56, 0, 0, 0})
+        '
+        'Voltage
+        '
+        Me.Voltage.BackColor = System.Drawing.Color.White
+        Me.Voltage.DecimalPlaces = 2
+        Me.Voltage.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.Voltage.Location = New System.Drawing.Point(118, 17)
+        Me.Voltage.Maximum = New Decimal(New Integer() {80, 0, 0, 0})
+        Me.Voltage.Minimum = New Decimal(New Integer() {20, 0, 0, 0})
+        Me.Voltage.Name = "Voltage"
+        Me.Voltage.Size = New System.Drawing.Size(101, 20)
+        Me.Voltage.TabIndex = 52
+        Me.Voltage.Value = New Decimal(New Integer() {56, 0, 0, 0})
+        '
+        'TempComp
+        '
+        Me.TempComp.AutoSize = True
+        Me.TempComp.Location = New System.Drawing.Point(16, 89)
+        Me.TempComp.Name = "TempComp"
+        Me.TempComp.Size = New System.Drawing.Size(159, 17)
+        Me.TempComp.TabIndex = 76
+        Me.TempComp.Text = "Enable Temp Compensation"
+        Me.TempComp.UseVisualStyleBackColor = True
+        '
+        'TempSensor
+        '
+        Me.TempSensor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TempSensor.FormattingEnabled = True
+        Me.TempSensor.Location = New System.Drawing.Point(118, 52)
+        Me.TempSensor.Name = "TempSensor"
+        Me.TempSensor.Size = New System.Drawing.Size(101, 21)
+        Me.TempSensor.TabIndex = 78
+        '
+        'tempConmpCoef
+        '
+        Me.tempConmpCoef.BackColor = System.Drawing.Color.White
+        Me.tempConmpCoef.DecimalPlaces = 2
+        Me.tempConmpCoef.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
+        Me.tempConmpCoef.Location = New System.Drawing.Point(132, 117)
+        Me.tempConmpCoef.Maximum = New Decimal(New Integer() {200, 0, 0, 0})
+        Me.tempConmpCoef.Minimum = New Decimal(New Integer() {200, 0, 0, -2147483648})
+        Me.tempConmpCoef.Name = "tempConmpCoef"
+        Me.tempConmpCoef.Size = New System.Drawing.Size(87, 20)
+        Me.tempConmpCoef.TabIndex = 75
+        Me.tempConmpCoef.Value = New Decimal(New Integer() {30, 0, 0, 0})
+        '
+        'Label20
+        '
+        Me.Label20.Location = New System.Drawing.Point(13, 56)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(77, 13)
+        Me.Label20.TabIndex = 77
+        Me.Label20.Text = "Temp Sensor"
+        '
+        'Label16
+        '
+        Me.Label16.Location = New System.Drawing.Point(44, 19)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(102, 13)
+        Me.Label16.TabIndex = 38
+        Me.Label16.Text = "HV Output (V)"
+        '
+        'HVon
+        '
+        Me.HVon.AutoSize = True
+        Me.HVon.Location = New System.Drawing.Point(18, 18)
+        Me.HVon.Name = "HVon"
+        Me.HVon.Size = New System.Drawing.Size(15, 14)
+        Me.HVon.TabIndex = 53
+        Me.HVon.UseVisualStyleBackColor = True
+        '
+        'TabPage7
+        '
+        Me.TabPage7.Controls.Add(Me.multiboard)
+        Me.TabPage7.Controls.Add(Me.Label28)
+        Me.TabPage7.Controls.Add(Me.SumSpectrumGain)
+        Me.TabPage7.Controls.Add(Me.Label25)
+        Me.TabPage7.Controls.Add(Me.Button2)
+        Me.TabPage7.Controls.Add(Me.Button1)
+        Me.TabPage7.Controls.Add(Me.Label14)
+        Me.TabPage7.Controls.Add(Me.aClusterTime)
+        Me.TabPage7.Controls.Add(Me.aFileFormat)
+        Me.TabPage7.Controls.Add(Me.Label15)
+        Me.TabPage7.Controls.Add(Me.TransferSize)
+        Me.TabPage7.Controls.Add(Me.Label7)
+        Me.TabPage7.Controls.Add(Me.aProcessingMode)
+        Me.TabPage7.Controls.Add(Me.Label13)
+        Me.TabPage7.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage7.Name = "TabPage7"
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage7.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage7.TabIndex = 4
+        Me.TabPage7.Text = "Data Processing"
+        Me.TabPage7.UseVisualStyleBackColor = True
+        '
+        'SumSpectrumGain
+        '
+        Me.SumSpectrumGain.BackColor = System.Drawing.Color.White
+        Me.SumSpectrumGain.DecimalPlaces = 3
+        Me.SumSpectrumGain.Increment = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.SumSpectrumGain.Location = New System.Drawing.Point(397, 55)
+        Me.SumSpectrumGain.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.SumSpectrumGain.Name = "SumSpectrumGain"
+        Me.SumSpectrumGain.Size = New System.Drawing.Size(102, 20)
+        Me.SumSpectrumGain.TabIndex = 72
+        Me.SumSpectrumGain.Value = New Decimal(New Integer() {1, 0, 0, 65536})
+        '
+        'Label25
+        '
+        Me.Label25.Location = New System.Drawing.Point(272, 57)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(100, 28)
+        Me.Label25.TabIndex = 71
+        Me.Label25.Text = "Sum spectrum Gain"
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(14, 188)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(320, 46)
+        Me.Button2.TabIndex = 70
+        Me.Button2.Text = "USE ACQUISITION RESULT TO SET UNIFORMITY GAIN"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(14, 136)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(320, 46)
+        Me.Button1.TabIndex = 69
+        Me.Button1.Text = "USE ACQUISITION RESULT TO SET PEDESTAL"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Label14
+        '
+        Me.Label14.Location = New System.Drawing.Point(11, 94)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(73, 13)
+        Me.Label14.TabIndex = 25
+        Me.Label14.Text = "File Format"
+        '
         'aClusterTime
         '
         Me.aClusterTime.BackColor = System.Drawing.Color.White
@@ -190,22 +875,6 @@ Partial Class Settings
         Me.aClusterTime.TabIndex = 68
         Me.aClusterTime.Value = New Decimal(New Integer() {1000, 0, 0, 0})
         '
-        'Label15
-        '
-        Me.Label15.Location = New System.Drawing.Point(272, 19)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(86, 28)
-        Me.Label15.TabIndex = 67
-        Me.Label15.Text = "Cluster Time (ns)"
-        '
-        'Label14
-        '
-        Me.Label14.Location = New System.Drawing.Point(11, 94)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(73, 13)
-        Me.Label14.TabIndex = 25
-        Me.Label14.Text = "File Format"
-        '
         'aFileFormat
         '
         Me.aFileFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -215,13 +884,30 @@ Partial Class Settings
         Me.aFileFormat.Size = New System.Drawing.Size(103, 21)
         Me.aFileFormat.TabIndex = 24
         '
-        'Label13
+        'Label15
         '
-        Me.Label13.Location = New System.Drawing.Point(10, 57)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(99, 15)
-        Me.Label13.TabIndex = 23
-        Me.Label13.Text = "Processing Mode"
+        Me.Label15.Location = New System.Drawing.Point(272, 19)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(86, 28)
+        Me.Label15.TabIndex = 67
+        Me.Label15.Text = "Cluster Time (ns)"
+        '
+        'TransferSize
+        '
+        Me.TransferSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.TransferSize.FormattingEnabled = True
+        Me.TransferSize.Location = New System.Drawing.Point(117, 17)
+        Me.TransferSize.Name = "TransferSize"
+        Me.TransferSize.Size = New System.Drawing.Size(102, 21)
+        Me.TransferSize.TabIndex = 60
+        '
+        'Label7
+        '
+        Me.Label7.Location = New System.Drawing.Point(11, 20)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(70, 13)
+        Me.Label7.TabIndex = 28
+        Me.Label7.Text = "Transfer Size"
         '
         'aProcessingMode
         '
@@ -232,6 +918,54 @@ Partial Class Settings
         Me.aProcessingMode.Size = New System.Drawing.Size(103, 21)
         Me.aProcessingMode.TabIndex = 22
         '
+        'Label13
+        '
+        Me.Label13.Location = New System.Drawing.Point(10, 57)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(99, 15)
+        Me.Label13.TabIndex = 23
+        Me.Label13.Text = "Processing Mode"
+        '
+        'TabPage8
+        '
+        Me.TabPage8.Controls.Add(Me.CheckBox9)
+        Me.TabPage8.Controls.Add(Me.CheckBox8)
+        Me.TabPage8.Controls.Add(Me.aAnalogRead)
+        Me.TabPage8.Controls.Add(Me.monitorMux)
+        Me.TabPage8.Controls.Add(Me.ButtonSetMonitor)
+        Me.TabPage8.Controls.Add(Me.moniorCH)
+        Me.TabPage8.Controls.Add(Me.Label12)
+        Me.TabPage8.Controls.Add(Me.Label11)
+        Me.TabPage8.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage8.Name = "TabPage8"
+        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage8.Size = New System.Drawing.Size(803, 248)
+        Me.TabPage8.TabIndex = 5
+        Me.TabPage8.Text = "Monitor"
+        Me.TabPage8.UseVisualStyleBackColor = True
+        '
+        'CheckBox9
+        '
+        Me.CheckBox9.AutoSize = True
+        Me.CheckBox9.Checked = True
+        Me.CheckBox9.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox9.Location = New System.Drawing.Point(531, 88)
+        Me.CheckBox9.Name = "CheckBox9"
+        Me.CheckBox9.Size = New System.Drawing.Size(115, 17)
+        Me.CheckBox9.TabIndex = 62
+        Me.CheckBox9.Text = "Enable Time Latch"
+        Me.CheckBox9.UseVisualStyleBackColor = True
+        '
+        'CheckBox8
+        '
+        Me.CheckBox8.AutoSize = True
+        Me.CheckBox8.Location = New System.Drawing.Point(531, 56)
+        Me.CheckBox8.Name = "CheckBox8"
+        Me.CheckBox8.Size = New System.Drawing.Size(124, 17)
+        Me.CheckBox8.TabIndex = 61
+        Me.CheckBox8.Text = "Enable NOR32 Time"
+        Me.CheckBox8.UseVisualStyleBackColor = True
+        '
         'aAnalogRead
         '
         Me.aAnalogRead.AutoSize = True
@@ -241,6 +975,24 @@ Partial Class Settings
         Me.aAnalogRead.TabIndex = 60
         Me.aAnalogRead.Text = "Analog Readout"
         Me.aAnalogRead.UseVisualStyleBackColor = True
+        '
+        'monitorMux
+        '
+        Me.monitorMux.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.monitorMux.FormattingEnabled = True
+        Me.monitorMux.Location = New System.Drawing.Point(119, 20)
+        Me.monitorMux.Name = "monitorMux"
+        Me.monitorMux.Size = New System.Drawing.Size(103, 21)
+        Me.monitorMux.TabIndex = 22
+        '
+        'ButtonSetMonitor
+        '
+        Me.ButtonSetMonitor.Location = New System.Drawing.Point(686, 19)
+        Me.ButtonSetMonitor.Name = "ButtonSetMonitor"
+        Me.ButtonSetMonitor.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonSetMonitor.TabIndex = 0
+        Me.ButtonSetMonitor.Text = "Set"
+        Me.ButtonSetMonitor.UseVisualStyleBackColor = True
         '
         'moniorCH
         '
@@ -266,323 +1018,6 @@ Partial Class Settings
         Me.Label11.Size = New System.Drawing.Size(73, 13)
         Me.Label11.TabIndex = 23
         Me.Label11.Text = "Monitor Mux"
-        '
-        'monitorMux
-        '
-        Me.monitorMux.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.monitorMux.FormattingEnabled = True
-        Me.monitorMux.Location = New System.Drawing.Point(119, 20)
-        Me.monitorMux.Name = "monitorMux"
-        Me.monitorMux.Size = New System.Drawing.Size(103, 21)
-        Me.monitorMux.TabIndex = 22
-        '
-        'ButtonSetMonitor
-        '
-        Me.ButtonSetMonitor.Location = New System.Drawing.Point(686, 19)
-        Me.ButtonSetMonitor.Name = "ButtonSetMonitor"
-        Me.ButtonSetMonitor.Size = New System.Drawing.Size(75, 23)
-        Me.ButtonSetMonitor.TabIndex = 0
-        Me.ButtonSetMonitor.Text = "Set"
-        Me.ButtonSetMonitor.UseVisualStyleBackColor = True
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.Panel2)
-        Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(817, 293)
-        Me.GroupBox1.TabIndex = 8
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "General Settings"
-        '
-        'Panel2
-        '
-        Me.Panel2.AutoScroll = True
-        Me.Panel2.Controls.Add(Me.TabControl2)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 16)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(811, 274)
-        Me.Panel2.TabIndex = 0
-        '
-        'SoftwareTrigger
-        '
-        Me.SoftwareTrigger.BackColor = System.Drawing.Color.White
-        Me.SoftwareTrigger.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.SoftwareTrigger.Location = New System.Drawing.Point(142, 102)
-        Me.SoftwareTrigger.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
-        Me.SoftwareTrigger.Name = "SoftwareTrigger"
-        Me.SoftwareTrigger.Size = New System.Drawing.Size(113, 20)
-        Me.SoftwareTrigger.TabIndex = 73
-        '
-        'Label19
-        '
-        Me.Label19.Location = New System.Drawing.Point(10, 104)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(94, 17)
-        Me.Label19.TabIndex = 72
-        Me.Label19.Text = "Software Trigger"
-        '
-        'Label18
-        '
-        Me.Label18.Location = New System.Drawing.Point(10, 78)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(99, 18)
-        Me.Label18.TabIndex = 71
-        Me.Label18.Text = "Trigger Selector"
-        '
-        'TriggerSelector
-        '
-        Me.TriggerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TriggerSelector.FormattingEnabled = True
-        Me.TriggerSelector.Location = New System.Drawing.Point(142, 75)
-        Me.TriggerSelector.Name = "TriggerSelector"
-        Me.TriggerSelector.Size = New System.Drawing.Size(113, 21)
-        Me.TriggerSelector.TabIndex = 70
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(235, 139)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(20, 13)
-        Me.Label17.TabIndex = 69
-        Me.Label17.Text = "Hz"
-        '
-        'SelfFreq
-        '
-        Me.SelfFreq.BackColor = System.Drawing.Color.White
-        Me.SelfFreq.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.SelfFreq.Location = New System.Drawing.Point(142, 137)
-        Me.SelfFreq.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
-        Me.SelfFreq.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
-        Me.SelfFreq.Name = "SelfFreq"
-        Me.SelfFreq.Size = New System.Drawing.Size(80, 20)
-        Me.SelfFreq.TabIndex = 68
-        Me.SelfFreq.Value = New Decimal(New Integer() {1000, 0, 0, 0})
-        '
-        'SelfEnable
-        '
-        Me.SelfEnable.AutoSize = True
-        Me.SelfEnable.Location = New System.Drawing.Point(19, 139)
-        Me.SelfEnable.Name = "SelfEnable"
-        Me.SelfEnable.Size = New System.Drawing.Size(80, 17)
-        Me.SelfEnable.TabIndex = 67
-        Me.SelfEnable.Text = "Self Trigger"
-        Me.SelfEnable.UseVisualStyleBackColor = True
-        '
-        'TimePsBin
-        '
-        Me.TimePsBin.BackColor = System.Drawing.Color.White
-        Me.TimePsBin.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.TimePsBin.Location = New System.Drawing.Point(119, 84)
-        Me.TimePsBin.Maximum = New Decimal(New Integer() {1569325056, 23283064, 0, 0})
-        Me.TimePsBin.Minimum = New Decimal(New Integer() {37, 0, 0, 0})
-        Me.TimePsBin.Name = "TimePsBin"
-        Me.TimePsBin.Size = New System.Drawing.Size(112, 20)
-        Me.TimePsBin.TabIndex = 66
-        Me.TimePsBin.Value = New Decimal(New Integer() {50, 0, 0, 0})
-        '
-        'Label10
-        '
-        Me.Label10.Location = New System.Drawing.Point(20, 86)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(70, 13)
-        Me.Label10.TabIndex = 65
-        Me.Label10.Text = "ps / bin"
-        '
-        'T0Freq
-        '
-        Me.T0Freq.BackColor = System.Drawing.Color.White
-        Me.T0Freq.Location = New System.Drawing.Point(119, 52)
-        Me.T0Freq.Maximum = New Decimal(New Integer() {10000000, 0, 0, 0})
-        Me.T0Freq.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.T0Freq.Name = "T0Freq"
-        Me.T0Freq.Size = New System.Drawing.Size(112, 20)
-        Me.T0Freq.TabIndex = 64
-        Me.T0Freq.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'Label9
-        '
-        Me.Label9.Location = New System.Drawing.Point(19, 56)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(92, 16)
-        Me.Label9.TabIndex = 63
-        Me.Label9.Text = "T0 Frequency"
-        '
-        'T0Mode
-        '
-        Me.T0Mode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.T0Mode.FormattingEnabled = True
-        Me.T0Mode.Location = New System.Drawing.Point(119, 21)
-        Me.T0Mode.Name = "T0Mode"
-        Me.T0Mode.Size = New System.Drawing.Size(112, 21)
-        Me.T0Mode.TabIndex = 62
-        '
-        'Label8
-        '
-        Me.Label8.Location = New System.Drawing.Point(20, 24)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(70, 13)
-        Me.Label8.TabIndex = 61
-        Me.Label8.Text = "T0 Mode"
-        '
-        'TransferSize
-        '
-        Me.TransferSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TransferSize.FormattingEnabled = True
-        Me.TransferSize.Location = New System.Drawing.Point(117, 17)
-        Me.TransferSize.Name = "TransferSize"
-        Me.TransferSize.Size = New System.Drawing.Size(102, 21)
-        Me.TransferSize.TabIndex = 60
-        '
-        'Label7
-        '
-        Me.Label7.Location = New System.Drawing.Point(11, 20)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(70, 13)
-        Me.Label7.TabIndex = 28
-        Me.Label7.Text = "Transfer Size"
-        '
-        'A_ShaperCI
-        '
-        Me.A_ShaperCI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.A_ShaperCI.FormattingEnabled = True
-        Me.A_ShaperCI.Location = New System.Drawing.Point(133, 54)
-        Me.A_ShaperCI.Name = "A_ShaperCI"
-        Me.A_ShaperCI.Size = New System.Drawing.Size(106, 21)
-        Me.A_ShaperCI.TabIndex = 59
-        '
-        'Label6
-        '
-        Me.Label6.Location = New System.Drawing.Point(7, 57)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(99, 18)
-        Me.Label6.TabIndex = 58
-        Me.Label6.Text = "Shaper C1 (Input)"
-        '
-        'A_DelayBox
-        '
-        Me.A_DelayBox.BackColor = System.Drawing.Color.White
-        Me.A_DelayBox.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_DelayBox.Location = New System.Drawing.Point(390, 21)
-        Me.A_DelayBox.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
-        Me.A_DelayBox.Name = "A_DelayBox"
-        Me.A_DelayBox.Size = New System.Drawing.Size(102, 20)
-        Me.A_DelayBox.TabIndex = 57
-        '
-        'A_TimeTHR
-        '
-        Me.A_TimeTHR.BackColor = System.Drawing.Color.White
-        Me.A_TimeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_TimeTHR.Location = New System.Drawing.Point(143, 21)
-        Me.A_TimeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
-        Me.A_TimeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.A_TimeTHR.Name = "A_TimeTHR"
-        Me.A_TimeTHR.Size = New System.Drawing.Size(112, 20)
-        Me.A_TimeTHR.TabIndex = 56
-        Me.A_TimeTHR.Value = New Decimal(New Integer() {800, 0, 0, 0})
-        '
-        'A_ChargeTHR
-        '
-        Me.A_ChargeTHR.BackColor = System.Drawing.Color.White
-        Me.A_ChargeTHR.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.A_ChargeTHR.Location = New System.Drawing.Point(143, 49)
-        Me.A_ChargeTHR.Maximum = New Decimal(New Integer() {1023, 0, 0, 0})
-        Me.A_ChargeTHR.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.A_ChargeTHR.Name = "A_ChargeTHR"
-        Me.A_ChargeTHR.Size = New System.Drawing.Size(112, 20)
-        Me.A_ChargeTHR.TabIndex = 55
-        Me.A_ChargeTHR.Value = New Decimal(New Integer() {800, 0, 0, 0})
-        '
-        'HVon
-        '
-        Me.HVon.AutoSize = True
-        Me.HVon.Location = New System.Drawing.Point(18, 18)
-        Me.HVon.Name = "HVon"
-        Me.HVon.Size = New System.Drawing.Size(15, 14)
-        Me.HVon.TabIndex = 53
-        Me.HVon.UseVisualStyleBackColor = True
-        '
-        'Voltage
-        '
-        Me.Voltage.BackColor = System.Drawing.Color.White
-        Me.Voltage.DecimalPlaces = 2
-        Me.Voltage.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
-        Me.Voltage.Location = New System.Drawing.Point(118, 17)
-        Me.Voltage.Maximum = New Decimal(New Integer() {80, 0, 0, 0})
-        Me.Voltage.Minimum = New Decimal(New Integer() {20, 0, 0, 0})
-        Me.Voltage.Name = "Voltage"
-        Me.Voltage.Size = New System.Drawing.Size(101, 20)
-        Me.Voltage.TabIndex = 52
-        Me.Voltage.Value = New Decimal(New Integer() {56, 0, 0, 0})
-        '
-        'Label16
-        '
-        Me.Label16.Location = New System.Drawing.Point(44, 19)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(102, 13)
-        Me.Label16.TabIndex = 38
-        Me.Label16.Text = "HV Output (V)"
-        '
-        'Label5
-        '
-        Me.Label5.Location = New System.Drawing.Point(7, 94)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(120, 18)
-        Me.Label5.TabIndex = 29
-        Me.Label5.Text = "Shaper C2 (Feedback)"
-        '
-        'A_ShaperCF
-        '
-        Me.A_ShaperCF.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.A_ShaperCF.FormattingEnabled = True
-        Me.A_ShaperCF.Location = New System.Drawing.Point(133, 91)
-        Me.A_ShaperCF.Name = "A_ShaperCF"
-        Me.A_ShaperCF.Size = New System.Drawing.Size(106, 21)
-        Me.A_ShaperCF.TabIndex = 28
-        '
-        'Label4
-        '
-        Me.Label4.Location = New System.Drawing.Point(303, 24)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(70, 13)
-        Me.Label4.TabIndex = 27
-        Me.Label4.Text = "Delay Trigger"
-        '
-        'Label3
-        '
-        Me.Label3.Location = New System.Drawing.Point(13, 23)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(91, 13)
-        Me.Label3.TabIndex = 24
-        Me.Label3.Text = "Time Threshold"
-        '
-        'Label2
-        '
-        Me.Label2.Location = New System.Drawing.Point(13, 51)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(92, 13)
-        Me.Label2.TabIndex = 23
-        Me.Label2.Text = "Charge Threshold"
-        '
-        'Label1
-        '
-        Me.Label1.Location = New System.Drawing.Point(7, 20)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(73, 13)
-        Me.Label1.TabIndex = 21
-        Me.Label1.Text = "Signal Polarity"
-        '
-        'A_polarity
-        '
-        Me.A_polarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.A_polarity.FormattingEnabled = True
-        Me.A_polarity.Location = New System.Drawing.Point(133, 17)
-        Me.A_polarity.Name = "A_polarity"
-        Me.A_polarity.Size = New System.Drawing.Size(106, 21)
-        Me.A_polarity.TabIndex = 20
         '
         'Panel3
         '
@@ -634,417 +1069,22 @@ Partial Class Settings
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'tempConmpCoef
-        '
-        Me.tempConmpCoef.BackColor = System.Drawing.Color.White
-        Me.tempConmpCoef.DecimalPlaces = 2
-        Me.tempConmpCoef.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
-        Me.tempConmpCoef.Location = New System.Drawing.Point(132, 117)
-        Me.tempConmpCoef.Maximum = New Decimal(New Integer() {200, 0, 0, 0})
-        Me.tempConmpCoef.Minimum = New Decimal(New Integer() {200, 0, 0, -2147483648})
-        Me.tempConmpCoef.Name = "tempConmpCoef"
-        Me.tempConmpCoef.Size = New System.Drawing.Size(87, 20)
-        Me.tempConmpCoef.TabIndex = 75
-        Me.tempConmpCoef.Value = New Decimal(New Integer() {30, 0, 0, 0})
-        '
-        'TempComp
-        '
-        Me.TempComp.AutoSize = True
-        Me.TempComp.Location = New System.Drawing.Point(16, 89)
-        Me.TempComp.Name = "TempComp"
-        Me.TempComp.Size = New System.Drawing.Size(159, 17)
-        Me.TempComp.TabIndex = 76
-        Me.TempComp.Text = "Enable Temp Compensation"
-        Me.TempComp.UseVisualStyleBackColor = True
-        '
-        'Label20
-        '
-        Me.Label20.Location = New System.Drawing.Point(13, 56)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(77, 13)
-        Me.Label20.TabIndex = 77
-        Me.Label20.Text = "Temp Sensor"
-        '
-        'TempSensor
-        '
-        Me.TempSensor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.TempSensor.FormattingEnabled = True
-        Me.TempSensor.Location = New System.Drawing.Point(118, 52)
-        Me.TempSensor.Name = "TempSensor"
-        Me.TempSensor.Size = New System.Drawing.Size(101, 21)
-        Me.TempSensor.TabIndex = 78
-        '
-        'TabControl2
-        '
-        Me.TabControl2.Controls.Add(Me.TabPage3)
-        Me.TabControl2.Controls.Add(Me.TabPage4)
-        Me.TabControl2.Controls.Add(Me.TabPage5)
-        Me.TabControl2.Controls.Add(Me.TabPage6)
-        Me.TabControl2.Controls.Add(Me.TabPage7)
-        Me.TabControl2.Controls.Add(Me.TabPage8)
-        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl2.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl2.Name = "TabControl2"
-        Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(811, 274)
-        Me.TabControl2.TabIndex = 79
-        '
-        'TabPage3
-        '
-        Me.TabPage3.Controls.Add(Me.Label22)
-        Me.TabPage3.Controls.Add(Me.Label21)
-        Me.TabPage3.Controls.Add(Me.PictureBox1)
-        Me.TabPage3.Controls.Add(Me.A_polarity)
-        Me.TabPage3.Controls.Add(Me.Label1)
-        Me.TabPage3.Controls.Add(Me.A_ShaperCF)
-        Me.TabPage3.Controls.Add(Me.Label5)
-        Me.TabPage3.Controls.Add(Me.A_ShaperCI)
-        Me.TabPage3.Controls.Add(Me.Label6)
-        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage3.TabIndex = 0
-        Me.TabPage3.Text = "Asic General"
-        Me.TabPage3.UseVisualStyleBackColor = True
-        '
-        'TabPage4
-        '
-        Me.TabPage4.Controls.Add(Me.PictureBox2)
-        Me.TabPage4.Controls.Add(Me.EnableGlobalTrigger)
-        Me.TabPage4.Controls.Add(Me.EnableExternalTrigger)
-        Me.TabPage4.Controls.Add(Me.GroupBox2)
-        Me.TabPage4.Controls.Add(Me.A_TimeTHR)
-        Me.TabPage4.Controls.Add(Me.Label3)
-        Me.TabPage4.Controls.Add(Me.A_ChargeTHR)
-        Me.TabPage4.Controls.Add(Me.Label2)
-        Me.TabPage4.Controls.Add(Me.TriggerSelector)
-        Me.TabPage4.Controls.Add(Me.Label17)
-        Me.TabPage4.Controls.Add(Me.A_DelayBox)
-        Me.TabPage4.Controls.Add(Me.SelfFreq)
-        Me.TabPage4.Controls.Add(Me.SelfEnable)
-        Me.TabPage4.Controls.Add(Me.Label4)
-        Me.TabPage4.Controls.Add(Me.SoftwareTrigger)
-        Me.TabPage4.Controls.Add(Me.Label18)
-        Me.TabPage4.Controls.Add(Me.Label19)
-        Me.TabPage4.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage4.TabIndex = 1
-        Me.TabPage4.Text = "Trigger"
-        Me.TabPage4.UseVisualStyleBackColor = True
-        '
-        'TabPage5
-        '
-        Me.TabPage5.Controls.Add(Me.ResetTDConT0)
-        Me.TabPage5.Controls.Add(Me.T0Mode)
-        Me.TabPage5.Controls.Add(Me.Label8)
-        Me.TabPage5.Controls.Add(Me.T0Freq)
-        Me.TabPage5.Controls.Add(Me.Label9)
-        Me.TabPage5.Controls.Add(Me.TimePsBin)
-        Me.TabPage5.Controls.Add(Me.Label10)
-        Me.TabPage5.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage5.TabIndex = 2
-        Me.TabPage5.Text = "Timestamp"
-        Me.TabPage5.UseVisualStyleBackColor = True
-        '
-        'TabPage6
-        '
-        Me.TabPage6.Controls.Add(Me.DisableTempRead)
-        Me.TabPage6.Controls.Add(Me.Label24)
-        Me.TabPage6.Controls.Add(Me.Label23)
-        Me.TabPage6.Controls.Add(Me.MaxV)
-        Me.TabPage6.Controls.Add(Me.Voltage)
-        Me.TabPage6.Controls.Add(Me.TempComp)
-        Me.TabPage6.Controls.Add(Me.TempSensor)
-        Me.TabPage6.Controls.Add(Me.tempConmpCoef)
-        Me.TabPage6.Controls.Add(Me.Label20)
-        Me.TabPage6.Controls.Add(Me.Label16)
-        Me.TabPage6.Controls.Add(Me.HVon)
-        Me.TabPage6.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage6.TabIndex = 3
-        Me.TabPage6.Text = "HV"
-        Me.TabPage6.UseVisualStyleBackColor = True
-        '
-        'TabPage7
-        '
-        Me.TabPage7.Controls.Add(Me.SumSpectrumGain)
-        Me.TabPage7.Controls.Add(Me.Label25)
-        Me.TabPage7.Controls.Add(Me.Button2)
-        Me.TabPage7.Controls.Add(Me.Button1)
-        Me.TabPage7.Controls.Add(Me.Label14)
-        Me.TabPage7.Controls.Add(Me.aClusterTime)
-        Me.TabPage7.Controls.Add(Me.aFileFormat)
-        Me.TabPage7.Controls.Add(Me.Label15)
-        Me.TabPage7.Controls.Add(Me.TransferSize)
-        Me.TabPage7.Controls.Add(Me.Label7)
-        Me.TabPage7.Controls.Add(Me.aProcessingMode)
-        Me.TabPage7.Controls.Add(Me.Label13)
-        Me.TabPage7.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage7.TabIndex = 4
-        Me.TabPage7.Text = "Data Processing"
-        Me.TabPage7.UseVisualStyleBackColor = True
-        '
-        'TabPage8
-        '
-        Me.TabPage8.Controls.Add(Me.CheckBox9)
-        Me.TabPage8.Controls.Add(Me.CheckBox8)
-        Me.TabPage8.Controls.Add(Me.aAnalogRead)
-        Me.TabPage8.Controls.Add(Me.monitorMux)
-        Me.TabPage8.Controls.Add(Me.ButtonSetMonitor)
-        Me.TabPage8.Controls.Add(Me.moniorCH)
-        Me.TabPage8.Controls.Add(Me.Label12)
-        Me.TabPage8.Controls.Add(Me.Label11)
-        Me.TabPage8.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage8.Name = "TabPage8"
-        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(803, 248)
-        Me.TabPage8.TabIndex = 5
-        Me.TabPage8.Text = "Monitor"
-        Me.TabPage8.UseVisualStyleBackColor = True
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(299, 20)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(202, 13)
-        Me.Label21.TabIndex = 61
-        Me.Label21.Text = "Polarity should be positive for Positive HV"
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(402, 132)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(45, 13)
-        Me.Label22.TabIndex = 62
-        Me.Label22.Text = "Label22"
-        '
-        'GroupBox2
-        '
-        Me.GroupBox2.Controls.Add(Me.EnableExternalVeto)
-        Me.GroupBox2.Controls.Add(Me.CheckBox4)
-        Me.GroupBox2.Controls.Add(Me.CheckBox3)
-        Me.GroupBox2.Controls.Add(Me.CheckBox2)
-        Me.GroupBox2.Controls.Add(Me.CheckBox1)
-        Me.GroupBox2.Location = New System.Drawing.Point(16, 163)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(239, 79)
-        Me.GroupBox2.TabIndex = 74
-        Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "TRIGGER VETO"
-        '
-        'EnableExternalVeto
-        '
-        Me.EnableExternalVeto.AutoSize = True
-        Me.EnableExternalVeto.Location = New System.Drawing.Point(13, 47)
-        Me.EnableExternalVeto.Name = "EnableExternalVeto"
-        Me.EnableExternalVeto.Size = New System.Drawing.Size(125, 17)
-        Me.EnableExternalVeto.TabIndex = 4
-        Me.EnableExternalVeto.Text = "Enable External Veto"
-        Me.EnableExternalVeto.UseVisualStyleBackColor = True
-        '
-        'CheckBox4
-        '
-        Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(121, 24)
-        Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox4.TabIndex = 3
-        Me.CheckBox4.Text = "4"
-        Me.CheckBox4.UseVisualStyleBackColor = True
-        '
-        'CheckBox3
-        '
-        Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(89, 24)
-        Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox3.TabIndex = 2
-        Me.CheckBox3.Text = "3"
-        Me.CheckBox3.UseVisualStyleBackColor = True
-        '
-        'CheckBox2
-        '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(51, 24)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox2.TabIndex = 1
-        Me.CheckBox2.Text = "2"
-        Me.CheckBox2.UseVisualStyleBackColor = True
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(13, 24)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(32, 17)
-        Me.CheckBox1.TabIndex = 0
-        Me.CheckBox1.Text = "1"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'EnableExternalTrigger
-        '
-        Me.EnableExternalTrigger.AutoSize = True
-        Me.EnableExternalTrigger.Location = New System.Drawing.Point(519, 23)
-        Me.EnableExternalTrigger.Name = "EnableExternalTrigger"
-        Me.EnableExternalTrigger.Size = New System.Drawing.Size(136, 17)
-        Me.EnableExternalTrigger.TabIndex = 75
-        Me.EnableExternalTrigger.Text = "Enable External Trigger"
-        Me.EnableExternalTrigger.UseVisualStyleBackColor = True
-        '
-        'EnableGlobalTrigger
-        '
-        Me.EnableGlobalTrigger.AutoSize = True
-        Me.EnableGlobalTrigger.Location = New System.Drawing.Point(669, 23)
-        Me.EnableGlobalTrigger.Name = "EnableGlobalTrigger"
-        Me.EnableGlobalTrigger.Size = New System.Drawing.Size(128, 17)
-        Me.EnableGlobalTrigger.TabIndex = 76
-        Me.EnableGlobalTrigger.Text = "Enable Global Trigger"
-        Me.EnableGlobalTrigger.UseVisualStyleBackColor = True
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.SciDigitizerAsic.My.Resources.Resources.Shaper
-        Me.PictureBox1.Location = New System.Drawing.Point(302, 54)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(277, 164)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 60
-        Me.PictureBox1.TabStop = False
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = Global.SciDigitizerAsic.My.Resources.Resources.TriggerHold
-        Me.PictureBox2.Location = New System.Drawing.Point(306, 52)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(349, 190)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 77
-        Me.PictureBox2.TabStop = False
-        '
-        'MaxV
-        '
-        Me.MaxV.BackColor = System.Drawing.Color.White
-        Me.MaxV.DecimalPlaces = 2
-        Me.MaxV.Increment = New Decimal(New Integer() {5, 0, 0, 131072})
-        Me.MaxV.Location = New System.Drawing.Point(344, 16)
-        Me.MaxV.Maximum = New Decimal(New Integer() {80, 0, 0, 0})
-        Me.MaxV.Minimum = New Decimal(New Integer() {20, 0, 0, 0})
-        Me.MaxV.Name = "MaxV"
-        Me.MaxV.Size = New System.Drawing.Size(101, 20)
-        Me.MaxV.TabIndex = 79
-        Me.MaxV.Value = New Decimal(New Integer() {56, 0, 0, 0})
-        '
-        'Label23
-        '
-        Me.Label23.Location = New System.Drawing.Point(261, 18)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(77, 13)
-        Me.Label23.TabIndex = 80
-        Me.Label23.Text = "MAX (V)"
-        '
-        'Label24
-        '
-        Me.Label24.Location = New System.Drawing.Point(15, 119)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(111, 18)
-        Me.Label24.TabIndex = 81
-        Me.Label24.Text = "mv/°C Compensation"
-        '
-        'CheckBox8
-        '
-        Me.CheckBox8.AutoSize = True
-        Me.CheckBox8.Location = New System.Drawing.Point(531, 56)
-        Me.CheckBox8.Name = "CheckBox8"
-        Me.CheckBox8.Size = New System.Drawing.Size(124, 17)
-        Me.CheckBox8.TabIndex = 61
-        Me.CheckBox8.Text = "Enable NOR32 Time"
-        Me.CheckBox8.UseVisualStyleBackColor = True
-        '
-        'CheckBox9
-        '
-        Me.CheckBox9.AutoSize = True
-        Me.CheckBox9.Checked = True
-        Me.CheckBox9.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CheckBox9.Location = New System.Drawing.Point(531, 88)
-        Me.CheckBox9.Name = "CheckBox9"
-        Me.CheckBox9.Size = New System.Drawing.Size(115, 17)
-        Me.CheckBox9.TabIndex = 62
-        Me.CheckBox9.Text = "Enable Time Latch"
-        Me.CheckBox9.UseVisualStyleBackColor = True
-        '
-        'ResetTDConT0
-        '
-        Me.ResetTDConT0.AutoSize = True
-        Me.ResetTDConT0.Location = New System.Drawing.Point(22, 125)
-        Me.ResetTDConT0.Name = "ResetTDConT0"
-        Me.ResetTDConT0.Size = New System.Drawing.Size(145, 17)
-        Me.ResetTDConT0.TabIndex = 68
-        Me.ResetTDConT0.Text = "Reset TDC coarse on T0"
-        Me.ResetTDConT0.UseVisualStyleBackColor = True
-        '
-        'DisableTempRead
-        '
-        Me.DisableTempRead.AutoSize = True
-        Me.DisableTempRead.Checked = True
-        Me.DisableTempRead.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.DisableTempRead.Location = New System.Drawing.Point(16, 154)
-        Me.DisableTempRead.Name = "DisableTempRead"
-        Me.DisableTempRead.Size = New System.Drawing.Size(248, 17)
-        Me.DisableTempRead.TabIndex = 82
-        Me.DisableTempRead.Text = "Disable Temperature readout during acquisition"
-        Me.DisableTempRead.UseVisualStyleBackColor = True
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(14, 136)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(320, 46)
-        Me.Button1.TabIndex = 69
-        Me.Button1.Text = "USE ACQUISITION RESULT TO SET PEDESTAL"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'Button2
-        '
-        Me.Button2.Location = New System.Drawing.Point(14, 188)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(320, 46)
-        Me.Button2.TabIndex = 70
-        Me.Button2.Text = "USE ACQUISITION RESULT TO SET UNIFORMITY GAIN"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'Label25
-        '
-        Me.Label25.Location = New System.Drawing.Point(272, 57)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(100, 28)
-        Me.Label25.TabIndex = 71
-        Me.Label25.Text = "Sum spectrum Gain"
-        '
-        'SumSpectrumGain
-        '
-        Me.SumSpectrumGain.BackColor = System.Drawing.Color.White
-        Me.SumSpectrumGain.DecimalPlaces = 3
-        Me.SumSpectrumGain.Increment = New Decimal(New Integer() {50, 0, 0, 0})
-        Me.SumSpectrumGain.Location = New System.Drawing.Point(397, 55)
-        Me.SumSpectrumGain.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.SumSpectrumGain.Name = "SumSpectrumGain"
-        Me.SumSpectrumGain.Size = New System.Drawing.Size(102, 20)
-        Me.SumSpectrumGain.TabIndex = 72
-        Me.SumSpectrumGain.Value = New Decimal(New Integer() {1, 0, 0, 65536})
+        'multiboard
+        '
+        Me.multiboard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.multiboard.FormattingEnabled = True
+        Me.multiboard.Location = New System.Drawing.Point(397, 94)
+        Me.multiboard.Name = "multiboard"
+        Me.multiboard.Size = New System.Drawing.Size(102, 21)
+        Me.multiboard.TabIndex = 74
+        '
+        'Label28
+        '
+        Me.Label28.Location = New System.Drawing.Point(272, 97)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(70, 13)
+        Me.Label28.TabIndex = 73
+        Me.Label28.Text = "Multiboard Mode"
         '
         'Settings
         '
@@ -1057,39 +1097,39 @@ Partial Class Settings
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
-        CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
-        CType(Me.SoftwareTrigger, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.SelfFreq, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.TimePsBin, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.T0Freq, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.A_DelayBox, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.Voltage, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel3.ResumeLayout(False)
-        Me.TabControl1.ResumeLayout(False)
-        CType(Me.tempConmpCoef, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage4.ResumeLayout(False)
         Me.TabPage4.PerformLayout()
-        Me.TabPage5.ResumeLayout(False)
-        Me.TabPage5.PerformLayout()
-        Me.TabPage6.ResumeLayout(False)
-        Me.TabPage6.PerformLayout()
-        Me.TabPage7.ResumeLayout(False)
-        Me.TabPage8.ResumeLayout(False)
-        Me.TabPage8.PerformLayout()
+        CType(Me.ExtTrigDelay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.A_TimeTHR, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.A_ChargeTHR, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.A_DelayBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SelfFreq, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SoftwareTrigger, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage5.ResumeLayout(False)
+        Me.TabPage5.PerformLayout()
+        CType(Me.T0Freq, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TimePsBin, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage6.ResumeLayout(False)
+        Me.TabPage6.PerformLayout()
         CType(Me.MaxV, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Voltage, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tempConmpCoef, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage7.ResumeLayout(False)
         CType(Me.SumSpectrumGain, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage8.ResumeLayout(False)
+        Me.TabPage8.PerformLayout()
+        CType(Me.moniorCH, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel3.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1160,9 +1200,7 @@ Partial Class Settings
     Friend WithEvents TabPage8 As TabPage
     Friend WithEvents Label22 As Label
     Friend WithEvents Label21 As Label
-    Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents EnableGlobalTrigger As CheckBox
-    Friend WithEvents EnableExternalTrigger As CheckBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents EnableExternalVeto As CheckBox
     Friend WithEvents CheckBox4 As CheckBox
@@ -1180,4 +1218,10 @@ Partial Class Settings
     Friend WithEvents Button1 As Button
     Friend WithEvents SumSpectrumGain As NumericUpDown
     Friend WithEvents Label25 As Label
+    Friend WithEvents TriggerMode As ComboBox
+    Friend WithEvents ExtTrigDelay As NumericUpDown
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label26 As Label
+    Friend WithEvents multiboard As ComboBox
+    Friend WithEvents Label28 As Label
 End Class

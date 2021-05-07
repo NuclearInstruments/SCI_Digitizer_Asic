@@ -6,6 +6,7 @@ Public Class RunStart
 
     Public TargetValue As Double = 0
     Public FilePathName As String
+    Public mode As Integer
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles pMRun.TextChanged
 
     End Sub
@@ -18,6 +19,12 @@ Public Class RunStart
 
     End Sub
 
+    Public Sub LockMode(mode As Integer)
+        If runMode.Items.Count > mode Then
+            runMode.SelectedIndex = mode
+        End If
+        runMode.Enabled = False
+    End Sub
 
     Private Sub RunStart_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cTargetMode.Items.Clear()
@@ -31,10 +38,10 @@ Public Class RunStart
         cTargetMode.SelectedIndex = 0
         pRun.Text = My.Settings.parRun + 1
         pMRun.Text = My.Settings.parAcq + 1
-        If MainForm.sets.HVon.Checked Then
+        If MainForm.sets_petiroc.HVon.Checked Then
             pBias.Text = "0 V"
         Else
-            pBias.Text = MainForm.sets.Voltage.Value & " V"
+            pBias.Text = MainForm.sets_petiroc.Voltage.Value & " V"
         End If
 
         pBoard.Text = 1
@@ -50,7 +57,10 @@ Public Class RunStart
 
         TextBox1.Text = My.Settings.folderpos
         Me.StartPosition = FormStartPosition.CenterScreen
-        Me.Height = 700
+
+        runMode.Items.Add("Spectroscopy")
+        runMode.Items.Add("Photon Counting")
+        runMode.SelectedIndex = 0
     End Sub
 
     Public Structure RunGlobal
@@ -67,11 +77,13 @@ Public Class RunStart
 
     Public Structure BoardConfig
         Public BoardSN As String
-        Public ConfigPetiroc As List(Of DT5550W_P_lib.DT5550W.PetirocConfig)
+        Public ConfigPetiroc As List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
+        Public ConfigCitiroc As List(Of DT5550W_P_lib.DT5550W_CITIROC.CitirocConfig)
     End Structure
 
     Structure RunInfoGlobal
         Public SystemInfo As String
+        Public RunMode As String
         Public AsicInfo As String
         Public AsicCount As String
         Public ApplicationVersion As String
@@ -82,6 +94,8 @@ Public Class RunStart
         Public TargetValue As Double
         Public Note As String
     End Structure
+
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         My.Settings.parRun = pRun.Text
         My.Settings.parAcq = pMRun.Text
@@ -89,6 +103,8 @@ Public Class RunStart
         My.Settings.folderpos = MainForm.SaveFolderDefault
 
         My.Settings.Save()
+
+        mode = runMode.SelectedIndex
 
         ' MainForm.rdc.ScaleFactor = 4 'MainForm.pprop.iTime.Value / MainForm.Ts
         Dim header As String
@@ -104,24 +120,51 @@ Public Class RunStart
         RIG.GlobalRun.RunId = pRun.Text
         RIG.GlobalRun.MachineRun = pMRun.Text
         RIG.GlobalRun.DateTime = pDT.Text
-        RIG.GlobalRun.PacketSize = MainForm.sets.TransferSize.Text
-        RIG.GlobalRun.T0Mode = MainForm.sets.T0Mode.Text
-        RIG.GlobalRun.T0freq = MainForm.sets.T0Freq.Value
-        RIG.GlobalRun.psbin = MainForm.sets.TimePsBin.Value
-        RIG.GlobalRun.HVon = MainForm.sets.HVon.Checked
-        RIG.GlobalRun.HVVoltage = MainForm.sets.Voltage.Value
-        RIG.BoardConfiguration = New List(Of BoardConfig)
-        For Each dt In MainForm.DTList
-            Dim aCFG As New BoardConfig
-            aCFG.BoardSN = dt.SerialNumber
-            aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W.PetirocConfig)
-            If dt.pCFG.Count > 0 Then
-                For Each pc In dt.pCFG
-                    aCFG.ConfigPetiroc.Add(pc)
+
+        Select Case MainForm.GBL_ASIC_MODEL
+            Case DT5550W_P_lib.t_AsicModels.PETIROC
+                RIG.RunMode = runMode.Text
+                RIG.GlobalRun.PacketSize = MainForm.sets_petiroc.TransferSize.Text
+                RIG.GlobalRun.T0Mode = MainForm.sets_petiroc.T0Mode.Text
+                RIG.GlobalRun.T0freq = MainForm.sets_petiroc.T0Freq.Value
+                RIG.GlobalRun.psbin = MainForm.sets_petiroc.TimePsBin.Value
+                RIG.GlobalRun.HVon = MainForm.sets_petiroc.HVon.Checked
+                RIG.GlobalRun.HVVoltage = MainForm.sets_petiroc.Voltage.Value
+                RIG.BoardConfiguration = New List(Of BoardConfig)
+
+                For Each dt In MainForm.DTList
+                    Dim aCFG As New BoardConfig
+                    aCFG.BoardSN = dt.SerialNumber
+                    aCFG.ConfigPetiroc = New List(Of DT5550W_P_lib.DT5550W_PETIROC.PetirocConfig)
+                    If dt.PetirocClass.pCFG.Count > 0 Then
+                        For Each pc In dt.PetirocClass.pCFG
+                            aCFG.ConfigPetiroc.Add(pc)
+                        Next
+                    End If
+                    RIG.BoardConfiguration.Add(aCFG)
                 Next
-            End If
-            RIG.BoardConfiguration.Add(aCFG)
-        Next
+            Case DT5550W_P_lib.t_AsicModels.CITIROC
+                RIG.RunMode = runMode.Text
+                RIG.GlobalRun.PacketSize = MainForm.sets_citiroc.TransferSize.Text
+                RIG.GlobalRun.T0Mode = MainForm.sets_citiroc.T0Mode.Text
+                RIG.GlobalRun.T0freq = MainForm.sets_citiroc.T0Freq.Value
+                RIG.GlobalRun.HVon = MainForm.sets_citiroc.HVon.Checked
+                RIG.GlobalRun.HVVoltage = MainForm.sets_citiroc.Voltage.Value
+                RIG.BoardConfiguration = New List(Of BoardConfig)
+
+                For Each dt In MainForm.DTList
+                    Dim aCFG As New BoardConfig
+                    aCFG.BoardSN = dt.SerialNumber
+                    aCFG.ConfigCitiroc = New List(Of DT5550W_P_lib.DT5550W_CITIROC.CitirocConfig)
+                    If dt.CitirocClass.pCFG.Count > 0 Then
+                        For Each pc In dt.CitirocClass.pCFG
+                            aCFG.ConfigCitiroc.Add(pc)
+                        Next
+                    End If
+                    RIG.BoardConfiguration.Add(aCFG)
+                Next
+        End Select
+
         RIG.TargetType = cTargetMode.Text
         Dim targmult As Double = 1
         If cTargetMode.Text = "Time" Then
@@ -239,6 +282,10 @@ Public Class RunStart
             UnitMult.SelectedIndex = 0
         End If
 
+
+    End Sub
+
+    Private Sub Label14_Click(sender As Object, e As EventArgs) Handles Label14.Click
 
     End Sub
 End Class
