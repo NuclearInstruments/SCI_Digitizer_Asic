@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,8 @@ namespace DT5550W_P_lib
 {
     public class DT5550W_CITIROC
     {
+        const double DAQ_MHZ = 125;
+        double DAQ_TS = 1000 / DAQ_MHZ;
         const UInt32 SCI_REG_ALL_FIFO_RESET = 0xFFFFF908;
         const UInt32 SCI_REG_T0_SOFT_FREQ = 0x00000000;
         const UInt32 SCI_REG_T0_SEL = 0x00000001;
@@ -505,6 +509,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                   SCI_REG_i2c_master_0_MON);
 
 
+
             SerialNumber = DeviceSerialNumber;
             if (retcode == 0)
                 return true;
@@ -642,7 +647,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                     break;
 
                 case TriggerMode.GBL_TRIG_CHARGE:
-                    gbltrig_mode = 0;
+                    gbltrig_mode = 1;
                     trig_mode = 3;
                     break;
 
@@ -845,7 +850,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
         public bool SetDigitalOutputSignalLength(double ns)
         {
-            int clk_s = (int)(ns / 6.25);
+            int clk_s = (int)(ns / DAQ_TS);
             int retval = 0;
             /*retval = phy.NI_USB3_WriteReg_M((UInt32)clk_s, DIGOUT_LEN);
             if (retval != 0)
@@ -859,7 +864,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         public void ConfigureSignalGenerator(bool enableA, bool enableB, bool enableC, bool enableD, int frequency)
         {
             
-            int period = 160000000 / frequency;
+            int period = (int) Math.Round(DAQ_MHZ * 1000000 / frequency);
             
             phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_SW_TRIG_FREQ);
         }
@@ -886,7 +891,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
             }
 
-            int period = 160000000 / T0sw_freq;
+            int period = (int)Math.Round(DAQ_MHZ * 1000000 / T0sw_freq);
             phy.NI_USB3_WriteReg_M((UInt32)source, SCI_REG_T0_SEL);
             //phy.NI_USB3_WriteReg_M((UInt32)swmode, T0_SWMODE);
             phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_T0_SOFT_FREQ);
@@ -912,13 +917,16 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         }
 
         const int PacketSize = 38;
-        Queue<UInt32> InternalBuffer = new Queue<UInt32>();
-        int internalBufferSize = 1000000;
+        ConcurrentQueue<UInt32> InternalBuffer = new ConcurrentQueue<UInt32>();
+        int internalBufferSize = 50000000;
 
 
         public bool PushRawDataInBuffer(ref UInt32[] bufferA, UInt32 valid_wordA)
         {
-            if (InternalBuffer.Count + valid_wordA > internalBufferSize) return false;
+            if (InternalBuffer.Count + valid_wordA > internalBufferSize)
+            {
+                return false;
+            }
 
             for (int i = 0; i < valid_wordA; i++)
             {
@@ -928,6 +936,10 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             return true;
         }
 
+        public bool PeakFromQueue (out UInt32 q)
+        {
+            return InternalBuffer.TryDequeue(out q);
+        }
 
 
         public int DecodeCitirocRowEvents(ref Queue<t_DataCITIROC> pC, int ThresholdSoftware)
@@ -942,40 +954,60 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             t_DataCITIROC DataPETIROCA = null;
             t = 0;
             s = 0;
-            while (InternalBuffer.Count > PacketSize)
+            while (true)
             {
                 switch (s)
                 {
                     case 0:
-                        bword = InternalBuffer.Dequeue();
-                        if (((bword >> 4) & 0xc000000) == 0x8000000)
+                        if (InternalBuffer.Count > PacketSize)
                         {
-                            s = 1;
-                            DataPETIROCA = new t_DataCITIROC();
-                            DataPETIROCA.AsicID = (UInt16)(bword & 0xF);
-                            DataPETIROCA.EventTimecode = ((UInt64)InternalBuffer.Dequeue());
-                            DataPETIROCA.RunEventTimecode = (((UInt64)InternalBuffer.Dequeue())) + (((UInt64)InternalBuffer.Dequeue()) << 32);
-                            DataPETIROCA.EventCounter = ((UInt64)InternalBuffer.Dequeue());
+                            bool result = PeakFromQueue(out bword);
+                            if (((bword >> 4)) == 0x8000000)
+                            {
+                                s = 1;
+                                DataPETIROCA = new t_DataCITIROC();
+                                DataPETIROCA.AsicID = (UInt16)(bword & 0xF);
+                                PeakFromQueue(out bword);
+                                DataPETIROCA.EventTimecode = ((UInt64)bword);
+                                PeakFromQueue(out bword);
+                                DataPETIROCA.RunEventTimecode = bword;
+                                PeakFromQueue(out bword);
+                                DataPETIROCA.RunEventTimecode += (((UInt64)bword) << 32);
+                                PeakFromQueue(out bword);
+                                DataPETIROCA.EventCounter = ((UInt64)bword);
 
-                            DataPETIROCA.EventTimecode_ns = DataPETIROCA.EventTimecode * 6.25;
-                            DataPETIROCA.RunEventTimecode_ns = DataPETIROCA.RunEventTimecode * 6.25;
+                                DataPETIROCA.EventTimecode_ns = DataPETIROCA.EventTimecode * DAQ_TS;
+                                DataPETIROCA.RunEventTimecode_ns = DataPETIROCA.RunEventTimecode * 0.5;
 
-                            t = t + 5;
-                            minTime = 100000000000000;
+                                t = t + 5;
+                                minTime = 100000000000000;
+                            }
+                            else
+                                t++;
+                        } else
+                        {
+                            return DecodedPackets;
                         }
-                        else
-                            t++;
                         break;
 
                     case 1:
+                        string test="";
                         for (i = 0; i < 32; i++)
                         {
-                            bword = InternalBuffer.Dequeue();
+                            PeakFromQueue(out bword);
                             datarow[i * 3 + 0] = (bword >> 0) & 0x3FFF;
                             datarow[i * 3 + 1] = (bword >> 14) & 0x3FFF;
                             datarow[i * 3 + 2] = (bword >> 28) & 0x1;
                             t++;
+                           // test = datarow[i * 3 + 0].ToString("00000") + "\t";
                         }
+                        /*if (DataPETIROCA.AsicID == 0)
+                        {
+                            using (StreamWriter sw = File.AppendText("c:/temp/cd.txt"))
+                            {
+                                sw.WriteLine(test);
+                            }
+                        }*/
                         for (i = 0; i < 32; i++)
                         {
                             DataPETIROCA.hit[31-i] = (bool)((datarow[i * 3 + 2] & 0x1) == 1 ? true : false);
@@ -999,10 +1031,20 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                         break;
 
                     case 2:
-                        if ((InternalBuffer.Dequeue() & 0xc0000000) == 0xc0000000)
+                        PeakFromQueue(out bword);
+                        if ((bword & 0xc0000000) == 0xc0000000)
                         {
+
+                            /*using (StreamWriter sw = File.AppendText("c:/temp/ts.txt"))
+                            {
+                                sw.WriteLine(DataPETIROCA.RunEventTimecode_ns.ToString());
+                            }*/
+
                             pC.Enqueue(DataPETIROCA);
                             DecodedPackets++;
+                        } else
+                        {
+                            Console.WriteLine("Invalid");
                         }
                         t++;
                         s = 0;
@@ -1014,6 +1056,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
 
         public int GetRawBuffer(UInt32[] data, UInt32 event_count, UInt32 timeout, UInt32 PacketSize, ref UInt32 valid_word)
         {
+            
             int retcode = 0;
             UInt32 transfer_length = PacketSize * event_count;
             UInt32 read_word = 0;
@@ -1022,6 +1065,40 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             retcode = phy.NI_USB3_ReadData_M(data, (UInt32)transfer_length, SCI_REG_CitirocFrame0_FIFOADDRESS, PHY_LINK.USB_BUS_MODE.STREAMING, (UInt32)timeout, ref read_word, ref valid_data);
 
             valid_word = valid_data;
+
+            /*using (StreamWriter sw = File.AppendText("c:/temp/cd2.txt"))
+            {
+                /* int line_counter = 0;
+                 for (int i=0;i< valid_word; i++)
+                 {
+                     if (((data[i] >> 4) & 0xc000000) == 0x8000000)
+                     {
+                         line_counter = 0;
+                     }
+
+                     string message = "";
+                     if (line_counter==37)
+                     {
+                         if ((data[i] & 0xc0000000) != 0xc0000000)
+                         {
+                             message = "   <<<<<<< ERROR >>>>>>>>";
+                         }
+                     } else
+                     {
+
+                     }
+
+                         sw.WriteLine(line_counter.ToString().PadLeft(3) + "   " + data[i].ToString("X").PadLeft(8) + message);
+                     line_counter++;
+                 }
+
+                sw.WriteLine("-----------------");*/
+
+            /*    for (int i = 0; i < valid_word; i++)
+                {
+                    sw.WriteLine(data[i]);
+                }
+            }*/
             return retcode;
         }
 
@@ -1044,12 +1121,13 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                 switch (s)
                 {
                     case 0:
-                        bword = InternalBuffer.Dequeue();
+                        PeakFromQueue(out bword);
                         if (bword  == 0xFFFFFFFF)
                         {
                             s = 1;
                             DataPC = new t_DataCITIROCPC();
-                            DataPC.PacketID = ((UInt64)InternalBuffer.Dequeue());                            
+                            PeakFromQueue(out bword);
+                            DataPC.PacketID = ((UInt64)bword);                            
                             t = t + 2;
 
                         }
@@ -1060,7 +1138,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                     case 1:
                         for (i = 0; i < 128; i++)
                         {
-                            bword = InternalBuffer.Dequeue();
+                            PeakFromQueue(out bword);
                             DataPC.counters[i] = bword;
                             t++;
                         }
@@ -1070,11 +1148,16 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
                     case 2:
 
 
-                        DataPC.EventTimecode  = (((UInt64)InternalBuffer.Dequeue())) + (((UInt64)InternalBuffer.Dequeue()) << 32);
-                        DataPC.WindowsID = ((UInt64)InternalBuffer.Dequeue());
-                        DataPC.StartID = ((UInt64)InternalBuffer.Dequeue());
+                        PeakFromQueue(out bword);
+                        DataPC.EventTimecode = bword;
+                        PeakFromQueue(out bword);
+                        DataPC.EventTimecode = (((UInt64)bword) << 32);
+                        PeakFromQueue(out bword);
+                        DataPC.WindowsID = ((UInt64)bword);
+                        PeakFromQueue(out bword);
+                        DataPC.StartID = ((UInt64)bword);
 
-                        DataPC.EventTimecode_ns = ((double)DataPC.EventTimecode) * 6.25;
+                        DataPC.EventTimecode_ns = ((double)DataPC.EventTimecode) * DAQ_TS;
                         pC.Enqueue(DataPC);
                         DecodedPackets++;
 
@@ -1125,7 +1208,7 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
         {
             int period = 160000000 / PeriodicStart;
             phy.NI_USB3_WriteReg_M((UInt32)mode, SCI_REG_FR_MODE);
-            phy.NI_USB3_WriteReg_M((UInt32)(PeriodicWidth/6.25), SCI_REG_FR_IFP);
+            phy.NI_USB3_WriteReg_M((UInt32)(PeriodicWidth/DAQ_TS), SCI_REG_FR_IFP);
             phy.NI_USB3_WriteReg_M((UInt32)period, SCI_REG_FR_IFP2);
             phy.NI_USB3_WriteReg_M((UInt32)windows_count, SCI_REG_FR_LIMIT);
         }
@@ -1218,10 +1301,10 @@ const UInt32 SCI_REG_CitirocCfg1_REG_CFG0 = 0x100009;
             if (read_pos3 > transfer_length * 2)
                 return false;
 
-            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_0_CONFIG_DECIMATOR);
-            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_1_CONFIG_DECIMATOR);
-            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_2_CONFIG_DECIMATOR);
-            phy.NI_USB3_WriteReg_M(21, SCI_REG_Oscilloscope_3_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_0_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_1_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_2_CONFIG_DECIMATOR);
+            phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_3_CONFIG_DECIMATOR);
 
             phy.NI_USB3_WriteReg_M(0, SCI_REG_Oscilloscope_0_CONFIG_ARM);
             phy.NI_USB3_WriteReg_M(1, SCI_REG_Oscilloscope_0_CONFIG_ARM);

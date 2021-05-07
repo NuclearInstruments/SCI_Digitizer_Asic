@@ -59,6 +59,9 @@ Public Class Settings_Citiroc
         cfg.TriggerLatch = LatchTrigger.Checked
         cfg.HoldDelay = HoldDelay.Value
 
+        cfg.UseInternalAsicTriggerPath = InternalTriggerPath.Checked
+
+
 
         cfg.Rebin = speBin.Text
 
@@ -221,6 +224,8 @@ Public Class Settings_Citiroc
 
             TriggerMode.Text = cfg.TriggerMode
             LatchTrigger.Checked = cfg.TriggerLatch
+            InternalTriggerPath.Checked = cfg.UseInternalAsicTriggerPath
+
             HoldDelay.Value = cfg.HoldDelay
             LabelHoldNs.Text = Math.Round(HoldDelay.Value * 1000 / 160, 0) & " ns"
 
@@ -396,7 +401,9 @@ Public Class Settings_Citiroc
         TransferSize.Items.Add("100 Events")
         TransferSize.Items.Add("1000 Events")
         TransferSize.Items.Add("10000 Events")
-        TransferSize.SelectedIndex = 0
+        TransferSize.Items.Add("50000 Events")
+        TransferSize.Items.Add("100000 Events")
+        TransferSize.SelectedIndex = 2
 
         'T0Mode.Items.Add("FIRST PHOTON")
         'T0Mode.Items.Add("FIRST PHOTON ASIC 0")
@@ -518,7 +525,7 @@ Public Class Settings_Citiroc
                 pC.sc_scaOrPdHg = IIf(EnergyModeHG.Text = "Peak Sense", 0, 1)  ' peak detector on HG
                 pC.sc_scaOrPdLg = IIf(EnergyModeLG.Text = "Peak Sense", 0, 1)  ' peak detector on LG
                 pC.sc_bypassPd = 0 ' Bypass Peak Sensing
-                pC.sc_selTrigExtPd = TriggerExtMode 'Select peak sensing cell trigger [0 : internal trigger – 1 : external trigger] 
+                pC.sc_selTrigExtPd = IIf(InternalTriggerPath.Checked, 0, TriggerExtMode) ' TriggerExtMode 'Select peak sensing cell trigger [0 : internal trigger – 1 : external trigger] 
                 pC.sc_shapingTimeLg = ShapingTimeLG.SelectedIndex
                 pC.sc_shapingTimeHg = ShapingTimeHG.SelectedIndex
                 pC.sc_latchDiscri = IIf(LatchTrigger.Checked, 1, 0)  'Select latched (RS : 1) or direct output (trigger : 0) on charge discriminator
@@ -693,7 +700,22 @@ Public Class Settings_Citiroc
         MainForm.SumSpectrumGain = SumSpectrumGain.Value
 
         MainForm.Timer3.Enabled = True
-        MainForm.TransferSize = Math.Pow(10, TransferSize.SelectedIndex + 1)
+        Select Case TransferSize.SelectedIndex
+            Case 0
+                MainForm.TransferSize = 10
+            Case 1
+                MainForm.TransferSize = 100
+            Case 2
+                MainForm.TransferSize = 1000
+            Case 3
+                MainForm.TransferSize = 10000
+            Case 4
+                MainForm.TransferSize = 50000
+            Case 5
+                MainForm.TransferSize = 100000
+
+        End Select
+
 
         Select Case aProcessingMode.SelectedIndex
             Case 0
@@ -938,6 +960,10 @@ Public Class Settings_Citiroc
     End Sub
 
     Private Sub TabPage7_Click(sender As Object, e As EventArgs) Handles TabPage7.Click
+
+    End Sub
+
+    Private Sub LatchTrigger_CheckedChanged(sender As Object, e As EventArgs) Handles LatchTrigger.CheckedChanged
 
     End Sub
 End Class

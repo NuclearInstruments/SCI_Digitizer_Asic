@@ -44,6 +44,8 @@ Public Class ScanWindow
     Dim isRunning As Boolean = False
     Dim discard_next = 0
 
+
+
     Structure tPointRate
         Dim PointData As DateTime
         Dim PointIntegralTime As Double
@@ -258,6 +260,9 @@ Public Class ScanWindow
 
 
     Public Function UpdateCPS(arr() As UInt32)
+        If (isRunning = False) Then
+            Return False
+        End If
         ReDim TotalCps(arr.Length - 1)
 
         Dim sum As UInt64 = 0

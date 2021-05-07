@@ -1135,7 +1135,7 @@ namespace DT5550W_P_lib
 
         public bool SetDigitalOutputSignalLength(double ns)
         {
-            int clk_s = (int)(ns / 6.25);
+            int clk_s = (int)(ns / 8);
             int retval = 0;
             retval = phy.NI_USB3_WriteReg_M((UInt32)clk_s, DIGOUT_LEN);
             if (retval != 0)

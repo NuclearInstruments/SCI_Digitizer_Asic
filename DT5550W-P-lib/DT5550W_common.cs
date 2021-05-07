@@ -124,11 +124,17 @@ namespace DT5550W_P_lib
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_ConnectDevice(
                 String serial_number,
-                ref IntPtr handle);
+                IntPtr handle);
+
+
+        [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
+        unsafe private static extern int NI_USB3_AllocHandle(
+        ref IntPtr handle);
 
         public PHY_LINK()
         {
             Handle = new IntPtr();
+            NI_USB3_AllocHandle(ref Handle);
             NI_USB3_Init();
         }
 
@@ -139,7 +145,7 @@ namespace DT5550W_P_lib
                 UInt32 address,
                 USB_BUS_MODE bus_mode,
                 UInt32 timeout_ms,
-                ref IntPtr handle,
+                IntPtr handle,
                 ref IntPtr written_data);
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -149,7 +155,7 @@ namespace DT5550W_P_lib
                 UInt32 address,
                 USB_BUS_MODE bus_mode,
                 UInt32 timeout_ms,
-                ref IntPtr handle,
+                IntPtr handle,
                 ref IntPtr read_data,
                 ref IntPtr valid_data
                 );
@@ -158,21 +164,21 @@ namespace DT5550W_P_lib
         unsafe private static extern int NI_USB3_WriteReg(
                 UInt32 data,
                 UInt32 address,
-                ref IntPtr handle
+                IntPtr handle
                 );
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_ReadReg(
                 ref UInt32 data,
                 UInt32 address,
-                ref IntPtr handle
+                IntPtr handle
                 );
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_IIC_WriteData(
                 Byte address,
                 Byte[] value,
-                int len, ref IntPtr handle);
+                int len, IntPtr handle);
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_IIC_ReadData(
@@ -181,27 +187,27 @@ namespace DT5550W_P_lib
         int len,
         Byte[] value_read,
         int len_read,
-        ref IntPtr handle);
+        IntPtr handle);
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_SetIICControllerBaseAddress(
             UInt32 ControlAddress,
             UInt32 StatusAddress,
-            ref IntPtr handle);
+            IntPtr handle);
 
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_SetHV(
                    bool Enable,
                    float voltage,
-                   ref IntPtr handle);
+                   IntPtr handle);
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_GetHV(
             ref bool Enable,
             ref float voltage,
             ref float current,
-            ref IntPtr handle);
+            IntPtr handle);
 
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -209,14 +215,14 @@ namespace DT5550W_P_lib
             StringBuilder model,
             ref int asic_count,
             ref int SN,
-            ref IntPtr handle);
+            IntPtr handle);
 
 
         [DllImport("niusb3_core.dll", CallingConvention = CallingConvention.Cdecl)]
         unsafe private static extern int NI_USB3_GetDT5550WTempSens(
             int address,
             ref float temperature,
-            ref IntPtr handle);
+            IntPtr handle);
 
 
 
@@ -239,7 +245,7 @@ namespace DT5550W_P_lib
                address,
                bus_mode,
                timeout_ms,
-               ref Handle,
+               Handle,
                ref written_data_ptr);
 
             written_data = (UInt32)written_data_ptr.ToInt32();
@@ -266,7 +272,7 @@ namespace DT5550W_P_lib
                     address,
                     bus_mode,
                     timeout_ms,
-                    ref Handle,
+                    Handle,
                     ref read_data_ptr,
                     ref valid_data_ptr
                     );
@@ -281,7 +287,7 @@ namespace DT5550W_P_lib
                 UInt32 address)
         {
             mut.WaitOne();
-            int res = NI_USB3_WriteReg(data, address, ref Handle);
+            int res = NI_USB3_WriteReg(data, address, Handle);
             mut.ReleaseMutex();
             return res;
         }
@@ -290,7 +296,7 @@ namespace DT5550W_P_lib
           UInt32 address)
         {
             mut.WaitOne();
-            int res = NI_USB3_ReadReg(ref data, address, ref Handle);
+            int res = NI_USB3_ReadReg(ref data, address, Handle);
 
             mut.ReleaseMutex();
             return res;
@@ -305,7 +311,7 @@ namespace DT5550W_P_lib
             if (NI_USB3_IIC_WriteData(
                 address,
                 value,
-                len, ref Handle) != 0)
+                len, Handle) != 0)
             {
                 mut.ReleaseMutex();
                 return -1;
@@ -374,9 +380,25 @@ namespace DT5550W_P_lib
 
         public int NI_USB3_ConnectDevice_M(String serial_number)
         {
-            return NI_USB3_ConnectDevice(
+            
+            int ret =  NI_USB3_ConnectDevice(
                   serial_number,
-                  ref Handle);
+                   Handle);
+            uint data = 0;
+            /*
+            NI_USB3_WriteReg_M(30 * 10000, 0xFFFF0002);
+            NI_USB3_WriteReg_M(0, 0xFFFF0000);
+
+            while(true)
+            {
+                NI_USB3_ReadReg_M(ref data, 0xFFFF0010);
+                Console.WriteLine("Status: " + data.ToString());
+                NI_USB3_ReadReg_M(ref data, 0xFFFF0011);
+                Console.WriteLine("voltage: " + (((double)data)/10000).ToString());
+            }*/
+
+
+            return ret;
         }
 
         public int NI_USB3_SetIICControllerBaseAddress_M(UInt32 ControlAddress,
@@ -385,7 +407,7 @@ namespace DT5550W_P_lib
             return NI_USB3_SetIICControllerBaseAddress(
             ControlAddress,
             StatusAddress,
-            ref Handle);
+            Handle);
         }
 
         public int NI_USB3_SetHV_M(
@@ -397,7 +419,7 @@ namespace DT5550W_P_lib
             res = NI_USB3_SetHV(
                                Enable,
                                voltage,
-                               ref Handle);
+                               Handle);
             mut.ReleaseMutex();
             return res;
         }
@@ -414,7 +436,7 @@ namespace DT5550W_P_lib
                 ref Enable,
                 ref voltage,
                 ref current,
-                ref Handle);
+                Handle);
 
             mut.ReleaseMutex();
             return res;
@@ -429,7 +451,7 @@ namespace DT5550W_P_lib
             int res = NI_USB3_GetDT5550WTempSens(
                 address,
                 ref temperature,
-                ref Handle);
+                Handle);
             mut.ReleaseMutex();
             return res;
         }
@@ -444,7 +466,7 @@ namespace DT5550W_P_lib
                  model,
                 ref asic_count,
                 ref SN,
-                ref Handle);
+                Handle);
 
             mut.ReleaseMutex();
             return res;

@@ -68,6 +68,8 @@
     Public MonitorMuxDigital As String
     Public ChannelDigital As Integer
     Public HoldDelay As Integer
+    Public UseInternalAsicTriggerPath As Boolean
+
 
     Public sA() As SingleAsicCFG
 

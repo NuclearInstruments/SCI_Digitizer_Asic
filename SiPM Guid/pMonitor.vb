@@ -278,7 +278,7 @@ Public Class pMonitor
 
 
         Dim tmpXData(1024 * 8) As Single
-        Dim timeScaleFactor = 1 / 160000000 * 21
+        Dim timeScaleFactor = 1 / 125000000 * 2
         For i = 0 To 1023
 
             tmpXData(i) = i * timeScaleFactor
@@ -586,5 +586,9 @@ Public Class pMonitor
         End If
 
         Pesgo1.Refresh()
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
     End Sub
 End Class

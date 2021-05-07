@@ -256,19 +256,19 @@
         FileSize.Text = BytesToMegabytes(MainForm.sByteCounter) & " MB"
         DwnProcess.Text = MainForm.sAcqTime & "/" & MainForm.sProcTime
 
-        If RunStatus.Text.Contains("RUNNING") Then
+        'If RunStatus.Text.Contains("RUNNING") Then
 
-            If MainForm.DisableTempReadingAcq Then
-                HVVolt.Visible = False
-                HVCurrent.Visible = False
-                SiPMT.Visible = False
-            End If
-        Else
-                HVVolt.Visible = True
-            HVCurrent.Visible = True
-            SiPMT.Visible = True
-
-        End If
+        'If MainForm.DisableTempReadingAcq Then
+        'HVVolt.Visible = False
+        'HVCurrent.Visible = False
+        'SiPMT.Visible = False
+        'End If
+        'Else
+        'HVVolt.Visible = True
+        'HVCurrent.Visible = True
+        'SiPMT.Visible = True
+        '
+        'End If
 
     End Sub
 
