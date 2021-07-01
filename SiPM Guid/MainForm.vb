@@ -320,6 +320,7 @@ Public Class MainForm
 
         '    AppendToLog(LogMode.mINFO, "Creating panel Time Distribution")
 
+
         'End If
 
         Dim content1f As DockContent = GetDockContentForm("Hit per channel", DockState.Document, Color.White)
