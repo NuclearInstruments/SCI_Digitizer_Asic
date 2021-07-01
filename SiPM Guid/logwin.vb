@@ -250,7 +250,7 @@
 
         RunTime.Text = MainForm.sTime
         RunStatus.Text = MainForm.sStatus
-        RunProgress.Value = MainForm.sTargetPercent
+        RunProgress.Value = IIf(MainForm.sTargetPercent > 100, 100, MainForm.sTargetPercent)
         Events.Text = MainForm.sEventCounter
         Clusters.Text = MainForm.sClusterCounter
         FileSize.Text = BytesToMegabytes(MainForm.sByteCounter) & " MB"

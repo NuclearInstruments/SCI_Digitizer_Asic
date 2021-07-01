@@ -1212,11 +1212,18 @@ namespace DT5550W_P_lib
         }
         public uint gray_to_bin(uint num, int nbit)
         {
-            uint temp = num ^ (num >> 8);
+            /*uint temp = num ^ (num >> 8);
             temp ^= (temp >> 4);
             temp ^= (temp >> 2);
             temp ^= (temp >> 1);
-            return temp;
+            return temp;*/
+            
+            uint i = 1 << 8 * 32 - 2; //long is 64-bit
+            uint p, b = p = num & i;
+
+            while ((i >>= 1) > 0)
+                b |= p = num & i ^ p >> 1;
+            return b;
         }
 
         public int DecodePetirocRowEvents(ref UInt32[] bufferA, UInt32 valid_wordA, ref Queue<t_DataPETIROC> pC, int ThresholdSoftware, int Polarity)

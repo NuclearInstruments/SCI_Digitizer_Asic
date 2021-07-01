@@ -307,18 +307,20 @@ Public Class MainForm
         End If
 
 
-        If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
-            Dim content1e As DockContent = GetDockContentForm("Time Distribution", DockState.Document, Color.White)
-            content1e.Show(dockPanel)
-            content1e.CloseButtonVisible = False
+        'If GBL_ASIC_MODEL = t_AsicModels.PETIROC Then
+        '    Dim content1e As DockContent = GetDockContentForm("Time Distribution", DockState.Document, Color.White)
+        '    content1e.Show(dockPanel)
+        '    content1e.CloseButtonVisible = False
 
-            content1e.Controls.Add(pRT5)
-            pRT5.Dock = DockStyle.Fill
-            list_dockPanel.Add(content1e)
-            pRT5.Pesgo1.PeString.MainTitle = "Time distribution"
-            AppendToLog(LogMode.mINFO, "Creating panel Time Distribution")
+        '    content1e.Controls.Add(pRT5)
+        '    pRT5.Dock = DockStyle.Fill
+        '    list_dockPanel.Add(content1e)
+        '    pRT5.Pesgo1.PeString.MainTitle = "Time distribution"
 
-        End If
+
+        '    AppendToLog(LogMode.mINFO, "Creating panel Time Distribution")
+
+        'End If
 
         Dim content1f As DockContent = GetDockContentForm("Hit per channel", DockState.Document, Color.White)
         content1f.Show(dockPanel)
@@ -1987,9 +1989,9 @@ Public Class MainForm
                         For i = 0 To BI.channelsPerAsic - 1
                             strline &= $"FINE_{i};"
                         Next
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"RELATIVETIME_{i};"
-                        Next
+                        'For i = 0 To BI.channelsPerAsic - 1
+                        'strline &= $"RELATIVETIME_{i};"
+                        'Next
                         strline = strline.Remove(strline.Length - 1)
 
 
@@ -2036,9 +2038,9 @@ Public Class MainForm
                             For i = 0 To BI.channelsPerAsic - 1
                                 strline &= $"FINE_{asi}_{i};"
                             Next
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"RELATIVETIME_{asi}_{i};"
-                            Next
+                            'For i = 0 To BI.channelsPerAsic - 1
+                            'strline &= $"RELATIVETIME_{asi}_{i};"
+                            'Next
                         Next
 
                         strline = strline.Remove(strline.Length - 1)
@@ -2169,7 +2171,8 @@ Public Class MainForm
                             For i = 0 To e.hit.Count - 1
                                 hitNumber(i) = IIf(e.hit(i), 1, 0)
                             Next
-                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                            'strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime)
                             tx.WriteLine(strline)
                             sByteCounter += strline.Length
                         End If
@@ -2297,7 +2300,8 @@ Public Class MainForm
                                         For i = 0 To e.hit.Count - 1
                                             hitNumber(i) = IIf(e.hit(i), 1, 0)
                                         Next
-                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                                        'strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime) & ";" & String.Join(";", e.relative_time)
+                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.charge) & ";" & String.Join(";", e.CoarseTime) & ";" & String.Join(";", e.FineTime)
                                     End If
                                 End If
                             Next
