@@ -13,7 +13,7 @@ namespace DT5550W_P_lib
         POSITIVE = 0,
         NEGATIVE = 1
     }
-    public enum TriggerMode { TIME_TRIG, CHARGE_TRIG, EXT_TRIG, GBL_TRIG_TIME, GBL_TRIG_CHARGE, SELF_TRIG };
+    public enum TriggerMode { TIME_TRIG, CHARGE_TRIG, EXT_TRIG, GBL_TRIG_TIME, GBL_TRIG_CHARGE, SELF_TRIG, TWO_COINC_TIME, GBL_TWO_COINC_TIME };
 
     public enum T0Mode { SOFTWARE_STARTRUN = 0, SOFTWARE_PERIODIC = 1, EXTERNAL = 2 };
     public enum PCMode { PERIODIC_WIN = 0, EXTERNAL_WIN = 1, PERIODIC_WIN_EXT_START =2, PERIODIC_WIN_INT_START =3};
@@ -43,6 +43,9 @@ namespace DT5550W_P_lib
         public UInt64 RunEventTimecode;
         public UInt64 EventCounter;
         public UInt16 AsicID;
+        public UInt32 TriggerID;
+        public UInt32 ValidationID;
+        public UInt32 Flags;
 
         public double EventTimecode_ns;
         public double RunEventTimecode_ns;

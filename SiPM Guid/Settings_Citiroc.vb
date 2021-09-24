@@ -446,6 +446,8 @@ Public Class Settings_Citiroc
         TriggerMode.Items.Add("Common (Time)")
         TriggerMode.Items.Add("Common (Charge)")
         TriggerMode.Items.Add("Self Trigger")
+        TriggerMode.Items.Add("2 Coinc (Time)")
+        TriggerMode.Items.Add("Global 2 Coinc(Time)")
         TriggerMode.SelectedIndex = 0
 
         speBin.Items.Add("256")
@@ -494,6 +496,11 @@ Public Class Settings_Citiroc
                 TriggerExtMode = 1
             Case "Self Trigger"
                 TriggerExtMode = 1
+            Case "2 Coinc (Time)"
+                TriggerExtMode = 1
+            Case "Global 2 Coinc(Time)"
+                TriggerExtMode = 1
+
         End Select
 
 
@@ -653,7 +660,13 @@ Public Class Settings_Citiroc
                     MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.GBL_TRIG_CHARGE)
                 Case "Self Trigger"
                     MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.SELF_TRIG)
+                Case "2 Coinc (Time)"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.TWO_COINC_TIME)
+                Case "Global 2 Coinc(Time)"
+                    MainForm.DTList(i).CITIROC_SetTriggerMode(DT5550W_P_lib.TriggerMode.GBL_TWO_COINC_TIME)
+
             End Select
+
 
             Select Case T0Mode.Text
                 Case "EXTERNAL - LEMO 1"
@@ -676,6 +689,7 @@ Public Class Settings_Citiroc
                     MainForm.DTList(i).ConfigurePC(DT5550W_P_lib.PCMode.PERIODIC_WIN_INT_START, pc_WW.Value, pc_IF.Value, pc_WC.Value)
             End Select
 
+            MainForm.DTList(i).CITIROC_EnableValidation(bValidateEnable.Checked, bValidateDiscard.Checked, bValidateFake.Checked, bValidateWin.Value)
         Next
 
 

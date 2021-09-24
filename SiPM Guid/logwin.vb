@@ -8,11 +8,16 @@
     Dim FileSize As New Label
     Dim AvailableSize As New Label
     Dim DwnProcess As New Label
-
-
     Dim SiPMT As New Label
     Dim HVVolt As New Label
     Dim HVCurrent As New Label
+
+    Dim CUR_Trigger As New Label
+    Dim CUR_Validation As New Label
+    Dim CNTR_Validated As New Label
+    Dim CNTR_Fake As New Label
+    Dim CNTR_NotValidated As New Label
+
 
     Private Declare Function GetDiskFreeSpaceEx _
     Lib "kernel32" _
@@ -62,13 +67,17 @@
         tb2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 15))
         tb2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33))
 
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
         tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
         tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
         tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
-        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 25))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Absolute, 5))
+        tb2.RowStyles.Add(New RowStyle(SizeType.Percent, 16))
 
         Dim l0 As New Label
         Dim l1 As New Label
@@ -82,6 +91,14 @@
         Dim l9 As New Label
         Dim l10 As New Label
         Dim l11 As New Label
+        Dim l12 As New Label
+        Dim l13 As New Label
+        Dim l14 As New Label
+        Dim l15 As New Label
+        Dim l16 As New Label
+
+
+
 
         l0.Text = "Run ID"
         l0.TextAlign = ContentAlignment.MiddleCenter
@@ -233,7 +250,66 @@
         tb2.Controls.Add(HVCurrent, 5, 6)
 
 
+        l12.Text = "Trigger ID"
+        l12.TextAlign = ContentAlignment.MiddleCenter
+        l12.Dock = DockStyle.Fill
+        tb2.Controls.Add(l12, 0, 8)
+        tb2.Dock = DockStyle.Fill
+        CUR_Trigger.Text = ""
+        CUR_Trigger.BackColor = Color.Pink
+        CUR_Trigger.ForeColor = Color.Black
+        CUR_Trigger.TextAlign = ContentAlignment.MiddleCenter
+        CUR_Trigger.Dock = DockStyle.Fill
+        tb2.Controls.Add(CUR_Trigger, 1, 8)
 
+        l13.Text = "Validation ID"
+        l13.TextAlign = ContentAlignment.MiddleCenter
+        l13.Dock = DockStyle.Fill
+        tb2.Controls.Add(l13, 2, 8)
+        tb2.Dock = DockStyle.Fill
+        CUR_Validation.Text = ""
+        CUR_Validation.BackColor = Color.Pink
+        CUR_Validation.ForeColor = Color.Black
+        CUR_Validation.TextAlign = ContentAlignment.MiddleCenter
+        CUR_Validation.Dock = DockStyle.Fill
+        tb2.Controls.Add(CUR_Validation, 3, 8)
+
+
+        l13.Text = "Validated"
+        l13.TextAlign = ContentAlignment.MiddleCenter
+        l13.Dock = DockStyle.Fill
+        tb2.Controls.Add(l13, 0, 10)
+        tb2.Dock = DockStyle.Fill
+        CNTR_Validated.Text = ""
+        CNTR_Validated.BackColor = Color.Beige
+        CNTR_Validated.ForeColor = Color.Black
+        CNTR_Validated.TextAlign = ContentAlignment.MiddleCenter
+        CNTR_Validated.Dock = DockStyle.Fill
+        tb2.Controls.Add(CNTR_Validated, 1, 10)
+
+        l14.Text = "Fake"
+        l14.TextAlign = ContentAlignment.MiddleCenter
+        l14.Dock = DockStyle.Fill
+        tb2.Controls.Add(l14, 2, 10)
+        tb2.Dock = DockStyle.Fill
+        CNTR_Fake.Text = ""
+        CNTR_Fake.BackColor = Color.Beige
+        CNTR_Fake.ForeColor = Color.Black
+        CNTR_Fake.TextAlign = ContentAlignment.MiddleCenter
+        CNTR_Fake.Dock = DockStyle.Fill
+        tb2.Controls.Add(CNTR_Fake, 3, 10)
+
+        l15.Text = "Not Validated"
+        l15.TextAlign = ContentAlignment.MiddleCenter
+        l15.Dock = DockStyle.Fill
+        tb2.Controls.Add(l15, 4, 10)
+        tb2.Dock = DockStyle.Fill
+        CNTR_NotValidated.Text = ""
+        CNTR_NotValidated.BackColor = Color.Beige
+        CNTR_NotValidated.ForeColor = Color.Black
+        CNTR_NotValidated.TextAlign = ContentAlignment.MiddleCenter
+        CNTR_NotValidated.Dock = DockStyle.Fill
+        tb2.Controls.Add(CNTR_NotValidated, 5, 10)
 
         tb2.Dock = DockStyle.Fill
         TableLayoutPanel1.Controls.Add(tb2, 1, 0)
@@ -255,6 +331,14 @@
         Clusters.Text = MainForm.sClusterCounter
         FileSize.Text = BytesToMegabytes(MainForm.sByteCounter) & " MB"
         DwnProcess.Text = MainForm.sAcqTime & "/" & MainForm.sProcTime
+        CUR_Trigger.Text = MainForm.sTriggerId
+        CUR_Validation.Text = MainForm.sValidationId
+        CNTR_Fake.Text = MainForm.sCntrNotFake
+        CNTR_NotValidated.Text = MainForm.sCntrNotValidated
+        CNTR_Validated.Text = MainForm.sCntrValidated
+
+        'TextBox1.AppendText("Validated: " & MainForm.sCntrValidated + " Not Validated: " & MainForm.sCntrNotValidated)
+        '  Vali.Text = MainForm.sCntrValidated
 
         'If RunStatus.Text.Contains("RUNNING") Then
 

@@ -85,6 +85,12 @@ Public Class MainForm
     Public RUN_TARGET_MODE As TargetMode
     Public RUN_TARGET_VALUE As Double
 
+    Public sTriggerId As Long
+    Public sValidationId As Long
+    Public sCntrValidated As Long
+    Public sCntrNotValidated As Long
+    Public sCntrNotFake As Long
+
     Public sEventCounter As Long
     Public sClusterCounter As Long
     Public sTarget As Double
@@ -1322,6 +1328,12 @@ Public Class MainForm
         Dim tx As StreamWriter = Nothing
         Dim bwriter As BinaryWriter = Nothing
 
+        sTriggerId = 0
+        sValidationId = 0
+        sCntrValidated = 0
+        sCntrNotValidated = 0
+        sCntrNotFake = 0
+
         AppendToLog(LogMode.mACQUISITION, "Starting acquisition", BI.SerialNumber)
         If EnableSaveFile = True Then
             AppendToLog(LogMode.mACQUISITION, "List mode save file is enabled", BI.SerialNumber)
@@ -1376,7 +1388,7 @@ Public Class MainForm
 
 
                     Case t_AsicModels.CITIROC
-                        strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;"
+                        strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;Trigger_ID;Validation_ID;Flags;"
                         For i = 0 To BI.channelsPerAsic - 1
                             strline &= $"HIT_{i};"
                         Next
@@ -1429,7 +1441,7 @@ Public Class MainForm
                         strline = "ID_CLUSTER;CLUSTER_RUN_Timecode_ns;CLUSTER_Timecode_ns;NEventsInCluster;"
 
                         For asi = 0 To BI.totalAsics - 1
-                            strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};"
+                            strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};Trigger_ID_{asi};Validation_ID_{asi};Flags_{asi};"
                             For i = 0 To BI.channelsPerAsic - 1
                                 strline &= $"HIT_{asi}_{i};"
                             Next
@@ -1547,10 +1559,28 @@ Public Class MainForm
                 watch.Stop()
 
 
+
+
+
                 If CurrentProcessMode = ProcessMode.EVENT_DECODE Then
 
                     While (DataDecodedCitiroc.Count > 0)
                         Dim e = DataDecodedCitiroc.Dequeue()
+
+
+                        sTriggerId = IIf(e.TriggerID > sTriggerId, e.TriggerID, sTriggerId)
+                        sValidationId = IIf(e.ValidationID > sValidationId, e.ValidationID, sValidationId)
+                        If e.Flags = 0 Or e.Flags = 1 Then
+                            sCntrValidated += 1
+                        End If
+                        If e.Flags = 2 Then
+                            sCntrNotValidated += 1
+                        End If
+                        If e.Flags = 3 Then
+                            sCntrNotFake += 1
+                        End If
+
+
                         TotalEvents += 1
 
 
@@ -1570,7 +1600,7 @@ Public Class MainForm
                             For i = 0 To e.hit.Count - 1
                                 hitNumber(i) = IIf(e.hit(i), 1, 0)
                             Next
-                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
+                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & e.TriggerID & ";" & e.ValidationID & ";" & e.Flags & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
                             tx.WriteLine(strline)
                             sByteCounter += strline.Length
                         End If
@@ -1697,6 +1727,18 @@ Public Class MainForm
                             newCluster.timecode_ns = newCluster.timecode * BI.FPGATimecode_ns
                             newCluster.Runtimecode_ns = newCluster.Runtimecode * BI.FPGATimecode_ns
                             For Each e In newCluster.Events
+                                sTriggerId = IIf(e.TriggerID > sTriggerId, e.TriggerID, sTriggerId)
+                                sValidationId = IIf(e.ValidationID > sValidationId, e.ValidationID, sValidationId)
+
+                                If e.Flags = 0 Or e.Flags = 1 Then
+                                    sCntrValidated += 1
+                                End If
+                                If e.Flags = 2 Then
+                                    sCntrNotValidated += 1
+                                End If
+                                If e.Flags = 3 Then
+                                    sCntrNotFake += 1
+                                End If
 
                                 For j = 0 To BI.channelsPerAsic - 1
                                     Dim vtemp As Double = (CType(e.chargeLG(j), Double) + CorrPoints(e.AsicID, j).Offset) * CorrPoints(e.AsicID, j).Gain
@@ -1719,7 +1761,7 @@ Public Class MainForm
                                         For i = 0 To e.hit.Count - 1
                                             hitNumber(i) = IIf(e.hit(i), 1, 0)
                                         Next
-                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
+                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & e.TriggerID & ";" & e.ValidationID & ";" & e.Flags & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
                                     End If
                                 End If
                             Next

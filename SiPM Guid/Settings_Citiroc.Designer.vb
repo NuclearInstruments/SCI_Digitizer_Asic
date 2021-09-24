@@ -46,6 +46,7 @@ Partial Class Settings_Citiroc
         Me.ScaBias = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.InternalTriggerPath = New System.Windows.Forms.CheckBox()
         Me.LabelHoldNs = New System.Windows.Forms.Label()
         Me.HoldDelay = New System.Windows.Forms.NumericUpDown()
         Me.Label31 = New System.Windows.Forms.Label()
@@ -128,7 +129,12 @@ Partial Class Settings_Citiroc
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.InternalTriggerPath = New System.Windows.Forms.CheckBox()
+        Me.bValidateEnable = New System.Windows.Forms.CheckBox()
+        Me.bValidateDiscard = New System.Windows.Forms.CheckBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.bValidateFake = New System.Windows.Forms.CheckBox()
+        Me.bValidateWin = New System.Windows.Forms.NumericUpDown()
+        Me.Label40 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -161,6 +167,8 @@ Partial Class Settings_Citiroc
         CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.TabControl1.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        CType(Me.bValidateWin, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -258,7 +266,7 @@ Partial Class Settings_Citiroc
         Me.TabPage3.Controls.Add(Me.Label1)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage3.Size = New System.Drawing.Size(803, 248)
         Me.TabPage3.TabIndex = 0
         Me.TabPage3.Text = "Asic General"
@@ -429,11 +437,21 @@ Partial Class Settings_Citiroc
         Me.TabPage4.Controls.Add(Me.Label19)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage4.Size = New System.Drawing.Size(803, 248)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Trigger"
         Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'InternalTriggerPath
+        '
+        Me.InternalTriggerPath.AutoSize = True
+        Me.InternalTriggerPath.Location = New System.Drawing.Point(422, 22)
+        Me.InternalTriggerPath.Name = "InternalTriggerPath"
+        Me.InternalTriggerPath.Size = New System.Drawing.Size(169, 17)
+        Me.InternalTriggerPath.TabIndex = 84
+        Me.InternalTriggerPath.Text = "Use Direct internal trigger path"
+        Me.InternalTriggerPath.UseVisualStyleBackColor = True
         '
         'LabelHoldNs
         '
@@ -651,8 +669,8 @@ Partial Class Settings_Citiroc
         Me.TabPage5.Controls.Add(Me.Label9)
         Me.TabPage5.Location = New System.Drawing.Point(4, 22)
         Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
-        Me.TabPage5.Size = New System.Drawing.Size(804, 252)
+        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage5.Size = New System.Drawing.Size(803, 248)
         Me.TabPage5.TabIndex = 2
         Me.TabPage5.Text = "Timestamp"
         Me.TabPage5.UseVisualStyleBackColor = True
@@ -708,7 +726,7 @@ Partial Class Settings_Citiroc
         Me.TabPage6.Controls.Add(Me.HVon)
         Me.TabPage6.Location = New System.Drawing.Point(4, 22)
         Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage6.Size = New System.Drawing.Size(803, 248)
         Me.TabPage6.TabIndex = 3
         Me.TabPage6.Text = "HV"
@@ -825,6 +843,7 @@ Partial Class Settings_Citiroc
         '
         'TabPage7
         '
+        Me.TabPage7.Controls.Add(Me.GroupBox3)
         Me.TabPage7.Controls.Add(Me.ImgPath)
         Me.TabPage7.Controls.Add(Me.Label39)
         Me.TabPage7.Controls.Add(Me.speBin)
@@ -843,7 +862,7 @@ Partial Class Settings_Citiroc
         Me.TabPage7.Controls.Add(Me.Label13)
         Me.TabPage7.Location = New System.Drawing.Point(4, 22)
         Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage7.Size = New System.Drawing.Size(803, 248)
         Me.TabPage7.TabIndex = 4
         Me.TabPage7.Text = "Data Processing"
@@ -1005,8 +1024,8 @@ Partial Class Settings_Citiroc
         Me.TabPage8.Controls.Add(Me.Label11)
         Me.TabPage8.Location = New System.Drawing.Point(4, 22)
         Me.TabPage8.Name = "TabPage8"
-        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
-        Me.TabPage8.Size = New System.Drawing.Size(804, 252)
+        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage8.Size = New System.Drawing.Size(803, 248)
         Me.TabPage8.TabIndex = 5
         Me.TabPage8.Text = "Monitor"
         Me.TabPage8.UseVisualStyleBackColor = True
@@ -1100,8 +1119,8 @@ Partial Class Settings_Citiroc
         Me.TabPage9.Controls.Add(Me.Label33)
         Me.TabPage9.Location = New System.Drawing.Point(4, 22)
         Me.TabPage9.Name = "TabPage9"
-        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
-        Me.TabPage9.Size = New System.Drawing.Size(804, 252)
+        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage9.Size = New System.Drawing.Size(803, 248)
         Me.TabPage9.TabIndex = 6
         Me.TabPage9.Text = "Photon Counting"
         Me.TabPage9.UseVisualStyleBackColor = True
@@ -1238,7 +1257,7 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage1.Size = New System.Drawing.Size(809, 320)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
@@ -1248,21 +1267,76 @@ Partial Class Settings_Citiroc
         '
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage2.Size = New System.Drawing.Size(809, 320)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'InternalTriggerPath
+        'bValidateEnable
         '
-        Me.InternalTriggerPath.AutoSize = True
-        Me.InternalTriggerPath.Location = New System.Drawing.Point(422, 22)
-        Me.InternalTriggerPath.Name = "InternalTriggerPath"
-        Me.InternalTriggerPath.Size = New System.Drawing.Size(169, 17)
-        Me.InternalTriggerPath.TabIndex = 84
-        Me.InternalTriggerPath.Text = "Use Direct internal trigger path"
-        Me.InternalTriggerPath.UseVisualStyleBackColor = True
+        Me.bValidateEnable.AutoSize = True
+        Me.bValidateEnable.Location = New System.Drawing.Point(6, 20)
+        Me.bValidateEnable.Name = "bValidateEnable"
+        Me.bValidateEnable.Size = New System.Drawing.Size(59, 17)
+        Me.bValidateEnable.TabIndex = 77
+        Me.bValidateEnable.Text = "Enable"
+        Me.bValidateEnable.UseVisualStyleBackColor = True
+        '
+        'bValidateDiscard
+        '
+        Me.bValidateDiscard.AutoSize = True
+        Me.bValidateDiscard.Location = New System.Drawing.Point(6, 43)
+        Me.bValidateDiscard.Name = "bValidateDiscard"
+        Me.bValidateDiscard.Size = New System.Drawing.Size(159, 17)
+        Me.bValidateDiscard.TabIndex = 78
+        Me.bValidateDiscard.Text = "Discard non validated event"
+        Me.bValidateDiscard.UseVisualStyleBackColor = True
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.Label40)
+        Me.GroupBox3.Controls.Add(Me.bValidateWin)
+        Me.GroupBox3.Controls.Add(Me.bValidateFake)
+        Me.GroupBox3.Controls.Add(Me.bValidateDiscard)
+        Me.GroupBox3.Controls.Add(Me.bValidateEnable)
+        Me.GroupBox3.Location = New System.Drawing.Point(542, 57)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(240, 125)
+        Me.GroupBox3.TabIndex = 79
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Validation (LEMO 5)"
+        '
+        'bValidateFake
+        '
+        Me.bValidateFake.AutoSize = True
+        Me.bValidateFake.Location = New System.Drawing.Point(6, 66)
+        Me.bValidateFake.Name = "bValidateFake"
+        Me.bValidateFake.Size = New System.Drawing.Size(212, 17)
+        Me.bValidateFake.TabIndex = 79
+        Me.bValidateFake.Text = "Fake event on validation without trigger"
+        Me.bValidateFake.UseVisualStyleBackColor = True
+        '
+        'bValidateWin
+        '
+        Me.bValidateWin.DecimalPlaces = 2
+        Me.bValidateWin.Increment = New Decimal(New Integer() {825, 0, 0, 131072})
+        Me.bValidateWin.Location = New System.Drawing.Point(137, 94)
+        Me.bValidateWin.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.bValidateWin.Minimum = New Decimal(New Integer() {825, 0, 0, 131072})
+        Me.bValidateWin.Name = "bValidateWin"
+        Me.bValidateWin.Size = New System.Drawing.Size(89, 20)
+        Me.bValidateWin.TabIndex = 80
+        Me.bValidateWin.Value = New Decimal(New Integer() {300, 0, 0, 0})
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Location = New System.Drawing.Point(6, 96)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(115, 13)
+        Me.Label40.TabIndex = 81
+        Me.Label40.Text = "Validation Window (ns)"
         '
         'Settings_Citiroc
         '
@@ -1307,6 +1381,9 @@ Partial Class Settings_Citiroc
         CType(Me.pc_WW, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        CType(Me.bValidateWin, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1418,4 +1495,10 @@ Partial Class Settings_Citiroc
     Friend WithEvents ImgPath As ComboBox
     Friend WithEvents Label39 As Label
     Friend WithEvents InternalTriggerPath As CheckBox
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents Label40 As Label
+    Friend WithEvents bValidateWin As NumericUpDown
+    Friend WithEvents bValidateFake As CheckBox
+    Friend WithEvents bValidateDiscard As CheckBox
+    Friend WithEvents bValidateEnable As CheckBox
 End Class
