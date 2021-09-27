@@ -41,6 +41,10 @@ Public Class MainForm
 
     Public SumSpectrumGain As Double = 25
 
+    Public FileSeparator As String = ";"
+    Public FileFixedSizeB As Boolean = False
+    Public FileFixedSizeI As Integer = 20
+
 
     Public Structure CorrPoint
         Public Offset
@@ -1295,6 +1299,35 @@ Public Class MainForm
 
     End Sub
 
+    Public Function FST(text As String, Optional last As Boolean = False) As String
+        Dim fx = text
+        If FileFixedSizeB Then
+            fx = text.PadLeft(FileFixedSizeI)
+        End If
+        If last = False Then
+            fx = fx & FileSeparator
+        End If
+        Return fx
+    End Function
+
+    Public Function FSTaU16(arr As UShort(), Optional last As Boolean = False) As String
+        Dim fx As String = ""
+        If FileFixedSizeB Then
+            For Each a In arr
+                fx &= a.ToString().PadLeft(FileFixedSizeI) & FileSeparator
+            Next
+            fx.Remove(fx.Length - 1)
+        Else
+            fx = String.Join(FileSeparator, arr)
+        End If
+
+        If last = False Then
+            fx = fx & FileSeparator
+        End If
+
+        Return fx
+    End Function
+
 
     Public Sub AcquisitionThreadCitiroc(board As DT5550W_HAL, TransferSize As Integer, BoardArrayOffset As Integer)
 
@@ -1366,41 +1399,29 @@ Public Class MainForm
 
             If SaveFileType = FileType.CSV And EnableSaveFile = True Then
                 Dim strline = ""
-                Select Case GBL_ASIC_MODEL
-                    Case t_AsicModels.PETIROC
-                        strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;"
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"HIT_{i};"
-                        Next
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"CHARGE_{i};"
-                        Next
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"COARSE_{i};"
-                        Next
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"FINE_{i};"
-                        Next
-                        For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"RELATIVETIME_{i};"
-                        Next
-                        strline = strline.Remove(strline.Length - 1)
 
-
-                    Case t_AsicModels.CITIROC
-                        strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;Trigger_ID;Validation_ID;Flags;"
+                strline = ""
+                        strline &= FST("ID")
+                        strline &= FST("ASIC")
+                        strline &= FST("EventCounter")
+                        strline &= FST("RUN_EventTimeCodeLSB")
+                        strline &= FST("RUN_EventTimecode_ns")
+                        strline &= FST("T0_to_Event_Timecode")
+                        strline &= FST("T0_to_Event_Timecode_ns")
+                        strline &= FST("Trigger_ID")
+                        strline &= FST("Validation_ID")
+                        strline &= FST("Flags")
+                        'strline = "ID;ASIC;EventCounter;RUN_EventTimeCodeLSB;RUN_EventTimecode_ns;T0_to_Event_Timecode;T0_to_Event_Timecode_ns;Trigger_ID;Validation_ID;Flags;"
                         For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"HIT_{i};"
-                        Next
+                    strline &= FST($"HIT_{i}")
+                Next
                         For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"CHARGE_LG_{i};"
-                        Next
+                    strline &= FST($"CHARGE_LG_{i}")
+                Next
                         For i = 0 To BI.channelsPerAsic - 1
-                            strline &= $"CHARGE_HG_{i};"
-                        Next
-                        strline = strline.Remove(strline.Length - 1)
-
-                End Select
+                    strline &= FST($"CHARGE_HG_{i}", IIf(i = BI.channelsPerAsic - 1, True, False))
+                Next
+                'strline = strline.Remove(strline.Length - 1)
 
 
 
@@ -1412,50 +1433,40 @@ Public Class MainForm
         If CurrentProcessMode > ProcessMode.EVENT_DECODE Then
             If SaveFileType = FileType.CSV And EnableSaveFile = True Then
                 Dim strline = ""
-                Select Case GBL_ASIC_MODEL
-                    Case t_AsicModels.PETIROC
-                        strline = "ID_CLUSTER;CLUSTER_RUN_Timecode_ns;CLUSTER_Timecode_ns;NEventsInCluster;"
+
+                'strline = "ID_CLUSTER;CLUSTER_RUN_Timecode_ns;CLUSTER_Timecode_ns;NEventsInCluster;"
+                strline = ""
+                        strline &= FST("ID_CLUSTER")
+                        strline &= FST("CLUSTER_RUN_Timecode_ns")
+                        strline &= FST("CLUSTER_Timecode_ns")
+                        strline &= FST("NEventsInCluster")
 
                         For asi = 0 To BI.totalAsics - 1
-                            strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};"
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"HIT_{asi}_{i};"
-                            Next
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"CHARGE_{asi}_{i};"
-                            Next
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"COARSE_{asi}_{i};"
-                            Next
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"FINE_{asi}_{i};"
-                            Next
-                            For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"RELATIVETIME_{asi}_{i};"
-                            Next
-                        Next
+                            strline &= FST($"ASIC_{asi}")
+                            strline &= FST($"EventCounter_{asi}")
+                            strline &= FST($"RUN_EventTimeCodeLSB_{asi}")
+                            strline &= FST($"RUN_EventTimecode_ns_{asi}")
+                            strline &= FST($"T0_to_Event_Timecode_{asi}")
+                            strline &= FST($"T0_to_Event_Timecode_ns_{asi}")
+                            strline &= FST($"Trigger_ID_{asi}")
+                            strline &= FST($"Validation_ID_{asi}")
+                            strline &= FST($"Flags_{asi}")
 
-                        strline = strline.Remove(strline.Length - 1)
 
-                    Case t_AsicModels.CITIROC
-                        strline = "ID_CLUSTER;CLUSTER_RUN_Timecode_ns;CLUSTER_Timecode_ns;NEventsInCluster;"
-
-                        For asi = 0 To BI.totalAsics - 1
-                            strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};Trigger_ID_{asi};Validation_ID_{asi};Flags_{asi};"
+                            'strline &= $"ASIC_{asi};EventCounter_{asi};RUN_EventTimeCodeLSB_{asi};RUN_EventTimecode_ns_{asi};T0_to_Event_Timecode_{asi};T0_to_Event_Timecode_ns_{asi};Trigger_ID_{asi};Validation_ID_{asi};Flags_{asi};"
                             For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"HIT_{asi}_{i};"
-                            Next
+                        strline &= FST($"HIT_{asi}_{i}")
+                    Next
                             For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"CHARGE_LG_{asi}_{i};"
-                            Next
+                        strline &= FST($"CHARGE_LG_{asi}_{i}")
+                    Next
                             For i = 0 To BI.channelsPerAsic - 1
-                                strline &= $"CHARGE_HG_{asi}_{i};"
-                            Next
+                        strline &= FST($"CHARGE_HG_{asi}_{i}")
+                    Next
 
                         Next
 
                         strline = strline.Remove(strline.Length - 1)
-                End Select
 
                 tx.WriteLine(strline)
 
@@ -1600,7 +1611,19 @@ Public Class MainForm
                             For i = 0 To e.hit.Count - 1
                                 hitNumber(i) = IIf(e.hit(i), 1, 0)
                             Next
-                            strline &= TotalEvents & ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & e.TriggerID & ";" & e.ValidationID & ";" & e.Flags & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
+                            strline &= FST(TotalEvents) &
+                                FST(e.AsicID) &
+                                FST(e.EventCounter) &
+                                FST(e.RunEventTimecode) &
+                                FST(e.RunEventTimecode_ns) &
+                                FST(e.EventTimecode) &
+                                FST(e.EventTimecode_ns) &
+                                FST(e.TriggerID) &
+                                FST(e.ValidationID) &
+                                FST(e.Flags) &
+                                FSTaU16(hitNumber) &
+                                FSTaU16(e.chargeLG) &
+                                FSTaU16(e.chargeHG, True)
                             tx.WriteLine(strline)
                             sByteCounter += strline.Length
                         End If
@@ -1717,8 +1740,9 @@ Public Class MainForm
 
                             If EnableSaveFile = True Then   'FILE SAVE
                                 If SaveFileType = FileType.CSV Then
-                                    strline = EventCounter & ";" & newCluster.Runtimecode_ns & ";" & newCluster.timecode_ns
-                                    strline &= ";" & newCluster.Events.Count
+                                    strline = ""
+                                    strline = FST(EventCounter) & FST(newCluster.Runtimecode_ns) & FST(newCluster.timecode_ns)
+                                    strline &= FST(newCluster.Events.Count, True)
                                 End If
                             End If
 
@@ -1761,7 +1785,19 @@ Public Class MainForm
                                         For i = 0 To e.hit.Count - 1
                                             hitNumber(i) = IIf(e.hit(i), 1, 0)
                                         Next
-                                        strline &= ";" & e.AsicID & ";" & e.EventCounter & ";" & e.RunEventTimecode & ";" & e.RunEventTimecode_ns & ";" & e.EventTimecode & ";" & e.EventTimecode_ns & ";" & e.TriggerID & ";" & e.ValidationID & ";" & e.Flags & ";" & String.Join(";", hitNumber) & ";" & String.Join(";", e.chargeLG) & ";" & String.Join(";", e.chargeHG)
+                                        strline &= FileSeparator &
+                                        FST(e.AsicID) &
+                                        FST(e.EventCounter) &
+                                        FST(e.RunEventTimecode) &
+                                        FST(e.RunEventTimecode_ns) &
+                                        FST(e.EventTimecode) &
+                                        FST(e.EventTimecode_ns) &
+                                        FST(e.TriggerID) &
+                                        FST(e.ValidationID) &
+                                        FST(e.Flags) &
+                                        FSTaU16(hitNumber) &
+                                        FSTaU16(e.chargeLG) &
+                                        FSTaU16(e.chargeHG, True)
                                     End If
                                 End If
                             Next

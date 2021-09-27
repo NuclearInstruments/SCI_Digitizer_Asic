@@ -135,6 +135,10 @@ Partial Class Settings_Citiroc
         Me.bValidateFake = New System.Windows.Forms.CheckBox()
         Me.bValidateWin = New System.Windows.Forms.NumericUpDown()
         Me.Label40 = New System.Windows.Forms.Label()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.FileSeparator = New System.Windows.Forms.ComboBox()
+        Me.FileFixedSizeB = New System.Windows.Forms.CheckBox()
+        Me.FileFixedSizeV = New System.Windows.Forms.NumericUpDown()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -169,6 +173,7 @@ Partial Class Settings_Citiroc
         Me.TabControl1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         CType(Me.bValidateWin, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.FileFixedSizeV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -843,6 +848,10 @@ Partial Class Settings_Citiroc
         '
         'TabPage7
         '
+        Me.TabPage7.Controls.Add(Me.FileFixedSizeV)
+        Me.TabPage7.Controls.Add(Me.FileFixedSizeB)
+        Me.TabPage7.Controls.Add(Me.Label41)
+        Me.TabPage7.Controls.Add(Me.FileSeparator)
         Me.TabPage7.Controls.Add(Me.GroupBox3)
         Me.TabPage7.Controls.Add(Me.ImgPath)
         Me.TabPage7.Controls.Add(Me.Label39)
@@ -924,7 +933,7 @@ Partial Class Settings_Citiroc
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(14, 188)
+        Me.Button2.Location = New System.Drawing.Point(343, 188)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(320, 46)
         Me.Button2.TabIndex = 70
@@ -933,7 +942,7 @@ Partial Class Settings_Citiroc
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(14, 136)
+        Me.Button1.Location = New System.Drawing.Point(14, 188)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(320, 46)
         Me.Button1.TabIndex = 69
@@ -1338,6 +1347,41 @@ Partial Class Settings_Citiroc
         Me.Label40.TabIndex = 81
         Me.Label40.Text = "Validation Window (ns)"
         '
+        'Label41
+        '
+        Me.Label41.Location = New System.Drawing.Point(11, 129)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(73, 13)
+        Me.Label41.TabIndex = 81
+        Me.Label41.Text = "Separator"
+        '
+        'FileSeparator
+        '
+        Me.FileSeparator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.FileSeparator.FormattingEnabled = True
+        Me.FileSeparator.Location = New System.Drawing.Point(117, 126)
+        Me.FileSeparator.Name = "FileSeparator"
+        Me.FileSeparator.Size = New System.Drawing.Size(103, 21)
+        Me.FileSeparator.TabIndex = 80
+        '
+        'FileFixedSizeB
+        '
+        Me.FileFixedSizeB.AutoSize = True
+        Me.FileFixedSizeB.Location = New System.Drawing.Point(14, 162)
+        Me.FileFixedSizeB.Name = "FileFixedSizeB"
+        Me.FileFixedSizeB.Size = New System.Drawing.Size(102, 17)
+        Me.FileFixedSizeB.TabIndex = 82
+        Me.FileFixedSizeB.Text = "Fixed-size Fields"
+        Me.FileFixedSizeB.UseVisualStyleBackColor = True
+        '
+        'FileFixedSizeV
+        '
+        Me.FileFixedSizeV.Location = New System.Drawing.Point(116, 161)
+        Me.FileFixedSizeV.Name = "FileFixedSizeV"
+        Me.FileFixedSizeV.Size = New System.Drawing.Size(103, 20)
+        Me.FileFixedSizeV.TabIndex = 83
+        Me.FileFixedSizeV.Value = New Decimal(New Integer() {20, 0, 0, 0})
+        '
         'Settings_Citiroc
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1370,6 +1414,7 @@ Partial Class Settings_Citiroc
         CType(Me.Voltage, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tempConmpCoef, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage7.ResumeLayout(False)
+        Me.TabPage7.PerformLayout()
         CType(Me.SumSpectrumGain, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.aClusterTime, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage8.ResumeLayout(False)
@@ -1384,6 +1429,7 @@ Partial Class Settings_Citiroc
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         CType(Me.bValidateWin, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.FileFixedSizeV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1501,4 +1547,8 @@ Partial Class Settings_Citiroc
     Friend WithEvents bValidateFake As CheckBox
     Friend WithEvents bValidateDiscard As CheckBox
     Friend WithEvents bValidateEnable As CheckBox
+    Friend WithEvents Label41 As Label
+    Friend WithEvents FileSeparator As ComboBox
+    Friend WithEvents FileFixedSizeV As NumericUpDown
+    Friend WithEvents FileFixedSizeB As CheckBox
 End Class

@@ -470,6 +470,12 @@ Public Class Settings_Citiroc
         ImgPath.Items.Add("High Gain")
         ImgPath.SelectedIndex = 0
 
+        FileSeparator.Items.Add("Semi Colon")
+        FileSeparator.Items.Add("Colon")
+        FileSeparator.Items.Add("Space")
+        FileSeparator.Items.Add("Tab")
+
+
     End Sub
 
     Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click
@@ -693,6 +699,20 @@ Public Class Settings_Citiroc
         Next
 
 
+        Select Case FileSeparator.Text
+            Case "Semi Colon"
+                MainForm.FileSeparator = ";"
+            Case "Colon"
+                MainForm.FileSeparator = ","
+            Case "Space"
+                MainForm.FileSeparator = " "
+            Case "Tab"
+                MainForm.FileSeparator = vbTab
+
+        End Select
+
+        MainForm.FileFixedSizeB = FileFixedSizeB.Checked
+        MainForm.FileFixedSizeI = FileFixedSizeV.Value
 
 
         MainForm.hvon.Enabled = Not HVon.Checked
@@ -978,6 +998,14 @@ Public Class Settings_Citiroc
     End Sub
 
     Private Sub LatchTrigger_CheckedChanged(sender As Object, e As EventArgs) Handles LatchTrigger.CheckedChanged
+
+    End Sub
+
+    Private Sub Label41_Click(sender As Object, e As EventArgs) Handles Label41.Click
+
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FileSeparator.SelectedIndexChanged
 
     End Sub
 End Class
