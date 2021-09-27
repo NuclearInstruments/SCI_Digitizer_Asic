@@ -1313,8 +1313,8 @@ Public Class MainForm
     Public Function FSTaU16(arr As UShort(), Optional last As Boolean = False) As String
         Dim fx As String = ""
         If FileFixedSizeB Then
-            For Each a In arr
-                fx &= a.ToString().PadLeft(FileFixedSizeI) & FileSeparator
+            For i = 0 To arr.Length - 1
+                fx &= arr(i).ToString().PadLeft(FileFixedSizeI) & IIf(i <> arr.Length - 1, FileSeparator, "")
             Next
             fx.Remove(fx.Length - 1)
         Else

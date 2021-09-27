@@ -474,7 +474,7 @@ Public Class Settings_Citiroc
         FileSeparator.Items.Add("Colon")
         FileSeparator.Items.Add("Space")
         FileSeparator.Items.Add("Tab")
-
+        FileSeparator.SelectedIndex = 0
 
     End Sub
 
